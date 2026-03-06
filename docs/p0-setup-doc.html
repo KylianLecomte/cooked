@@ -385,8 +385,8 @@
     </div>
     <div class="header-badge">
       <span class="badge badge-green">✓ PostgreSQL 18.3 GA</span>
-      <span class="badge badge-cyan">✓ Turbo 2.8.13</span>
-      <span class="badge badge-yellow">✓ ESLint v10 flat config</span>
+      <span class="badge badge-cyan">✓ ESLint v10 + Vitest + SWC</span>
+      <span class="badge badge-yellow">✓ Prisma 7 + Zod v4</span>
     </div>
   </header>
 
@@ -587,11 +587,6 @@
       <div class="decision-cell decision-why">Travail offline possible. Migrations rapides et destructives (prisma migrate reset) sans risquer une BDD partagée. Latence réseau éliminée.</div>
     </div>
     <div class="decision-row">
-      <div class="decision-cell"><span class="decision-subject">Logging applicatif</span></div>
-      <div class="decision-cell decision-choice">Logger @nestjs/common (jamais console.log)</div>
-      <div class="decision-cell decision-why">Quand Pino est branché via app.useLogger(), tout le code utilisant Logger NestJS bénéficie automatiquement de Pino sans modification. console.log = logs non structurés, impossibles à parser ou envoyer vers Axiom.</div>
-    </div>
-    <div class="decision-row">
       <div class="decision-cell"><span class="decision-subject">Commits</span></div>
       <div class="decision-cell decision-choice">Conventional Commits (commitlint)</div>
       <div class="decision-cell decision-why">Format type(scope): desc. Permet génération automatique de changelog. Historique Git = documentation lisible. Bloquant via hook commit-msg.</div>
@@ -664,27 +659,37 @@
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>ESLint ENOENT au commit</strong> — Double problème : ESLint non installé au workspace root + config au format eslintrc incompatible avec ESLint v10. Fix : install ESLint + réécriture en flat config (<code>eslint.config.mjs</code>).</div>
+      <div class="issue-text"><strong>ESLint ENOENT au commit</strong> — ESLint non installé au workspace root + config eslintrc incompatible avec ESLint v10. Fix : install + flat config. Config CLI NestJS conservée (<code>recommendedTypeChecked</code> + <code>projectService</code>), plus sophistiquée que la config proposée.</div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>PostgreSQL 18 — version confirmée GA</strong> — <code>SELECT version()</code> retourne <code>PostgreSQL 18.3 on x86_64-pc-linux-musl</code>. Version stable, utilisable en dev et production. Commande correcte : <code>docker exec cooked_postgres psql -U cooked -d cooked_db -c "SELECT version();"</code> (le flag <code>-d cooked_db</code> est obligatoire).</div>
+      <div class="issue-text"><strong>PostgreSQL 18 — version confirmée GA</strong> — <code>SELECT version()</code> retourne <code>PostgreSQL 18.3 on x86_64-pc-linux-musl</code>. Version stable. Commande correcte : <code>docker exec cooked_postgres psql -U cooked -d cooked_db -c "SELECT version();"</code></div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>ESLint config NestJS CLI vs config monorepo</strong> — La CLI NestJS génère un <code>eslint.config.mjs</code> dans <code>apps/api/</code> plus sophistiqué que la config proposée (utilise <code>recommendedTypeChecked</code> + <code>parserOptions.projectService</code>). Décision : conserver la config CLI, retirer uniquement <code>"prettier/prettier": ["error", { endOfLine: "auto" }]</code> qui écrase notre <code>.prettierrc</code>. Installer <code>eslint-plugin-prettier</code> au workspace root.</div>
+      <div class="issue-text"><strong>console.log bloqué par ESLint (no-console + --max-warnings=0)</strong> — Remplacé par <code>Logger</code> de <code>@nestjs/common</code>. Avantage : quand Pino est intégré via <code>app.useLogger()</code>, tout le code NestJS bénéficie de Pino sans modification.</div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>console.log bloqué par ESLint (no-console + --max-warnings=0)</strong> — Le <code>console.log</code> de <code>main.ts</code> génère un warning bloqué par <code>--max-warnings=0</code>. Solution correcte : remplacer par <code>Logger</code> de <code>@nestjs/common</code>. Avantage : quand Pino sera intégré via <code>app.useLogger()</code>, tout le code utilisant <code>Logger</code> NestJS bénéficiera de Pino sans modification.</div>
+      <div class="issue-text"><strong>Vitest + NestJS : decorators non résolus (emitDecoratorMetadata)</strong> — Vitest utilise esbuild qui ne supporte pas <code>emitDecoratorMetadata</code>. Fix : <code>unplugin-swc</code> + <code>@swc/core</code> comme transformateur. SWC supporte les décorateurs NestJS. Config dans <code>vitest.config.ts</code> avec <code>swc.vite({ module: { type: 'es6' } })</code>.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>Prisma 7 — breaking change : <code>url</code> supprimé de schema.prisma</strong> — En Prisma 7, la datasource URL est déplacée dans <code>prisma.config.ts</code>. Utiliser le helper <code>env()</code> importé depuis <code>prisma/config</code> plutôt que <code>process.env</code> (évite le problème de types Node hors <code>src/</code>). Commandes <code>migrate dev</code> et <code>db push</code> ne lancent plus <code>prisma generate</code> automatiquement — doit être lancé explicitement.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>Zod v4 — breaking change : <code>error.errors</code> supprimé</strong> — Dans Zod v4, <code>ZodError.errors</code> est remplacé par <code>ZodError.issues</code>. <code>z.string().url()</code> est remplacé par <code>z.url()</code> top-level. Utiliser <code>z.prettifyError(error)</code> pour formatter les erreurs (nouvelle API v4). <code>z.string().startsWith()</code> remplacé par <code>.refine()</code>.</div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">ℹ️</div>
       <div class="issue-tag" style="color:var(--cyan);border-color:var(--cyan)">INFO</div>
-      <div class="issue-text"><strong>Pas de mémoire entre conversations Claude</strong> — Une conversation par phase. Maintenir <code>CONTEXT.md</code> à la racine + le coller en début de chaque nouvelle conversation. Claude met à jour ce fichier en fin de phase.</div>
+      <div class="issue-text"><strong>Pas de mémoire entre conversations Claude</strong> — Une conversation par phase. Maintenir <code>CONTEXT.md</code> + le coller en début de chaque nouvelle conversation. Claude met à jour ce fichier en fin de phase.</div>
     </div>
   </div>
 
@@ -699,17 +704,22 @@
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">NESTJS API</div>
       <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
-      <div style="font-size:11px;color:var(--dim)">Scaffold, répond sur :3000</div>
+      <div style="font-size:11px;color:var(--dim)">Scaffold + tests unitaires Vitest</div>
     </div>
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">DOCKER</div>
       <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
-      <div style="font-size:11px;color:var(--dim)">Postgres 18 + Redis 8 healthy</div>
+      <div style="font-size:11px;color:var(--dim)">Postgres 18.3 GA + Redis 8</div>
     </div>
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">GIT HOOKS</div>
       <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
       <div style="font-size:11px;color:var(--dim)">Husky + lint-staged + commitlint</div>
+    </div>
+    <div style="background:var(--surface);padding:16px 20px">
+      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">PRISMA + ENV</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--yellow)">~</div>
+      <div style="font-size:11px;color:var(--dim)">Prisma 7 + Zod validation — en cours</div>
     </div>
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">CI/CD</div>
@@ -723,7 +733,7 @@
     </div>
   </div>
 
-  <footer>COOKED — DOCUMENTATION P0 — GÉNÉRÉE MARS 2026 — v1.2</footer>
+  <footer>COOKED — DOCUMENTATION P0 — GÉNÉRÉE MARS 2026 — v1.3</footer>
 
 </div>
 </body>

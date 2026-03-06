@@ -4,5 +4,6 @@ packages:
 
 ignoredBuiltDependencies:
   - "@prisma/engines"
+  - "@sentry-internal/node-cpu-profiler"
   - "@swc/core"
   - prisma

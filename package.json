@@ -3,6 +3,7 @@
   "private": true,
   "packageManager": "pnpm@10.30.3",
   "scripts": {
+    "dev:api": "turbo run dev --filter=@cooked/api",
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",

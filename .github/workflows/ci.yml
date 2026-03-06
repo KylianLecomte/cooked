@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Annule les runs en cours si un nouveau commit est poussé sur la même branche
+# Évite de consommer des minutes GitHub Actions inutilement
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint / Typecheck / Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        # Lit la version depuis le champ packageManager dans package.json
+        # Pas besoin de spécifier la version ici
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+          # cache: "pnpm" met en cache ~/.pnpm-store entre les runs
+          # Réduit le temps d'install de ~60s à ~10s après le premier run
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        # --frozen-lockfile : échoue si pnpm-lock.yaml est désynchronisé avec package.json
+        # Garantit que le CI utilise exactement les versions lockées, jamais de résolution implicite
+
+      - name: Lint
+        run: pnpm turbo lint
+        # Turborepo parallélise le lint sur tous les packages
+        # Cache les résultats — si les fichiers n'ont pas changé, le lint n'est pas relancé
+
+      - name: Typecheck
+        run: pnpm turbo typecheck
+
+      - name: Test
+        run: pnpm turbo test
