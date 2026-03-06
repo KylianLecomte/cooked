@@ -11,14 +11,18 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "vitest run --config vitest.e2e.config.ts",
-    "test:cov": "vitest run --coverage"
+    "test:cov": "vitest run --coverage",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "@prisma/client": "^7.4.2",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@cooked/eslint-config": "workspace:*",
@@ -30,6 +34,8 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
     "@types/supertest": "^7.2.0",
+    "dotenv": "^17.3.1",
+    "prisma": "^7.4.2",
     "supertest": "^7.2.2",
     "typescript": "^5.7.0",
     "typescript-eslint": "^8.56.1",
