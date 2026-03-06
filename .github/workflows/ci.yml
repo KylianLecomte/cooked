@@ -18,6 +18,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    # Variables d'environnement disponibles pour tous les steps du job
+    env:
+      # DATABASE_URL fictive pour que prisma generate puisse charger prisma.config.ts
+      # prisma generate ne se connecte pas à la BDD — il lit uniquement schema.prisma
+      # Sans cette variable, env() de Prisma 7 throw pendant postinstall
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/cooked_ci
+      # Les autres variables sont optionnelles pour CI (pas de Redis, pas de Sentry)
+      REDIS_HOST: localhost
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: placeholder
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
