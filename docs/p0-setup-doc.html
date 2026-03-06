@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>COOKED — P0 Setup Doc</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg:       #080B10;
+    --surface:  #0D1117;
+    --border:   #161C26;
+    --border2:  #1E2A38;
+    --text:     #C9D5E0;
+    --muted:    #3D5068;
+    --dim:      #8A9BB0;
+
+    --cyan:     #38BDF8;
+    --green:    #4ADE80;
+    --purple:   #A78BFA;
+    --orange:   #FB923C;
+    --pink:     #F472B6;
+    --yellow:   #FCD34D;
+    --red:      #F87171;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── GRID LAYOUT ── */
+  .page { max-width: 1200px; margin: 0 auto; }
+
+  /* ── HEADER ── */
+  .header {
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 16px;
+  }
+  .header-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .header-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    color: #EFF6FF;
+    line-height: 1;
+  }
+  .header-title span { color: var(--cyan); }
+  .header-sub {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .header-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 3px 10px;
+    border: 1px solid;
+    letter-spacing: 1px;
+  }
+  .badge-green  { color: var(--green);  border-color: var(--green);  background: #4ADE8010; }
+  .badge-cyan   { color: var(--cyan);   border-color: var(--cyan);   background: #38BDF810; }
+  .badge-yellow { color: var(--yellow); border-color: var(--yellow); background: #FCD34D10; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── TREE STRUCTURE ── */
+  .tree-section { margin-bottom: 40px; }
+  .tree {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    padding: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tree::before {
+    content: 'STRUCTURE';
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--border2);
+  }
+  .tree-line { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+  .tree-icon { width: 16px; flex-shrink: 0; text-align: center; font-size: 12px; }
+  .tree-name { color: var(--text); }
+  .tree-name.dir { color: var(--cyan); font-weight: 600; }
+  .tree-name.config { color: var(--yellow); }
+  .tree-name.env { color: var(--orange); }
+  .tree-name.docker { color: var(--purple); }
+  .tree-name.git { color: var(--red); }
+  .tree-badge {
+    font-size: 9px;
+    padding: 1px 7px;
+    border: 1px solid;
+    letter-spacing: 1px;
+    margin-left: 8px;
+  }
+  .tree-comment { color: var(--muted); font-size: 11px; margin-left: auto; }
+  .tree-indent-1 { padding-left: 20px; }
+  .tree-indent-2 { padding-left: 40px; }
+  .tree-indent-3 { padding-left: 60px; }
+
+  /* ── TOOLS GRID ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border2);
+    margin-bottom: 40px;
+  }
+  .tool-card {
+    background: var(--surface);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .tool-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+  .tool-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .tool-version {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .tool-role { font-size: 10px; letter-spacing: 2px; color: var(--muted); margin-bottom: 8px; }
+  .tool-desc { font-size: 12px; color: var(--dim); line-height: 1.5; }
+  .tool-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 7px;
+    margin-top: 8px;
+    margin-right: 4px;
+    border: 1px solid;
+    letter-spacing: 1px;
+  }
+
+  /* ── DECISIONS TABLE ── */
+  .decisions { margin-bottom: 40px; }
+  .decision-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    margin-bottom: 1px;
+  }
+  .decision-row.header-row {
+    background: transparent;
+    margin-bottom: 4px;
+  }
+  .decision-cell {
+    background: var(--surface);
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+  .decision-row.header-row .decision-cell {
+    background: transparent;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    padding-left: 0;
+  }
+  .decision-subject {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--cyan);
+    font-weight: 600;
+  }
+  .decision-choice { color: var(--text); }
+  .decision-why { color: var(--dim); font-size: 11px; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow { margin-bottom: 40px; }
+  .flow-steps {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .flow-step {
+    flex: 0 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-right: none;
+    padding: 16px 20px;
+    position: relative;
+    min-width: 140px;
+  }
+  .flow-step:last-child { border-right: 1px solid var(--border2); }
+  .flow-step::after {
+    content: '▶';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 10px;
+    z-index: 2;
+    background: var(--bg);
+    padding: 2px 0;
+  }
+  .flow-step:last-child::after { display: none; }
+  .flow-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 4px;
+    opacity: 0.3;
+  }
+  .flow-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .flow-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  /* ── CONFIG BLOCKS ── */
+  .configs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+  @media (max-width: 768px) { .configs { grid-template-columns: 1fr; } }
+  .config-block {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+  }
+  .config-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .config-filename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--yellow);
+  }
+  .config-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+  }
+  .config-body {
+    padding: 14px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--dim);
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .kw  { color: var(--purple); }
+  .str { color: var(--green); }
+  .key { color: var(--cyan); }
+  .cmt { color: var(--muted); font-style: italic; }
+  .num { color: var(--orange); }
+  .bool { color: var(--pink); }
+
+  /* ── ISSUES LOG ── */
+  .issues { margin-bottom: 40px; }
+  .issue-row {
+    display: grid;
+    grid-template-columns: 24px auto 1fr;
+    gap: 14px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+    background: var(--surface);
+  }
+  .issue-row:last-child { border-bottom: none; }
+  .issue-icon { font-size: 14px; margin-top: 1px; }
+  .issue-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border: 1px solid;
+    white-space: nowrap;
+    letter-spacing: 1px;
+    height: fit-content;
+  }
+  .issue-text { font-size: 12px; color: var(--dim); line-height: 1.5; }
+  .issue-text strong { color: var(--text); }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--border2);
+  }
+
+  /* color helpers */
+  .c-cyan   { color: var(--cyan); }
+  .c-green  { color: var(--green); }
+  .c-purple { color: var(--purple); }
+  .c-orange { color: var(--orange); }
+  .c-pink   { color: var(--pink); }
+  .c-yellow { color: var(--yellow); }
+  .c-red    { color: var(--red); }
+
+  .accent-line {
+    display: block;
+    height: 2px;
+    width: 40px;
+    margin-bottom: 24px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <div class="header-eyebrow">DOCUMENTATION TECHNIQUE — PHASE 0</div>
+      <div class="header-title">COOKED <span>/ P0</span></div>
+      <div class="header-sub">MONOREPO SETUP · WSL2 · TURBOREPO · NESTJS · DOCKER — MARS 2026</div>
+    </div>
+    <div class="header-badge">
+      <span class="badge badge-green">✓ PostgreSQL 18.3 GA</span>
+      <span class="badge badge-cyan">✓ Turbo 2.8.13</span>
+      <span class="badge badge-yellow">✓ ESLint v10 flat config</span>
+    </div>
+  </header>
+
+  <!-- STRUCTURE -->
+  <div class="tree-section">
+    <div class="section-title">STRUCTURE MONOREPO</div>
+    <div class="tree">
+      <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">cooked/</span><span class="tree-comment">— racine du monorepo</span></div>
+
+      <div class="tree-indent-1">
+        <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">apps/</span><span class="tree-comment">— applications</span></div>
+        <div class="tree-indent-2">
+          <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">api/</span><span class="tree-badge badge-green" style="color:var(--green);border-color:var(--green);background:#4ADE8010;">@cooked/api</span></div>
+          <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">mobile/</span><span class="tree-badge" style="color:var(--muted);border-color:var(--muted);">à venir P1</span></div>
+          <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">web/</span><span class="tree-badge" style="color:var(--muted);border-color:var(--muted);">à venir P8</span></div>
+        </div>
+
+        <div class="tree-line" style="margin-top:6px"><span class="tree-icon">📁</span><span class="tree-name dir">packages/</span><span class="tree-comment">— packages partagés</span></div>
+        <div class="tree-indent-2">
+          <div class="tree-line"><span class="tree-icon">📦</span><span class="tree-name dir">shared/</span><span class="tree-comment">— types TS + schemas Zod uniquement</span></div>
+          <div class="tree-line"><span class="tree-icon">📦</span><span class="tree-name dir">tsconfig/</span><span class="tree-comment">— configs TypeScript base/node/react</span></div>
+          <div class="tree-line"><span class="tree-icon">📦</span><span class="tree-name dir">eslint-config/</span><span class="tree-comment">— config ESLint v10 flat config</span></div>
+        </div>
+
+        <div class="tree-line" style="margin-top:6px"><span class="tree-icon">📁</span><span class="tree-name dir">.husky/</span><span class="tree-comment">— git hooks</span></div>
+        <div class="tree-indent-2">
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">pre-commit</span><span class="tree-comment">→ pnpm lint-staged</span></div>
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">commit-msg</span><span class="tree-comment">→ commitlint (Conventional Commits)</span></div>
+        </div>
+
+        <div style="margin-top:6px">
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">turbo.json</span><span class="tree-comment">— pipeline build/dev/lint/test/typecheck</span></div>
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">pnpm-workspace.yaml</span><span class="tree-comment">— déclaration workspaces + onlyBuiltDeps</span></div>
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">eslint.config.mjs</span><span class="tree-comment">— ESLint v10 flat config racine</span></div>
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">.prettierrc</span><span class="tree-comment">— config Prettier (endOfLine: lf)</span></div>
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">commitlint.config.js</span><span class="tree-comment">— validation messages de commit</span></div>
+          <div class="tree-line"><span class="tree-icon">🐳</span><span class="tree-name docker">docker-compose.yml</span><span class="tree-comment">— postgres:18 + redis:8</span></div>
+          <div class="tree-line"><span class="tree-icon">🔒</span><span class="tree-name env">.env</span><span class="tree-comment">— variables d'env (gitignored)</span></div>
+          <div class="tree-line"><span class="tree-icon">📋</span><span class="tree-name config">.env.template</span><span class="tree-comment">— template commité pour les collègues</span></div>
+          <div class="tree-line"><span class="tree-icon">🚫</span><span class="tree-name git">.gitignore</span><span class="tree-comment">— node_modules, dist, .env, .turbo…</span></div>
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">.nvmrc</span><span class="tree-comment">— Node 22 (fnm auto-switch)</span></div>
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">.npmrc</span><span class="tree-comment">— shamefully-hoist=false, link-workspace-packages=true</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTILS INSTALLÉS -->
+  <div class="section-title">OUTILS INSTALLÉS — WORKSPACE ROOT</div>
+  <div class="tools-grid" style="margin-bottom:40px">
+
+    <div class="tool-card" style="--accent:var(--cyan)">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-cyan">Turborepo</span>
+        <span class="tool-version">2.8.13</span>
+      </div>
+      <div class="tool-role">ORCHESTRATEUR MONOREPO</div>
+      <div class="tool-desc">Cache intelligent des builds. Lance toutes les apps en parallèle avec <code>pnpm dev</code>. Respecte les dépendances entre packages (<code>^build</code>).</div>
+      <span class="tool-tag" style="color:var(--cyan);border-color:var(--cyan)">cache</span>
+      <span class="tool-tag" style="color:var(--cyan);border-color:var(--cyan)">parallel</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-green">pnpm</span>
+        <span class="tool-version">10.30.3</span>
+      </div>
+      <div class="tool-role">PACKAGE MANAGER</div>
+      <div class="tool-desc">Workspaces natifs, store global partagé, isolation stricte des dépendances. <strong>Security by default</strong> : scripts postinstall bloqués sauf approbation explicite.</div>
+      <span class="tool-tag" style="color:var(--green);border-color:var(--green)">workspace:*</span>
+      <span class="tool-tag" style="color:var(--green);border-color:var(--green)">approve-builds</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--purple)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-purple">ESLint</span>
+        <span class="tool-version">v10 (flat config)</span>
+      </div>
+      <div class="tool-role">LINTER — FORMAT FLAT CONFIG OBLIGATOIRE</div>
+      <div class="tool-desc">v10 supprime définitivement le format <code>.eslintrc</code>. Config via <code>eslint.config.mjs</code> uniquement. Utilise le package unifié <code>typescript-eslint</code>.</div>
+      <span class="tool-tag" style="color:var(--red);border-color:var(--red)">⚠ breaking v10</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--pink)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-pink">Prettier</span>
+        <span class="tool-version">latest</span>
+      </div>
+      <div class="tool-role">FORMATEUR DE CODE</div>
+      <div class="tool-desc">Format uniforme sur tout le codebase. <code>endOfLine: lf</code> critique en environnement Windows/WSL2 mixte. <code>eslint-config-prettier</code> évite les conflits ESLint.</div>
+      <span class="tool-tag" style="color:var(--pink);border-color:var(--pink)">eol: lf</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-orange">Husky</span>
+        <span class="tool-version">9.x</span>
+      </div>
+      <div class="tool-role">GIT HOOKS</div>
+      <div class="tool-desc">Script <code>prepare</code> auto-exécuté après <code>pnpm install</code> = hooks installés sur toutes les machines. Deux hooks : <code>pre-commit</code> (lint-staged) + <code>commit-msg</code> (commitlint).</div>
+      <span class="tool-tag" style="color:var(--orange);border-color:var(--orange)">pre-commit</span>
+      <span class="tool-tag" style="color:var(--orange);border-color:var(--orange)">commit-msg</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--yellow)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-yellow">commitlint</span>
+        <span class="tool-version">latest</span>
+      </div>
+      <div class="tool-role">VALIDATION MESSAGES COMMIT</div>
+      <div class="tool-desc">Enforce la convention <code>type(scope): description</code>. Types autorisés : feat, fix, chore, docs, style, refactor, test, perf, ci, build, revert. Subject en minuscules, max 100 chars.</div>
+      <span class="tool-tag" style="color:var(--yellow);border-color:var(--yellow)">conventional commits</span>
+    </div>
+
+  </div>
+
+  <!-- DOCKER -->
+  <div class="section-title">INFRASTRUCTURE LOCALE — DOCKER</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px">
+
+    <div style="background:var(--surface);border:1px solid var(--border2);padding:20px;border-top:2px solid var(--cyan)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:4px">PostgreSQL 18</div>
+      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:12px">BASE DE DONNÉES</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:2;color:var(--dim)">
+        <div><span style="color:var(--muted)">image    </span><span style="color:var(--green)">postgres:18-alpine</span></div>
+        <div><span style="color:var(--muted)">port     </span><span>5432</span></div>
+        <div><span style="color:var(--muted)">user     </span><span>cooked</span></div>
+        <div><span style="color:var(--muted)">db       </span><span>cooked_db</span></div>
+        <div><span style="color:var(--muted)">volume   </span><span>cooked_postgres_data</span></div>
+        <div><span style="color:var(--muted)">health   </span><span style="color:var(--green)">pg_isready ✓</span></div>
+      </div>
+      <div style="margin-top:12px;padding:8px;background:#38BDF808;border:1px solid #38BDF820;font-size:11px;color:var(--dim)">
+        ⚠ PostgreSQL 18 potentiellement en beta — surveiller pour la prod
+      </div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border2);padding:20px;border-top:2px solid var(--red)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--red);margin-bottom:4px">Redis 8</div>
+      <div style="font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:12px">CACHE DISTRIBUÉ</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:2;color:var(--dim)">
+        <div><span style="color:var(--muted)">image    </span><span style="color:var(--green)">redis:8-alpine</span></div>
+        <div><span style="color:var(--muted)">port     </span><span>6379</span></div>
+        <div><span style="color:var(--muted)">password </span><span>cooked_dev</span></div>
+        <div><span style="color:var(--muted)">persist  </span><span>appendonly yes (AOF)</span></div>
+        <div><span style="color:var(--muted)">volume   </span><span>cooked_redis_data</span></div>
+        <div><span style="color:var(--muted)">health   </span><span style="color:var(--green)">redis-cli ping ✓</span></div>
+      </div>
+      <div style="margin-top:12px;padding:8px;background:#4ADE8008;border:1px solid #4ADE8020;font-size:11px;color:var(--dim)">
+        AOF = données persistées entre redémarrages (rejoue le log au boot)
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DÉCISIONS ARCHITECTURALES -->
+  <div class="section-title">DÉCISIONS ARCHITECTURALES — POURQUOI</div>
+  <div class="decisions">
+    <div class="decision-row header-row">
+      <div class="decision-cell">SUJET</div>
+      <div class="decision-cell">DÉCISION</div>
+      <div class="decision-cell">RAISON</div>
+    </div>
+
+    <div class="decision-row">
+      <div class="decision-cell"><span class="decision-subject">Package Manager</span></div>
+      <div class="decision-cell decision-choice">pnpm 10</div>
+      <div class="decision-cell decision-why">workspace:* protocol, store global, isolation stricte, security by default sur les postinstall scripts</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-cell"><span class="decision-subject">OS dev</span></div>
+      <div class="decision-cell decision-choice">WSL2 Ubuntu 24.04</div>
+      <div class="decision-cell decision-why">Docker tourne déjà en Linux en backend WSL2. Husky, scripts shell, Metro bundler fonctionnent sans adaptation. Parité avec CI GitHub Actions (Ubuntu).</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-cell"><span class="decision-subject">Fichiers projet</span></div>
+      <div class="decision-cell decision-choice">/home/kylian/ (pas /mnt/d/)</div>
+      <div class="decision-cell decision-why">I/O Docker sur /mnt/ = filesystem Windows, lent. /home/ = filesystem WSL2 natif, performances comparables à Linux réel.</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-cell"><span class="decision-subject">Node version</span></div>
+      <div class="decision-cell decision-choice">Node 22 LTS via fnm</div>
+      <div class="decision-cell decision-why">Node 22 est LTS depuis oct 2024. fnm supporte .nvmrc nativement + 40x plus rapide que nvm. Auto-switch avec --use-on-cd.</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-cell"><span class="decision-subject">ESLint config</span></div>
+      <div class="decision-cell decision-choice">Flat config (eslint.config.mjs)</div>
+      <div class="decision-cell decision-why">ESLint v10 (fév. 2026) supprime définitivement .eslintrc. Pas de choix. Le package typescript-eslint unifie parser + plugin.</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-cell"><span class="decision-subject">BDD locale vs cloud</span></div>
+      <div class="decision-cell decision-choice">Docker local en dev, Supabase uniquement en staging/prod</div>
+      <div class="decision-cell decision-why">Travail offline possible. Migrations rapides et destructives (prisma migrate reset) sans risquer une BDD partagée. Latence réseau éliminée.</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-cell"><span class="decision-subject">Logging applicatif</span></div>
+      <div class="decision-cell decision-choice">Logger @nestjs/common (jamais console.log)</div>
+      <div class="decision-cell decision-why">Quand Pino est branché via app.useLogger(), tout le code utilisant Logger NestJS bénéficie automatiquement de Pino sans modification. console.log = logs non structurés, impossibles à parser ou envoyer vers Axiom.</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-cell"><span class="decision-subject">Commits</span></div>
+      <div class="decision-cell decision-choice">Conventional Commits (commitlint)</div>
+      <div class="decision-cell decision-why">Format type(scope): desc. Permet génération automatique de changelog. Historique Git = documentation lisible. Bloquant via hook commit-msg.</div>
+    </div>
+  </div>
+
+  <!-- FLOW PRE-COMMIT -->
+  <div class="section-title">FLOW PRE-COMMIT — CE QUI SE PASSE À CHAQUE git commit</div>
+  <div class="flow" style="margin-bottom:40px">
+    <div class="flow-steps">
+      <div class="flow-step" style="border-color:var(--border2)">
+        <div class="flow-num c-cyan">01</div>
+        <div class="flow-label c-cyan">git commit</div>
+        <div class="flow-sub">tu lances la commande</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num c-orange">02</div>
+        <div class="flow-label c-orange">Husky</div>
+        <div class="flow-sub">déclenche pre-commit</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num c-purple">03</div>
+        <div class="flow-label c-purple">lint-staged</div>
+        <div class="flow-sub">fichiers stagés uniquement</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num c-pink">04</div>
+        <div class="flow-label c-pink">ESLint --fix</div>
+        <div class="flow-sub">corrige auto, bloque si erreur</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num c-pink">05</div>
+        <div class="flow-label c-pink">Prettier</div>
+        <div class="flow-sub">format automatique</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num c-yellow">06</div>
+        <div class="flow-label c-yellow">commitlint</div>
+        <div class="flow-sub">valide le message commit</div>
+      </div>
+      <div class="flow-step" style="border-color:var(--green)">
+        <div class="flow-num c-green">07</div>
+        <div class="flow-label c-green">✓ Commit</div>
+        <div class="flow-sub">code propre garanti</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">
+      Si une étape échoue → le commit est annulé, les fichiers sont restaurés dans leur état original (stash automatique lint-staged)
+    </div>
+  </div>
+
+  <!-- ISSUES RÉSOLUES -->
+  <div class="section-title">PROBLÈMES RENCONTRÉS ET RÉSOLUS</div>
+  <div class="issues" style="border:1px solid var(--border2)">
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>@cooked/tsconfig introuvable dans packages/shared</strong> — Dépendance <code>@cooked/tsconfig: workspace:*</code> manquante dans package.json de shared. Fix : ajout + pnpm install.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>Attribut <code>version</code> obsolète dans docker-compose.yml</strong> — Docker Compose v2 ignore cet attribut. Supprimé. Le fichier commence maintenant directement par <code>services:</code>.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>pnpm Ignored build scripts (@nestjs/core, esbuild)</strong> — Comportement intentionnel de pnpm 10 (security by default). Fix : <code>pnpm approve-builds</code> → ajoute <code>onlyBuiltDependencies</code> dans pnpm-workspace.yaml.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>ESLint ENOENT au commit</strong> — Double problème : ESLint non installé au workspace root + config au format eslintrc incompatible avec ESLint v10. Fix : install ESLint + réécriture en flat config (<code>eslint.config.mjs</code>).</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>PostgreSQL 18 — version confirmée GA</strong> — <code>SELECT version()</code> retourne <code>PostgreSQL 18.3 on x86_64-pc-linux-musl</code>. Version stable, utilisable en dev et production. Commande correcte : <code>docker exec cooked_postgres psql -U cooked -d cooked_db -c "SELECT version();"</code> (le flag <code>-d cooked_db</code> est obligatoire).</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>ESLint config NestJS CLI vs config monorepo</strong> — La CLI NestJS génère un <code>eslint.config.mjs</code> dans <code>apps/api/</code> plus sophistiqué que la config proposée (utilise <code>recommendedTypeChecked</code> + <code>parserOptions.projectService</code>). Décision : conserver la config CLI, retirer uniquement <code>"prettier/prettier": ["error", { endOfLine: "auto" }]</code> qui écrase notre <code>.prettierrc</code>. Installer <code>eslint-plugin-prettier</code> au workspace root.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>console.log bloqué par ESLint (no-console + --max-warnings=0)</strong> — Le <code>console.log</code> de <code>main.ts</code> génère un warning bloqué par <code>--max-warnings=0</code>. Solution correcte : remplacer par <code>Logger</code> de <code>@nestjs/common</code>. Avantage : quand Pino sera intégré via <code>app.useLogger()</code>, tout le code utilisant <code>Logger</code> NestJS bénéficiera de Pino sans modification.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">ℹ️</div>
+      <div class="issue-tag" style="color:var(--cyan);border-color:var(--cyan)">INFO</div>
+      <div class="issue-text"><strong>Pas de mémoire entre conversations Claude</strong> — Une conversation par phase. Maintenir <code>CONTEXT.md</code> à la racine + le coller en début de chaque nouvelle conversation. Claude met à jour ce fichier en fin de phase.</div>
+    </div>
+  </div>
+
+  <!-- ÉTAT ACTUEL -->
+  <div class="section-title" style="margin-top:40px">ÉTAT ACTUEL P0</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border2);margin-bottom:40px">
+    <div style="background:var(--surface);padding:16px 20px">
+      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">MONOREPO</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
+      <div style="font-size:11px;color:var(--dim)">Turborepo + pnpm workspaces</div>
+    </div>
+    <div style="background:var(--surface);padding:16px 20px">
+      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">NESTJS API</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
+      <div style="font-size:11px;color:var(--dim)">Scaffold, répond sur :3000</div>
+    </div>
+    <div style="background:var(--surface);padding:16px 20px">
+      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">DOCKER</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
+      <div style="font-size:11px;color:var(--dim)">Postgres 18 + Redis 8 healthy</div>
+    </div>
+    <div style="background:var(--surface);padding:16px 20px">
+      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">GIT HOOKS</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
+      <div style="font-size:11px;color:var(--dim)">Husky + lint-staged + commitlint</div>
+    </div>
+    <div style="background:var(--surface);padding:16px 20px">
+      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">CI/CD</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--muted)">○</div>
+      <div style="font-size:11px;color:var(--dim)">GitHub Actions — à faire</div>
+    </div>
+    <div style="background:var(--surface);padding:16px 20px">
+      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">OBSERVABILITÉ</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--muted)">○</div>
+      <div style="font-size:11px;color:var(--dim)">Pino + Sentry — à faire</div>
+    </div>
+  </div>
+
+  <footer>COOKED — DOCUMENTATION P0 — GÉNÉRÉE MARS 2026 — v1.2</footer>
+
+</div>
+</body>
+</html>

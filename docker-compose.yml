@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: cooked_postgres
+    environment:
+      POSTGRES_USER: cooked
+      POSTGRES_PASSWORD: cooked_dev
+      POSTGRES_DB: cooked_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cooked -d cooked_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:8-alpine
+    container_name: cooked_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass cooked_dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "cooked_dev", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    name: cooked_postgres_data
+  redis_data:
+    name: cooked_redis_data

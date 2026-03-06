@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stack Recap — App Nutrition</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Courier New', monospace; background: #0A0A0F; color: #E2E8F0; min-height: 100vh; padding: 40px 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .header { margin-bottom: 48px; border-bottom: 1px solid #1E293B; padding-bottom: 32px; }
+  .header-top { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .header h1 { font-size: clamp(28px, 5vw, 52px); font-weight: 900; letter-spacing: -2px; color: #F8FAFC; }
+  .subtitle { font-size: clamp(14px, 2.5vw, 22px); color: #61DAFB; font-weight: 700; letter-spacing: 4px; }
+  .meta { color: #64748B; margin-top: 8px; font-size: 13px; letter-spacing: 2px; }
+  .tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .tag { background: #0F172A; border: 1px solid #1E293B; color: #94A3B8; padding: 4px 12px; font-size: 11px; letter-spacing: 1px; }
+  .changelog { margin-top: 20px; background: #0F172A; border: 1px solid #1E293B; padding: 14px 18px; }
+  .changelog-title { font-size: 9px; letter-spacing: 3px; color: #334155; margin-bottom: 10px; }
+  .changelog-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cl-item { padding: 3px 10px; font-size: 10px; }
+  .sections { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 0; }
+  .section { background: #0D1117; padding: 24px; }
+  .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; }
+  .section-icon { font-size: 20px; }
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; }
+  .items { display: flex; flex-direction: column; gap: 12px; }
+  .item { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+  .item-name { padding: 2px 8px; font-size: 12px; font-weight: 700; white-space: nowrap; display: inline-block; }
+  .item-role { font-size: 10px; color: #475569; letter-spacing: 1px; margin-bottom: 2px; }
+  .item-note { font-size: 12px; color: #94A3B8; line-height: 1.4; }
+  .roadmap-title { font-size: 11px; letter-spacing: 4px; color: #475569; margin-bottom: 24px; border-top: 1px solid #1E293B; padding-top: 32px; margin-top: 48px; }
+  .roadmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .roadmap-card { background: #0D1117; padding: 20px; position: relative; }
+  .roadmap-bar { position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .roadmap-num { font-size: 36px; font-weight: 900; letter-spacing: -2px; line-height: 1; margin-bottom: 4px; }
+  .roadmap-name { font-size: 13px; font-weight: 700; margin-bottom: 12px; letter-spacing: 1px; }
+  .roadmap-item { font-size: 11px; color: #64748B; padding: 4px 0; border-bottom: 1px solid #0F172A; display: flex; gap: 8px; align-items: center; }
+  .market { margin-top: 40px; background: #0D1117; border: 1px solid #1E293B; padding: 20px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+  .market-heading { font-size: 10px; letter-spacing: 3px; color: #475569; grid-column: 1 / -1; margin-bottom: 4px; }
+  .market-tech { font-size: 13px; font-weight: 700; }
+  .market-count { font-size: 11px; color: #94A3B8; margin-top: 2px; }
+  .market-status { font-size: 10px; color: #64748B; margin-top: 2px; }
+  .footer { margin-top: 24px; text-align: center; color: #1E293B; font-size: 11px; letter-spacing: 2px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-top">
+      <h1>STACK RECAP</h1>
+      <span class="subtitle">REACT / RN</span>
+    </div>
+    <p class="meta">APP NUTRITION — NANTES — 2026</p>
+    <div class="tags">
+      <span class="tag">Fullstack TS</span><span class="tag">Monorepo</span>
+      <span class="tag">CRUD + Mobile</span><span class="tag">Observabilité complète</span>
+      <span class="tag">CI/CD + Sonar</span><span class="tag">Marché Nantes ✓</span>
+    </div>
+    <div class="changelog">
+      <div class="changelog-title">CHANGELOG v2</div>
+      <div class="changelog-items">
+        <span class="cl-item" style="background:#61DAFB15;color:#61DAFB">Redis ← NestJS Cache mémoire</span>
+        <span class="cl-item" style="background:#F472B615;color:#F472B6">+ Prometheus &amp; Grafana</span>
+        <span class="cl-item" style="background:#FACC1515;color:#FACC15">+ SonarCloud</span>
+        <span class="cl-item" style="background:#9B6EFF15;color:#9B6EFF">Expo Managed Workflow</span>
+        <span class="cl-item" style="background:#F472B615;color:#F472B6">+ Pino + Axiom</span>
+        <span class="cl-item" style="background:#F472B615;color:#F472B6">+ Sentry 3 couches</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sections" id="sections"></div>
+
+  <div class="roadmap-title">ROADMAP</div>
+  <div class="roadmap-grid" id="roadmap"></div>
+
+  <div class="market">
+    <div class="market-heading">MARCHÉ NANTES — OFFRES 2026</div>
+    <div><div class="market-tech" style="color:#61DAFB">React</div><div class="market-count">200+ offres</div><div class="market-status">🔥 Dominant</div></div>
+    <div><div class="market-tech" style="color:#3178C6">TypeScript</div><div class="market-count">Transversal</div><div class="market-status">🔥 Indispensable</div></div>
+    <div><div class="market-tech" style="color:#E535AB">NestJS / Node</div><div class="market-count">Bonne demande</div><div class="market-status">✅ Solide</div></div>
+    <div><div class="market-tech" style="color:#9B6EFF">React Native</div><div class="market-count">Quelques offres</div><div class="market-status">✅ Complément</div></div>
+  </div>
+
+  <div class="footer">GÉNÉRÉ AVEC CLAUDE — v2 — 2026</div>
+</div>
+<script>
+const sections = [
+  { label:"FRONTEND WEB", color:"#61DAFB", icon:"⚛", items:[
+    {name:"React 19",role:"UI Library",note:"Base de tout, hooks, composants"},
+    {name:"Vite",role:"Bundler",note:"Ultra rapide, zéro config inutile"},
+    {name:"TanStack Router",role:"Routing",note:"Type-safe, explicite, pas de magie"},
+    {name:"TanStack Query",role:"Data Fetching",note:"Cache, sync, états async"},
+    {name:"Zustand",role:"State Global",note:"Simple, léger, pas de boilerplate"},
+    {name:"shadcn/ui",role:"UI Components",note:"Accessible, customisable, copié dans ton code"},
+    {name:"Tailwind CSS",role:"Styling",note:"Utility-first, DX excellente"},
+    {name:"Sentry Web",role:"Error Tracking",note:"@sentry/react — erreurs front avec source maps"},
+  ]},
+  { label:"MOBILE", color:"#9B6EFF", icon:"📱", items:[
+    {name:"React Native",role:"Framework Mobile",note:"Android & iOS, réutilise React"},
+    {name:"Expo SDK 51+ Managed",role:"Toolchain",note:"Managed workflow : zéro Gradle, zéro XCode à gérer"},
+    {name:"Expo Router",role:"Navigation",note:"File-based routing, même logique que web"},
+    {name:"NativeWind",role:"Styling",note:"Tailwind sur React Native"},
+    {name:"expo-barcode-scanner",role:"Scan Code-barre",note:"Killer feature : scan aliment instantané"},
+    {name:"React Native MMKV",role:"Storage Local",note:"Stockage rapide et sécurisé (remplace AsyncStorage)"},
+    {name:"Expo EAS Build",role:"Build & Deploy",note:"APK Android cloud sans Android Studio"},
+    {name:"Sentry RN",role:"Crash Reporting",note:"@sentry/react-native — crashes natifs Android capturés"},
+  ]},
+  { label:"BACKEND", color:"#E535AB", icon:"⚙", items:[
+    {name:"NestJS",role:"Framework API",note:"Modulaire, typé, très demandé à Nantes"},
+    {name:"TypeScript",role:"Langage",note:"Partagé web/mobile/back via monorepo"},
+    {name:"Prisma ORM",role:"BDD Access",note:"Migrations propres, types auto-générés"},
+    {name:"PostgreSQL",role:"Base de données",note:"Fiable, relationnel, parfait pour CRUD nutrition"},
+    {name:"Redis",role:"Cache distribué",note:"Survit aux redémarrages API, partagé entre instances, TTL par clé"},
+    {name:"Swagger / OpenAPI",role:"Documentation",note:"Auto-généré avec NestJS"},
+    {name:"Zod",role:"Validation",note:"Schemas partagés front/back, validation runtime"},
+    {name:"Pino",role:"Logger structuré",note:"JSON haute perf, remplace le logger par défaut de NestJS"},
+    {name:"Sentry NestJS",role:"Error Tracking",note:"@sentry/nestjs — stack traces lisibles avec source maps"},
+  ]},
+  { label:"DONNÉES ALIMENTAIRES", color:"#4ADE80", icon:"🥗", items:[
+    {name:"Open Food Facts",role:"API Gratuite",note:"3M+ produits, scan code-barre → macros"},
+    {name:"USDA FoodData",role:"API Gratuite",note:"Aliments de base ultra-complets (viandes, céréales...)"},
+    {name:"Edamam",role:"API Freemium",note:"Recherche NLP : '100g poulet grillé' — 1000 req/mois gratuit"},
+    {name:"Cache Redis",role:"Stratégie",note:"TTL 7j sur aliments fréquents, partagé entre instances API"},
+  ]},
+  { label:"AUTH & INFRA", color:"#FB923C", icon:"🔐", items:[
+    {name:"Supabase Auth",role:"Authentification",note:"OAuth Google, JWT, sessions multi-device — zéro code auth"},
+    {name:"Supabase",role:"PostgreSQL Managé",note:"BDD + Storage + Realtime gratuit"},
+    {name:"Vercel",role:"Hébergement Web",note:"Deploy auto sur push, gratuit"},
+    {name:"Railway",role:"Hébergement API + Redis",note:"NestJS containerisé + Redis managé disponible"},
+    {name:"Docker",role:"Containerisation",note:"API NestJS + Redis en local via Docker Compose"},
+  ]},
+  { label:"OBSERVABILITÉ", color:"#F472B6", icon:"🔭", items:[
+    {name:"Sentry (3 couches)",role:"Erreurs & Crashes",note:"NestJS + Web React + React Native — source maps sur les 3"},
+    {name:"Pino + Axiom",role:"Logs structurés",note:"Logs JSON → Axiom (50GB/mois gratuit), recherche et alertes en prod"},
+    {name:"Prometheus",role:"Collecte métriques",note:"Scrape /metrics : latence, req/s, erreurs 5xx, connexions BDD/Redis"},
+    {name:"Grafana",role:"Dashboards & Alerting",note:"Visualisation temps réel des métriques Prometheus, alertes seuils"},
+    {name:"GET /health",role:"Health Check",note:"Statut API + PostgreSQL + Redis — Railway redémarre si KO"},
+    {name:"Expo EAS Insights",role:"Mobile OTA",note:"Stats mises à jour OTA, taux adoption versions"},
+  ]},
+  { label:"DEVOPS & CI/CD", color:"#FACC15", icon:"🚀", items:[
+    {name:"Turborepo",role:"Monorepo",note:"Web + Mobile + API dans un seul repo, cache build partagé"},
+    {name:"GitHub Actions",role:"CI/CD",note:"Lint → SonarCloud → Tests → Deploy — bloque le merge si fail"},
+    {name:"SonarCloud",role:"Qualité & Sécurité",note:"Complexité, duplication, vulnérabilités — gratuit repos publics"},
+    {name:"Vitest",role:"Tests Unitaires",note:"Ultra rapide, compatible Vite"},
+    {name:"Playwright",role:"Tests E2E",note:"Tests navigateur automatisés"},
+    {name:"Husky + lint-staged",role:"Git Hooks",note:"ESLint + Prettier bloquants avant chaque commit"},
+  ]},
+];
+
+const roadmap = [
+  {phase:"01",title:"MVP Mobile",color:"#9B6EFF",items:["Auth Supabase","Recherche aliments","Journal alimentaire","Dashboard calories / macros"]},
+  {phase:"02",title:"Scan & Stats",color:"#4ADE80",items:["Scan code-barre","Historique & graphiques","Objectifs personnalisés","Recettes custom"]},
+  {phase:"03",title:"Observabilité",color:"#F472B6",items:["Sentry 3 couches","Pino + Axiom logs","Prometheus + Grafana","/health endpoint enrichi"]},
+  {phase:"04",title:"Prod & CI/CD",color:"#FACC15",items:["GitHub Actions complet","SonarCloud sur chaque PR","APK via EAS Build","Front Web React + Vite"]},
+];
+
+document.getElementById('sections').innerHTML = sections.map(s => `
+  <div class="section" style="border:1px solid ${s.color}22">
+    <div class="section-header" style="border-bottom:1px solid ${s.color}33">
+      <span class="section-icon">${s.icon}</span>
+      <span class="section-label" style="color:${s.color}">${s.label}</span>
+    </div>
+    <div class="items">
+      ${s.items.map(i => `
+        <div class="item">
+          <span class="item-name" style="background:${s.color}18;color:${s.color}">${i.name}</span>
+          <div><div class="item-role">${i.role}</div><div class="item-note">${i.note}</div></div>
+        </div>`).join('')}
+    </div>
+  </div>`).join('');
+
+document.getElementById('roadmap').innerHTML = roadmap.map(p => `
+  <div class="roadmap-card" style="border:1px solid ${p.color}22">
+    <div class="roadmap-bar" style="background:${p.color}"></div>
+    <div class="roadmap-num" style="color:${p.color}22">${p.phase}</div>
+    <div class="roadmap-name" style="color:${p.color}">${p.title}</div>
+    ${p.items.map(i => `<div class="roadmap-item"><span style="color:${p.color};font-size:8px">▶</span>${i}</div>`).join('')}
+  </div>`).join('');
+</script>
+</body>
+</html>

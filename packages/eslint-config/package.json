@@ -2,12 +2,10 @@
   "name": "@cooked/eslint-config",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "main": "index.js",
-  "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.0.0"
-  },
+  "types": "index.d.ts",
   "peerDependencies": {
-    "eslint": ">=9"
+    "eslint": ">=10"
   }
 }
