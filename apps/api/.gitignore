@@ -4,3 +4,16 @@ node_modules
 
 /generated/prisma
 generated/
+coverage/
+dist/
+build/
+logs/
+*.log
+*.tmp
+*.cache
+*.tsbuildinfo
+.idea/
+.vscode/
+.DS_Store
+*.swp
+*.swo

@@ -277,7 +277,27 @@ const phases = [
 ];
 
 // State
-const checked = {};
+const checked = {
+  // P0 — Backend & tooling fait, mobile + observabilité cloud non fait
+  "p0-1":true,   // Monorepo Turborepo
+  "p0-2":true,   // TypeScript strict partagé
+  "p0-3":true,   // ESLint + Prettier + Husky + lint-staged
+  "p0-4":true,   // Git + GitHub (branching strategy à définir en P1)
+  "p0-5":true,   // GitHub Actions lint + typecheck + test
+  "p0-6":false,  // ❌ SonarCloud — non intégré
+  "p0-7":false,  // ❌ Secrets GitHub Actions — non configurés
+  "p0-8":false,  // ❌ Expo — non créé
+  "p0-9":false,  // ❌ Expo Router — non configuré
+  "p0-10":false, // ❌ NativeWind — non installé
+  "p0-11":false, // ❌ Émulateur Android — non testé
+  "p0-12":true,  // NestJS créé et fonctionnel
+  "p0-13":true,  // Prisma 7 + PostgreSQL (Docker local, pas Supabase)
+  "p0-14":true,  // Docker Compose PostgreSQL + Redis
+  "p0-15":true,  // Pino installé, pino-pretty en dev, JSON en prod
+  "p0-16":false, // ❌ Axiom — Pino tourne mais non connecté à Axiom
+  "p0-17":false, // ❌ Sentry — installé et configuré dans le code, DSN vide, rien n'est envoyé
+  "p0-18":true,  // Variables d'env + validation Zod au boot
+};
 let openPhaseId = 'P0';
 
 const totalTasks = phases.reduce((a, p) => a + p.categories.reduce((b, c) => b + c.tasks.length, 0), 0);

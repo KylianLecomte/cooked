@@ -32,6 +32,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # fetch-depth: 0 est nécessaire pour que pnpm turbo puisse accéder à l'historique git
+          # Turbo utilise l'historique pour déterminer quels packages ont changé et doivent être lintés/testés
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -61,3 +65,14 @@ jobs:
 
       - name: Test
         run: pnpm turbo test
+
+      - name: Coverage LCOV (pour SonarCloud)
+        # On génère le rapport LCOV séparément — passer --coverage à turbo n'est pas fiable
+        # On cible uniquement @cooked/api car c'est le seul package avec des tests pour l'instant
+        run: pnpm --filter @cooked/api test:cov
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Fourni automatiquement par GitHub — ne pas créer manuellement
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Token créé à l'étape 1 → à ajouter dans les secrets GitHub

@@ -37,7 +37,6 @@
     padding: 40px 24px 80px;
   }
 
-  /* ── GRID LAYOUT ── */
   .page { max-width: 1200px; margin: 0 auto; }
 
   /* ── HEADER ── */
@@ -89,6 +88,8 @@
   .badge-green  { color: var(--green);  border-color: var(--green);  background: #4ADE8010; }
   .badge-cyan   { color: var(--cyan);   border-color: var(--cyan);   background: #38BDF810; }
   .badge-yellow { color: var(--yellow); border-color: var(--yellow); background: #FCD34D10; }
+  .badge-orange { color: var(--orange); border-color: var(--orange); background: #FB923C10; }
+  .badge-red    { color: var(--red);    border-color: var(--red);    background: #F8717110; }
 
   /* ── SECTION TITLE ── */
   .section-title {
@@ -164,12 +165,6 @@
     padding: 18px 20px;
     position: relative;
     overflow: hidden;
-  }
-  .tool-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
   }
   .tool-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
   .tool-name {
@@ -278,47 +273,6 @@
   }
   .flow-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
 
-  /* ── CONFIG BLOCKS ── */
-  .configs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
-  @media (max-width: 768px) { .configs { grid-template-columns: 1fr; } }
-  .config-block {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-  }
-  .config-header {
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .config-filename {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--yellow);
-  }
-  .config-type {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--muted);
-  }
-  .config-body {
-    padding: 14px 16px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    line-height: 1.7;
-    color: var(--dim);
-    white-space: pre;
-    overflow-x: auto;
-  }
-  .kw  { color: var(--purple); }
-  .str { color: var(--green); }
-  .key { color: var(--cyan); }
-  .cmt { color: var(--muted); font-style: italic; }
-  .num { color: var(--orange); }
-  .bool { color: var(--pink); }
-
   /* ── ISSUES LOG ── */
   .issues { margin-bottom: 40px; }
   .issue-row {
@@ -344,6 +298,127 @@
   .issue-text { font-size: 12px; color: var(--dim); line-height: 1.5; }
   .issue-text strong { color: var(--text); }
 
+  /* ── TASK STATUS GRID ── */
+  .task-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border2);
+    margin-bottom: 40px;
+  }
+  .task-status-item {
+    background: var(--surface);
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 20px 1fr auto;
+    align-items: start;
+    gap: 12px;
+  }
+  .task-check { font-size: 13px; margin-top: 1px; }
+  .task-label { font-size: 12px; }
+  .task-label-text { color: var(--text); font-weight: 600; margin-bottom: 2px; }
+  .task-label-detail { font-size: 11px; color: var(--muted); }
+  .task-label-text.done { color: var(--muted); text-decoration: line-through; }
+  .task-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 7px;
+    border: 1px solid;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    height: fit-content;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-section {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .progress-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+  }
+  .progress-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--orange);
+  }
+  .progress-track {
+    background: var(--border2);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--green), var(--cyan));
+    width: 61%;
+  }
+  .progress-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── PENDING BLOCK ── */
+  .pending-block {
+    background: var(--surface);
+    border: 1px solid var(--orange);
+    border-left: 3px solid var(--orange);
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  .pending-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--orange);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pending-item {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+    font-size: 12px;
+  }
+  .pending-item:last-child { border-bottom: none; }
+  .pending-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--orange);
+    padding: 1px 7px;
+    border: 1px solid var(--orange);
+    background: #FB923C10;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .pending-text { color: var(--dim); }
+  .pending-text strong { color: var(--text); }
+
   /* ── FOOTER ── */
   footer {
     margin-top: 60px;
@@ -364,13 +439,6 @@
   .c-pink   { color: var(--pink); }
   .c-yellow { color: var(--yellow); }
   .c-red    { color: var(--red); }
-
-  .accent-line {
-    display: block;
-    height: 2px;
-    width: 40px;
-    margin-bottom: 24px;
-  }
 </style>
 </head>
 <body>
@@ -387,8 +455,186 @@
       <span class="badge badge-green">✓ PostgreSQL 18.3 GA</span>
       <span class="badge badge-cyan">✓ ESLint v10 + Vitest + SWC</span>
       <span class="badge badge-yellow">✓ Prisma 7 + Zod v4</span>
+      <span class="badge badge-orange">⚠ P0 EN COURS — 11/18 tâches</span>
     </div>
   </header>
+
+  <!-- PROGRESSION P0 -->
+  <div class="section-title">PROGRESSION PHASE 0</div>
+  <div class="progress-section">
+    <div class="progress-header">
+      <span class="progress-title">TÂCHES COMPLÉTÉES</span>
+      <span class="progress-count">11 / 18</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"></div>
+    </div>
+    <div class="progress-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span style="color:var(--dim)">Terminé (11) : monorepo, NestJS, Docker, Pino, Prisma, Zod, CI</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div><span style="color:var(--dim)">En attente (7) : SonarCloud, secrets CI, Expo, Axiom, Sentry DSN</span></div>
+    </div>
+  </div>
+
+  <!-- TÂCHES EN ATTENTE -->
+  <div class="section-title">TÂCHES EN ATTENTE — À COMPLÉTER</div>
+  <div class="pending-block">
+    <div class="pending-title">⚠ 7 TÂCHES BLOQUANTES AVANT DE CLORE P0</div>
+
+    <div class="pending-item">
+      <span class="pending-id">P0-06</span>
+      <div class="pending-text">
+        <strong>SonarCloud — non intégré</strong><br>
+        Analyse qualité + sécurité sur chaque PR absente. Gratuit pour repo public. Nécessite SONAR_TOKEN dans les secrets GitHub Actions. Bloque aussi P0-07.
+      </div>
+    </div>
+    <div class="pending-item">
+      <span class="pending-id">P0-07</span>
+      <div class="pending-text">
+        <strong>Secrets GitHub Actions — non configurés</strong><br>
+        SUPABASE_URL, RAILWAY_TOKEN, EAS_TOKEN, SONAR_TOKEN non ajoutés dans Settings → Secrets du repo. Les workflows qui en ont besoin échoueront silencieusement.
+      </div>
+    </div>
+    <div class="pending-item">
+      <span class="pending-id">P0-08</span>
+      <div class="pending-text">
+        <strong>App Expo — non créée</strong><br>
+        <code>apps/mobile/</code> est vide. Expo SDK 51+, Managed Workflow. Commande : <code>npx create-expo-app apps/mobile</code>. Décision : reporter à P1 ou garder en P0 ? À trancher.
+      </div>
+    </div>
+    <div class="pending-item">
+      <span class="pending-id">P0-09</span>
+      <div class="pending-text">
+        <strong>Expo Router — non configuré</strong><br>
+        Dépend de P0-08. File-based routing : <code>app/(tabs)/index</code>, <code>app/auth/login</code>. Même logique que le futur front web.
+      </div>
+    </div>
+    <div class="pending-item">
+      <span class="pending-id">P0-10</span>
+      <div class="pending-text">
+        <strong>NativeWind — non installé</strong><br>
+        Dépend de P0-08. Tailwind CSS sur React Native. Uniformise le styling avec le futur front web.
+      </div>
+    </div>
+    <div class="pending-item">
+      <span class="pending-id">P0-11</span>
+      <div class="pending-text">
+        <strong>Émulateur Android / Expo Go — non testé</strong><br>
+        Dépend de P0-08–10. Validation que l'app boot sur émulateur Android via Expo Go + hot reload fonctionnel.
+      </div>
+    </div>
+    <div class="pending-item">
+      <span class="pending-id">P0-16</span>
+      <div class="pending-text">
+        <strong>Axiom — Pino tourne mais non connecté</strong><br>
+        <code>pino-axiom</code> transport non configuré. Logs JSON produits localement mais non envoyés vers Axiom. Nécessite AXIOM_DATASET + AXIOM_TOKEN. 50GB/mois gratuit.
+      </div>
+    </div>
+    <div class="pending-item">
+      <span class="pending-id">P0-17</span>
+      <div class="pending-text">
+        <strong>Sentry DSN — vide, rien n'est envoyé</strong><br>
+        <code>@sentry/nestjs</code> installé et initialisé dans <code>instrument.ts</code> avec <code>enabled: !!process.env.SENTRY_DSN</code> — désactivé car SENTRY_DSN vide dans <code>.env</code>. Créer le projet sur sentry.io + renseigner le DSN.
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉTAT COMPLET DES TÂCHES P0 -->
+  <div class="section-title">ÉTAT COMPLET — TOUTES LES TÂCHES P0</div>
+  <div class="task-status-grid">
+
+    <!-- Monorepo & Tooling -->
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">Monorepo Turborepo</div><div class="task-label-detail">apps/mobile, apps/api, packages/shared</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-01</span>
+    </div>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">TypeScript strict partagé</div><div class="task-label-detail">packages/tsconfig — base/node/react</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-02</span>
+    </div>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">ESLint + Prettier + Husky + lint-staged</div><div class="task-label-detail">--max-warnings=0, pre-commit bloquant</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-03</span>
+    </div>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">Git + GitHub initialisé</div><div class="task-label-detail">Stratégie branches à définir en P1</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-04</span>
+    </div>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">GitHub Actions : lint + tests sur chaque PR</div><div class="task-label-detail">turborepo run lint typecheck test</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-05</span>
+    </div>
+    <div class="task-status-item" style="border-left:2px solid var(--orange)">
+      <span class="task-check">❌</span>
+      <div class="task-label"><div class="task-label-text">SonarCloud</div><div class="task-label-detail">Non intégré — SONAR_TOKEN manquant</div></div>
+      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-06</span>
+    </div>
+    <div class="task-status-item" style="border-left:2px solid var(--orange)">
+      <span class="task-check">❌</span>
+      <div class="task-label"><div class="task-label-text">Secrets GitHub Actions</div><div class="task-label-detail">Non configurés dans le repo</div></div>
+      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-07</span>
+    </div>
+    <div class="task-status-item" style="border-left:2px solid var(--orange)">
+      <span class="task-check">❌</span>
+      <div class="task-label"><div class="task-label-text">App Expo SDK 51+ Managed</div><div class="task-label-detail">apps/mobile/ vide</div></div>
+      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-08</span>
+    </div>
+    <div class="task-status-item" style="border-left:2px solid var(--orange)">
+      <span class="task-check">❌</span>
+      <div class="task-label"><div class="task-label-text">Expo Router</div><div class="task-label-detail">Dépend de P0-08</div></div>
+      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-09</span>
+    </div>
+    <div class="task-status-item" style="border-left:2px solid var(--orange)">
+      <span class="task-check">❌</span>
+      <div class="task-label"><div class="task-label-text">NativeWind</div><div class="task-label-detail">Dépend de P0-08</div></div>
+      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-10</span>
+    </div>
+    <div class="task-status-item" style="border-left:2px solid var(--orange)">
+      <span class="task-check">❌</span>
+      <div class="task-label"><div class="task-label-text">Test émulateur Android / Expo Go</div><div class="task-label-detail">Dépend de P0-08–10</div></div>
+      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-11</span>
+    </div>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">NestJS créé et fonctionnel</div><div class="task-label-detail">Structure modulaire : auth/, foods/, diary/</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-12</span>
+    </div>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">Prisma 7 + PostgreSQL</div><div class="task-label-detail">Docker local (pas Supabase), schema vide</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-13</span>
+    </div>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">Docker Compose local</div><div class="task-label-detail">postgres:18-alpine + redis:8-alpine, healthchecks</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-14</span>
+    </div>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">nestjs-pino 4.6.0</div><div class="task-label-detail">JSON structuré, pino-pretty en dev</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-15</span>
+    </div>
+    <div class="task-status-item" style="border-left:2px solid var(--orange)">
+      <span class="task-check">❌</span>
+      <div class="task-label"><div class="task-label-text">Pino → Axiom</div><div class="task-label-detail">pino-axiom non configuré, logs non envoyés</div></div>
+      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-16</span>
+    </div>
+    <div class="task-status-item" style="border-left:2px solid var(--orange)">
+      <span class="task-check">⚠️</span>
+      <div class="task-label"><div class="task-label-text">Sentry NestJS</div><div class="task-label-detail">Installé + initialisé, DSN vide → désactivé</div></div>
+      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-17</span>
+    </div>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">Env vars + validation Zod au boot</div><div class="task-label-detail">ConfigModule + validateEnv + z.prettifyError</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-18</span>
+    </div>
+
+  </div>
 
   <!-- STRUCTURE -->
   <div class="tree-section">
@@ -399,8 +645,8 @@
       <div class="tree-indent-1">
         <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">apps/</span><span class="tree-comment">— applications</span></div>
         <div class="tree-indent-2">
-          <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">api/</span><span class="tree-badge badge-green" style="color:var(--green);border-color:var(--green);background:#4ADE8010;">@cooked/api</span></div>
-          <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">mobile/</span><span class="tree-badge" style="color:var(--muted);border-color:var(--muted);">à venir P1</span></div>
+          <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">api/</span><span class="tree-badge badge-green" style="color:var(--green);border-color:var(--green);background:#4ADE8010;">@cooked/api ✓</span></div>
+          <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">mobile/</span><span class="tree-badge badge-orange" style="color:var(--orange);border-color:var(--orange);background:#FB923C10;">VIDE — P0-08 en attente</span></div>
           <div class="tree-line"><span class="tree-icon">📁</span><span class="tree-name dir">web/</span><span class="tree-badge" style="color:var(--muted);border-color:var(--muted);">à venir P8</span></div>
         </div>
 
@@ -419,15 +665,15 @@
 
         <div style="margin-top:6px">
           <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">turbo.json</span><span class="tree-comment">— pipeline build/dev/lint/test/typecheck</span></div>
-          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">pnpm-workspace.yaml</span><span class="tree-comment">— déclaration workspaces + onlyBuiltDeps</span></div>
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">pnpm-workspace.yaml</span><span class="tree-comment">— workspaces + ignoredBuiltDependencies</span></div>
           <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">eslint.config.mjs</span><span class="tree-comment">— ESLint v10 flat config racine</span></div>
-          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">.prettierrc</span><span class="tree-comment">— config Prettier (endOfLine: lf)</span></div>
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">.prettierrc</span><span class="tree-comment">— endOfLine: lf (critique WSL2/Windows)</span></div>
           <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">commitlint.config.js</span><span class="tree-comment">— validation messages de commit</span></div>
           <div class="tree-line"><span class="tree-icon">🐳</span><span class="tree-name docker">docker-compose.yml</span><span class="tree-comment">— postgres:18 + redis:8</span></div>
           <div class="tree-line"><span class="tree-icon">🔒</span><span class="tree-name env">.env</span><span class="tree-comment">— variables d'env (gitignored)</span></div>
-          <div class="tree-line"><span class="tree-icon">📋</span><span class="tree-name config">.env.template</span><span class="tree-comment">— template commité pour les collègues</span></div>
-          <div class="tree-line"><span class="tree-icon">🚫</span><span class="tree-name git">.gitignore</span><span class="tree-comment">— node_modules, dist, .env, .turbo…</span></div>
-          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">.nvmrc</span><span class="tree-comment">— Node 22 (fnm auto-switch)</span></div>
+          <div class="tree-line"><span class="tree-icon">📋</span><span class="tree-name config">.env.template</span><span class="tree-comment">— template commité</span></div>
+          <div class="tree-line"><span class="tree-icon">🚫</span><span class="tree-name git">.gitignore</span><span class="tree-comment">— node_modules, dist, .env, .turbo, *:Zone.Identifier</span></div>
+          <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">.nvmrc</span><span class="tree-comment">— "24" (Node 24.14 LTS via fnm)</span></div>
           <div class="tree-line"><span class="tree-icon">⚙</span><span class="tree-name config">.npmrc</span><span class="tree-comment">— shamefully-hoist=false, link-workspace-packages=true</span></div>
         </div>
       </div>
@@ -436,9 +682,9 @@
 
   <!-- OUTILS INSTALLÉS -->
   <div class="section-title">OUTILS INSTALLÉS — WORKSPACE ROOT</div>
-  <div class="tools-grid" style="margin-bottom:40px">
+  <div class="tools-grid">
 
-    <div class="tool-card" style="--accent:var(--cyan)">
+    <div class="tool-card">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan)"></div>
       <div class="tool-header">
         <span class="tool-name c-cyan">Turborepo</span>
@@ -457,19 +703,19 @@
         <span class="tool-version">10.30.3</span>
       </div>
       <div class="tool-role">PACKAGE MANAGER</div>
-      <div class="tool-desc">Workspaces natifs, store global partagé, isolation stricte des dépendances. <strong>Security by default</strong> : scripts postinstall bloqués sauf approbation explicite.</div>
+      <div class="tool-desc">Workspaces natifs, store global partagé, isolation stricte des dépendances. <strong>Security by default</strong> : scripts postinstall bloqués sauf approbation explicite via <code>ignoredBuiltDependencies</code>.</div>
       <span class="tool-tag" style="color:var(--green);border-color:var(--green)">workspace:*</span>
-      <span class="tool-tag" style="color:var(--green);border-color:var(--green)">approve-builds</span>
+      <span class="tool-tag" style="color:var(--green);border-color:var(--green)">ignoredBuiltDeps</span>
     </div>
 
     <div class="tool-card">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--purple)"></div>
       <div class="tool-header">
         <span class="tool-name c-purple">ESLint</span>
-        <span class="tool-version">v10 (flat config)</span>
+        <span class="tool-version">v10.0.2</span>
       </div>
-      <div class="tool-role">LINTER — FORMAT FLAT CONFIG OBLIGATOIRE</div>
-      <div class="tool-desc">v10 supprime définitivement le format <code>.eslintrc</code>. Config via <code>eslint.config.mjs</code> uniquement. Utilise le package unifié <code>typescript-eslint</code>.</div>
+      <div class="tool-role">LINTER — FLAT CONFIG OBLIGATOIRE</div>
+      <div class="tool-desc">v10 supprime définitivement <code>.eslintrc</code>. Config via <code>eslint.config.mjs</code> uniquement. Config CLI NestJS conservée (<code>recommendedTypeChecked</code> + <code>projectService</code>), plus complète que la config de base proposée.</div>
       <span class="tool-tag" style="color:var(--red);border-color:var(--red)">⚠ breaking v10</span>
     </div>
 
@@ -477,10 +723,10 @@
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--pink)"></div>
       <div class="tool-header">
         <span class="tool-name c-pink">Prettier</span>
-        <span class="tool-version">latest</span>
+        <span class="tool-version">3.8.1</span>
       </div>
       <div class="tool-role">FORMATEUR DE CODE</div>
-      <div class="tool-desc">Format uniforme sur tout le codebase. <code>endOfLine: lf</code> critique en environnement Windows/WSL2 mixte. <code>eslint-config-prettier</code> évite les conflits ESLint.</div>
+      <div class="tool-desc">Format uniforme. <code>endOfLine: lf</code> critique en WSL2/Windows mixte. <code>eslint-config-prettier</code> évite les conflits. Ne jamais ajouter <code>"prettier/prettier": ["error", { endOfLine: "auto" }]</code> dans ESLint — écrase <code>.prettierrc</code>.</div>
       <span class="tool-tag" style="color:var(--pink);border-color:var(--pink)">eol: lf</span>
     </div>
 
@@ -488,10 +734,10 @@
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange)"></div>
       <div class="tool-header">
         <span class="tool-name c-orange">Husky</span>
-        <span class="tool-version">9.x</span>
+        <span class="tool-version">9.1.7</span>
       </div>
       <div class="tool-role">GIT HOOKS</div>
-      <div class="tool-desc">Script <code>prepare</code> auto-exécuté après <code>pnpm install</code> = hooks installés sur toutes les machines. Deux hooks : <code>pre-commit</code> (lint-staged) + <code>commit-msg</code> (commitlint).</div>
+      <div class="tool-desc">Script <code>prepare</code> auto-exécuté après <code>pnpm install</code>. Deux hooks : <code>pre-commit</code> (lint-staged) + <code>commit-msg</code> (commitlint).</div>
       <span class="tool-tag" style="color:var(--orange);border-color:var(--orange)">pre-commit</span>
       <span class="tool-tag" style="color:var(--orange);border-color:var(--orange)">commit-msg</span>
     </div>
@@ -500,10 +746,10 @@
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--yellow)"></div>
       <div class="tool-header">
         <span class="tool-name c-yellow">commitlint</span>
-        <span class="tool-version">latest</span>
+        <span class="tool-version">20.4.3</span>
       </div>
       <div class="tool-role">VALIDATION MESSAGES COMMIT</div>
-      <div class="tool-desc">Enforce la convention <code>type(scope): description</code>. Types autorisés : feat, fix, chore, docs, style, refactor, test, perf, ci, build, revert. Subject en minuscules, max 100 chars.</div>
+      <div class="tool-desc">Enforce <code>type(scope): description</code>. Types : feat, fix, chore, docs, style, refactor, test, perf, ci, build, revert. Subject en minuscules, max 100 chars.</div>
       <span class="tool-tag" style="color:var(--yellow);border-color:var(--yellow)">conventional commits</span>
     </div>
 
@@ -518,14 +764,14 @@
       <div style="font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:12px">BASE DE DONNÉES</div>
       <div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:2;color:var(--dim)">
         <div><span style="color:var(--muted)">image    </span><span style="color:var(--green)">postgres:18-alpine</span></div>
+        <div><span style="color:var(--muted)">container</span><span>cooked_postgres</span></div>
         <div><span style="color:var(--muted)">port     </span><span>5432</span></div>
         <div><span style="color:var(--muted)">user     </span><span>cooked</span></div>
+        <div><span style="color:var(--muted)">pass     </span><span>cooked_dev</span></div>
         <div><span style="color:var(--muted)">db       </span><span>cooked_db</span></div>
         <div><span style="color:var(--muted)">volume   </span><span>cooked_postgres_data</span></div>
         <div><span style="color:var(--muted)">health   </span><span style="color:var(--green)">pg_isready ✓</span></div>
-      </div>
-      <div style="margin-top:12px;padding:8px;background:#38BDF808;border:1px solid #38BDF820;font-size:11px;color:var(--dim)">
-        ⚠ PostgreSQL 18 potentiellement en beta — surveiller pour la prod
+        <div><span style="color:var(--muted)">version  </span><span style="color:var(--green)">18.3 GA — confirmé SELECT version()</span></div>
       </div>
     </div>
 
@@ -534,6 +780,7 @@
       <div style="font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:12px">CACHE DISTRIBUÉ</div>
       <div style="font-family:'JetBrains Mono',monospace;font-size:11px;line-height:2;color:var(--dim)">
         <div><span style="color:var(--muted)">image    </span><span style="color:var(--green)">redis:8-alpine</span></div>
+        <div><span style="color:var(--muted)">container</span><span>cooked_redis</span></div>
         <div><span style="color:var(--muted)">port     </span><span>6379</span></div>
         <div><span style="color:var(--muted)">password </span><span>cooked_dev</span></div>
         <div><span style="color:var(--muted)">persist  </span><span>appendonly yes (AOF)</span></div>
@@ -541,7 +788,7 @@
         <div><span style="color:var(--muted)">health   </span><span style="color:var(--green)">redis-cli ping ✓</span></div>
       </div>
       <div style="margin-top:12px;padding:8px;background:#4ADE8008;border:1px solid #4ADE8020;font-size:11px;color:var(--dim)">
-        AOF = données persistées entre redémarrages (rejoue le log au boot)
+        AOF = données persistées entre redémarrages. Chaque opération d'écriture est loguée, rejoué au boot.
       </div>
     </div>
 
@@ -564,7 +811,7 @@
     <div class="decision-row">
       <div class="decision-cell"><span class="decision-subject">OS dev</span></div>
       <div class="decision-cell decision-choice">WSL2 Ubuntu 24.04</div>
-      <div class="decision-cell decision-why">Docker tourne déjà en Linux en backend WSL2. Husky, scripts shell, Metro bundler fonctionnent sans adaptation. Parité avec CI GitHub Actions (Ubuntu).</div>
+      <div class="decision-cell decision-why">Docker tourne en Linux natif. Husky, scripts shell, Metro bundler fonctionnent sans adaptation. Parité avec CI GitHub Actions (Ubuntu).</div>
     </div>
     <div class="decision-row">
       <div class="decision-cell"><span class="decision-subject">Fichiers projet</span></div>
@@ -573,23 +820,37 @@
     </div>
     <div class="decision-row">
       <div class="decision-cell"><span class="decision-subject">Node version</span></div>
-      <div class="decision-cell decision-choice">Node 22 LTS via fnm</div>
-      <div class="decision-cell decision-why">Node 22 est LTS depuis oct 2024. fnm supporte .nvmrc nativement + 40x plus rapide que nvm. Auto-switch avec --use-on-cd.</div>
+      <div class="decision-cell decision-choice">Node 24.14 LTS via fnm</div>
+      <div class="decision-cell decision-why">Node 24 LTS actif. fnm supporte .nvmrc nativement + 40x plus rapide que nvm. Auto-switch avec --use-on-cd. .nvmrc contient "24".</div>
     </div>
     <div class="decision-row">
       <div class="decision-cell"><span class="decision-subject">ESLint config</span></div>
       <div class="decision-cell decision-choice">Flat config (eslint.config.mjs)</div>
-      <div class="decision-cell decision-why">ESLint v10 (fév. 2026) supprime définitivement .eslintrc. Pas de choix. Le package typescript-eslint unifie parser + plugin.</div>
+      <div class="decision-cell decision-why">ESLint v10 supprime définitivement .eslintrc. Config CLI NestJS conservée (recommendedTypeChecked + projectService) — plus complète que la config de base.</div>
     </div>
     <div class="decision-row">
       <div class="decision-cell"><span class="decision-subject">BDD locale vs cloud</span></div>
       <div class="decision-cell decision-choice">Docker local en dev, Supabase uniquement en staging/prod</div>
-      <div class="decision-cell decision-why">Travail offline possible. Migrations rapides et destructives (prisma migrate reset) sans risquer une BDD partagée. Latence réseau éliminée.</div>
+      <div class="decision-cell decision-why">Travail offline possible. Migrations rapides et destructives sans risquer une BDD partagée. Latence réseau éliminée en dev.</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-cell"><span class="decision-subject">Test runner</span></div>
+      <div class="decision-cell decision-choice">Vitest 3.2.4 + unplugin-swc</div>
+      <div class="decision-cell decision-why">esbuild (défaut Vitest) ne supporte pas emitDecoratorMetadata → injection NestJS silencieusement cassée. SWC supporte les décorateurs. module: es6 dans swc.vite().</div>
     </div>
     <div class="decision-row">
       <div class="decision-cell"><span class="decision-subject">Commits</span></div>
       <div class="decision-cell decision-choice">Conventional Commits (commitlint)</div>
-      <div class="decision-cell decision-why">Format type(scope): desc. Permet génération automatique de changelog. Historique Git = documentation lisible. Bloquant via hook commit-msg.</div>
+      <div class="decision-cell decision-why">Format type(scope): desc. Historique Git lisible, génération de changelog automatique possible. Bloquant via hook commit-msg.</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-cell"><span class="decision-subject">Stratégie de branches</span></div>
+      <div class="decision-cell decision-choice">GitLab Flow — environment branches</div>
+      <div class="decision-cell decision-why">
+        Flux unidirectionnel : <code>feature/* → main → staging → production</code>. Chaque branche permanente représente un environnement réel. Toutes protégées — merge uniquement via PR + CI verte, jamais de commit direct.<br><br>
+        <span style="color:var(--muted)">Gitflow écarté : back-merges release→develop trop verbeux. GitHub Flow écarté : pas conçu pour multi-environnements. Démarrage progressif : seule <code>main</code> existe pour l'instant, <code>staging</code> et <code>production</code> ajoutées en P8 quand les environnements existent.</span><br><br>
+        <span style="color:var(--cyan);font-size:10px">Versioning : tags SemVer sur <code>production</code> uniquement — déclenche EAS Build (P8-03). Hotfix : branche depuis <code>production</code>, PR sur <code>production</code>, report obligatoire sur <code>main</code> via PR séparée.</span>
+      </div>
     </div>
   </div>
 
@@ -634,7 +895,7 @@
       </div>
     </div>
     <div style="margin-top:12px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">
-      Si une étape échoue → le commit est annulé, les fichiers sont restaurés dans leur état original (stash automatique lint-staged)
+      Si une étape échoue → le commit est annulé. lint-staged stash les fichiers non stagés avant d'exécuter, les restaure après.
     </div>
   </div>
 
@@ -654,37 +915,47 @@
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>pnpm Ignored build scripts (@nestjs/core, esbuild)</strong> — Comportement intentionnel de pnpm 10 (security by default). Fix : <code>pnpm approve-builds</code> → ajoute <code>onlyBuiltDependencies</code> dans pnpm-workspace.yaml.</div>
+      <div class="issue-text"><strong>pnpm Ignored build scripts (@nestjs/core, esbuild)</strong> — Comportement intentionnel de pnpm 10 (security by default). Fix : ajout dans <code>ignoredBuiltDependencies</code> dans pnpm-workspace.yaml. Attention : <code>ignoredBuiltDependencies</code> = blacklist (bloque ces packages) ≠ <code>onlyBuiltDependencies</code> = whitelist (autorise seulement ceux-là).</div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>ESLint ENOENT au commit</strong> — ESLint non installé au workspace root + config eslintrc incompatible avec ESLint v10. Fix : install + flat config. Config CLI NestJS conservée (<code>recommendedTypeChecked</code> + <code>projectService</code>), plus sophistiquée que la config proposée.</div>
+      <div class="issue-text"><strong>ESLint ENOENT au commit</strong> — ESLint non installé au workspace root + config eslintrc incompatible avec ESLint v10. Fix : install + flat config. Config CLI NestJS conservée (<code>recommendedTypeChecked</code> + <code>projectService</code>).</div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>PostgreSQL 18 — version confirmée GA</strong> — <code>SELECT version()</code> retourne <code>PostgreSQL 18.3 on x86_64-pc-linux-musl</code>. Version stable. Commande correcte : <code>docker exec cooked_postgres psql -U cooked -d cooked_db -c "SELECT version();"</code></div>
+      <div class="issue-text"><strong>PostgreSQL 18 — version confirmée GA</strong> — <code>SELECT version()</code> retourne <code>PostgreSQL 18.3 on x86_64-pc-linux-musl</code>. Commande : <code>docker exec cooked_postgres psql -U cooked -d cooked_db -c "SELECT version();"</code></div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>console.log bloqué par ESLint (no-console + --max-warnings=0)</strong> — Remplacé par <code>Logger</code> de <code>@nestjs/common</code>. Avantage : quand Pino est intégré via <code>app.useLogger()</code>, tout le code NestJS bénéficie de Pino sans modification.</div>
+      <div class="issue-text"><strong>console.log bloqué par ESLint (no-console + --max-warnings=0)</strong> — Remplacé par <code>Logger</code> de <code>@nestjs/common</code>. Quand Pino est intégré via <code>app.useLogger()</code>, tout le code NestJS bénéficie de Pino sans modification.</div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>Vitest + NestJS : decorators non résolus (emitDecoratorMetadata)</strong> — Vitest utilise esbuild qui ne supporte pas <code>emitDecoratorMetadata</code>. Fix : <code>unplugin-swc</code> + <code>@swc/core</code> comme transformateur. SWC supporte les décorateurs NestJS. Config dans <code>vitest.config.ts</code> avec <code>swc.vite({ module: { type: 'es6' } })</code>.</div>
+      <div class="issue-text"><strong>Vitest + NestJS : decorators non résolus</strong> — esbuild ne supporte pas <code>emitDecoratorMetadata</code>. Fix : <code>unplugin-swc</code> + <code>@swc/core</code>, <code>module: { type: 'es6' }</code> dans <code>swc.vite()</code>.</div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>Prisma 7 — breaking change : <code>url</code> supprimé de schema.prisma</strong> — En Prisma 7, la datasource URL est déplacée dans <code>prisma.config.ts</code>. Utiliser le helper <code>env()</code> importé depuis <code>prisma/config</code> plutôt que <code>process.env</code> (évite le problème de types Node hors <code>src/</code>). Commandes <code>migrate dev</code> et <code>db push</code> ne lancent plus <code>prisma generate</code> automatiquement — doit être lancé explicitement.</div>
+      <div class="issue-text"><strong>Prisma 7 — breaking change : <code>url</code> supprimé de schema.prisma</strong> — Déplacé dans <code>prisma.config.ts</code>. Utiliser <code>env()</code> importé depuis <code>prisma/config</code>. Commandes <code>migrate dev</code> et <code>db push</code> ne lancent plus <code>prisma generate</code> automatiquement. Import client : <code>from '../generated/prisma'</code> (pas <code>@prisma/client</code>).</div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">✅</div>
       <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
-      <div class="issue-text"><strong>Zod v4 — breaking change : <code>error.errors</code> supprimé</strong> — Dans Zod v4, <code>ZodError.errors</code> est remplacé par <code>ZodError.issues</code>. <code>z.string().url()</code> est remplacé par <code>z.url()</code> top-level. Utiliser <code>z.prettifyError(error)</code> pour formatter les erreurs (nouvelle API v4). <code>z.string().startsWith()</code> remplacé par <code>.refine()</code>.</div>
+      <div class="issue-text"><strong>Zod v4 — breaking change : <code>error.errors</code> supprimé</strong> — Remplacé par <code>error.issues</code>. <code>z.string().url()</code> → <code>z.url()</code> top-level. <code>z.prettifyError(error)</code> pour formatter. <code>z.string().startsWith()</code> → <code>.refine()</code>.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>prisma generate échoue en CI sans DATABASE_URL</strong> — <code>env()</code> de Prisma 7 throw si la variable est absente, même pour <code>prisma generate</code> qui n'a pas besoin de connexion. Fix : variables fictives dans <code>env:</code> du job GitHub Actions.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">⚠️</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>vitest.e2e.config.ts utilisait <code>module: { type: 'commonjs' }</code></strong> — Incohérent avec <code>vitest.config.ts</code> (es6) et <code>.swcrc</code> (es6). Corrigé : <code>swc.vite({ module: { type: 'es6' } })</code> — les deux configs de test utilisent maintenant le même module type.</div>
     </div>
     <div class="issue-row">
       <div class="issue-icon">ℹ️</div>
@@ -693,9 +964,9 @@
     </div>
   </div>
 
-  <!-- ÉTAT ACTUEL -->
-  <div class="section-title" style="margin-top:40px">ÉTAT ACTUEL P0</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border2);margin-bottom:40px">
+  <!-- ÉTAT ACTUEL SYNTHÈSE -->
+  <div class="section-title" style="margin-top:40px">ÉTAT ACTUEL P0 — SYNTHÈSE</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border2);margin-bottom:24px">
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">MONOREPO</div>
       <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
@@ -704,7 +975,7 @@
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">NESTJS API</div>
       <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
-      <div style="font-size:11px;color:var(--dim)">Scaffold + tests unitaires Vitest</div>
+      <div style="font-size:11px;color:var(--dim)">Scaffold + Pino JSON + Sentry (DSN vide)</div>
     </div>
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">DOCKER</div>
@@ -718,22 +989,47 @@
     </div>
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">PRISMA + ENV</div>
-      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--yellow)">~</div>
-      <div style="font-size:11px;color:var(--dim)">Prisma 7 + Zod validation — en cours</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
+      <div style="font-size:11px;color:var(--dim)">Prisma 7 + Zod v4 validation</div>
     </div>
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">CI/CD</div>
-      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--muted)">○</div>
-      <div style="font-size:11px;color:var(--dim)">GitHub Actions — à faire</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
+      <div style="font-size:11px;color:var(--dim)">GitHub Actions — lint/typecheck/test</div>
     </div>
-    <div style="background:var(--surface);padding:16px 20px">
-      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">OBSERVABILITÉ</div>
-      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--muted)">○</div>
-      <div style="font-size:11px;color:var(--dim)">Pino + Sentry — à faire</div>
+    <div style="background:var(--surface);padding:16px 20px;border:1px solid var(--orange)">
+      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">SONARCLOUD</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--orange)">✗</div>
+      <div style="font-size:11px;color:var(--dim)">Non intégré — SONAR_TOKEN manquant</div>
+    </div>
+    <div style="background:var(--surface);padding:16px 20px;border:1px solid var(--orange)">
+      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">EXPO MOBILE</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--orange)">✗</div>
+      <div style="font-size:11px;color:var(--dim)">apps/mobile/ vide — P0-08 à P0-11</div>
+    </div>
+    <div style="background:var(--surface);padding:16px 20px;border:1px solid var(--orange)">
+      <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">OBSERVABILITÉ CLOUD</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--orange)">⚠</div>
+      <div style="font-size:11px;color:var(--dim)">Pino local OK — Axiom non connecté, Sentry DSN vide</div>
     </div>
   </div>
 
-  <footer>COOKED — DOCUMENTATION P0 — GÉNÉRÉE MARS 2026 — v1.3</footer>
+  <!-- STATUT FINAL -->
+  <div style="background:var(--surface);border:1px solid var(--orange);padding:20px 24px;margin-bottom:40px;display:flex;align-items:center;gap:16px">
+    <div style="font-size:32px">⏳</div>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--orange);letter-spacing:2px">P0 EN COURS — 11/18 TÂCHES (61%)</div>
+      <div style="font-size:12px;color:var(--dim);margin-top:4px">
+        Backend et tooling fonctionnels. Reste : <strong style="color:var(--text)">SonarCloud (P0-06)</strong>, 
+        <strong style="color:var(--text)">secrets GitHub (P0-07)</strong>, 
+        <strong style="color:var(--text)">setup Expo complet (P0-08 à P0-11)</strong>, 
+        <strong style="color:var(--text)">Axiom (P0-16)</strong> et 
+        <strong style="color:var(--text)">Sentry DSN (P0-17)</strong>.
+      </div>
+    </div>
+  </div>
+
+  <footer>COOKED — DOCUMENTATION P0 — MARS 2026 — v2.1</footer>
 
 </div>
 </body>
