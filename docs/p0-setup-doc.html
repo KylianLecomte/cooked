@@ -455,7 +455,7 @@
       <span class="badge badge-green">✓ PostgreSQL 18.3 GA</span>
       <span class="badge badge-cyan">✓ ESLint v10 + Vitest + SWC</span>
       <span class="badge badge-yellow">✓ Prisma 7 + Zod v4</span>
-      <span class="badge badge-orange">⚠ P0 EN COURS — 11/18 tâches</span>
+      <span class="badge badge-orange">⚠ P0 EN COURS — 16/18 tâches</span>
     </div>
   </header>
 
@@ -464,69 +464,27 @@
   <div class="progress-section">
     <div class="progress-header">
       <span class="progress-title">TÂCHES COMPLÉTÉES</span>
-      <span class="progress-count">11 / 18</span>
+      <span class="progress-count">16 / 18</span>
     </div>
     <div class="progress-track">
-      <div class="progress-fill"></div>
+      <div class="progress-fill" style="width:89%"></div>
     </div>
     <div class="progress-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span style="color:var(--dim)">Terminé (11) : monorepo, NestJS, Docker, Pino, Prisma, Zod, CI</span></div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div><span style="color:var(--dim)">En attente (7) : SonarCloud, secrets CI, Expo, Axiom, Sentry DSN</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span style="color:var(--dim)">Terminé (16) : monorepo, NestJS, Docker, Pino, Prisma, Zod, CI, SonarCloud, Expo SDK 55, Expo Router, NativeWind v4</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div><span style="color:var(--dim)">En attente (2) : Axiom (P0-16), Sentry DSN (P0-17)</span></div>
     </div>
   </div>
 
   <!-- TÂCHES EN ATTENTE -->
   <div class="section-title">TÂCHES EN ATTENTE — À COMPLÉTER</div>
   <div class="pending-block">
-    <div class="pending-title">⚠ 7 TÂCHES BLOQUANTES AVANT DE CLORE P0</div>
+    <div class="pending-title">⚠ 2 TÂCHES RESTANTES AVANT DE CLORE P0</div>
 
-    <div class="pending-item">
-      <span class="pending-id">P0-06</span>
-      <div class="pending-text">
-        <strong>SonarCloud — non intégré</strong><br>
-        Analyse qualité + sécurité sur chaque PR absente. Gratuit pour repo public. Nécessite SONAR_TOKEN dans les secrets GitHub Actions. Bloque aussi P0-07.
-      </div>
-    </div>
-    <div class="pending-item">
-      <span class="pending-id">P0-07</span>
-      <div class="pending-text">
-        <strong>Secrets GitHub Actions — non configurés</strong><br>
-        SUPABASE_URL, RAILWAY_TOKEN, EAS_TOKEN, SONAR_TOKEN non ajoutés dans Settings → Secrets du repo. Les workflows qui en ont besoin échoueront silencieusement.
-      </div>
-    </div>
-    <div class="pending-item">
-      <span class="pending-id">P0-08</span>
-      <div class="pending-text">
-        <strong>App Expo — non créée</strong><br>
-        <code>apps/mobile/</code> est vide. Expo SDK 51+, Managed Workflow. Commande : <code>npx create-expo-app apps/mobile</code>. Décision : reporter à P1 ou garder en P0 ? À trancher.
-      </div>
-    </div>
-    <div class="pending-item">
-      <span class="pending-id">P0-09</span>
-      <div class="pending-text">
-        <strong>Expo Router — non configuré</strong><br>
-        Dépend de P0-08. File-based routing : <code>app/(tabs)/index</code>, <code>app/auth/login</code>. Même logique que le futur front web.
-      </div>
-    </div>
-    <div class="pending-item">
-      <span class="pending-id">P0-10</span>
-      <div class="pending-text">
-        <strong>NativeWind — non installé</strong><br>
-        Dépend de P0-08. Tailwind CSS sur React Native. Uniformise le styling avec le futur front web.
-      </div>
-    </div>
-    <div class="pending-item">
-      <span class="pending-id">P0-11</span>
-      <div class="pending-text">
-        <strong>Émulateur Android / Expo Go — non testé</strong><br>
-        Dépend de P0-08–10. Validation que l'app boot sur émulateur Android via Expo Go + hot reload fonctionnel.
-      </div>
-    </div>
     <div class="pending-item">
       <span class="pending-id">P0-16</span>
       <div class="pending-text">
         <strong>Axiom — Pino tourne mais non connecté</strong><br>
-        <code>pino-axiom</code> transport non configuré. Logs JSON produits localement mais non envoyés vers Axiom. Nécessite AXIOM_DATASET + AXIOM_TOKEN. 50GB/mois gratuit.
+        <code>pino-axiom</code> transport non configuré. Logs JSON produits localement mais non envoyés vers Axiom. Nécessite AXIOM_DATASET + AXIOM_TOKEN dans <code>.env</code> et dans les secrets GitHub Actions. 50GB/mois gratuit.
       </div>
     </div>
     <div class="pending-item">
@@ -568,35 +526,35 @@
       <div class="task-label"><div class="task-label-text done">GitHub Actions : lint + tests sur chaque PR</div><div class="task-label-detail">turborepo run lint typecheck test</div></div>
       <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-05</span>
     </div>
-    <div class="task-status-item" style="border-left:2px solid var(--orange)">
-      <span class="task-check">❌</span>
-      <div class="task-label"><div class="task-label-text">SonarCloud</div><div class="task-label-detail">Non intégré — SONAR_TOKEN manquant</div></div>
-      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-06</span>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">SonarCloud</div><div class="task-label-detail">sonarqube-scan-action@v7 — Automatic Analysis désactivé</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-06</span>
     </div>
-    <div class="task-status-item" style="border-left:2px solid var(--orange)">
-      <span class="task-check">❌</span>
-      <div class="task-label"><div class="task-label-text">Secrets GitHub Actions</div><div class="task-label-detail">Non configurés dans le repo</div></div>
-      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-07</span>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">Secrets GitHub Actions</div><div class="task-label-detail">SONAR_TOKEN ajouté — autres secrets ajoutés phase par phase</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-07</span>
     </div>
-    <div class="task-status-item" style="border-left:2px solid var(--orange)">
-      <span class="task-check">❌</span>
-      <div class="task-label"><div class="task-label-text">App Expo SDK 51+ Managed</div><div class="task-label-detail">apps/mobile/ vide</div></div>
-      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-08</span>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">App Expo SDK 55 Managed Workflow</div><div class="task-label-detail">apps/mobile/@cooked/mobile — SDK ~55.0.5 + RN 0.83.2</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-08</span>
     </div>
-    <div class="task-status-item" style="border-left:2px solid var(--orange)">
-      <span class="task-check">❌</span>
-      <div class="task-label"><div class="task-label-text">Expo Router</div><div class="task-label-detail">Dépend de P0-08</div></div>
-      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-09</span>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">Expo Router v55</div><div class="task-label-detail">app/_layout.tsx (Stack) + app/index.tsx — typedRoutes activé</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-09</span>
     </div>
-    <div class="task-status-item" style="border-left:2px solid var(--orange)">
-      <span class="task-check">❌</span>
-      <div class="task-label"><div class="task-label-text">NativeWind</div><div class="task-label-detail">Dépend de P0-08</div></div>
-      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-10</span>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">NativeWind v4 + tailwindcss v3</div><div class="task-label-detail">react-native-css-interop installé — className fonctionnel</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-10</span>
     </div>
-    <div class="task-status-item" style="border-left:2px solid var(--orange)">
-      <span class="task-check">❌</span>
-      <div class="task-label"><div class="task-label-text">Test émulateur Android / Expo Go</div><div class="task-label-detail">Dépend de P0-08–10</div></div>
-      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-11</span>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">Test Android via Expo Go APK SDK 55</div><div class="task-label-detail">Expo Go Play Store = SDK 54 — APK SDK 55 depuis expo.dev/go — tunnel WSL2</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-11</span>
     </div>
     <div class="task-status-item">
       <span class="task-check">✅</span>
@@ -999,13 +957,13 @@
     </div>
     <div style="background:var(--surface);padding:16px 20px;border:1px solid var(--orange)">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">SONARCLOUD</div>
-      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--orange)">✗</div>
-      <div style="font-size:11px;color:var(--dim)">Non intégré — SONAR_TOKEN manquant</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
+      <div style="font-size:11px;color:var(--dim)">sonarqube-scan-action@v7 — Automatic Analysis désactivé</div>
     </div>
     <div style="background:var(--surface);padding:16px 20px;border:1px solid var(--orange)">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">EXPO MOBILE</div>
-      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--orange)">✗</div>
-      <div style="font-size:11px;color:var(--dim)">apps/mobile/ vide — P0-08 à P0-11</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
+      <div style="font-size:11px;color:var(--dim)">SDK 55 + Expo Router + NativeWind v4 — testé sur Android</div>
     </div>
     <div style="background:var(--surface);padding:16px 20px;border:1px solid var(--orange)">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">OBSERVABILITÉ CLOUD</div>
@@ -1018,12 +976,10 @@
   <div style="background:var(--surface);border:1px solid var(--orange);padding:20px 24px;margin-bottom:40px;display:flex;align-items:center;gap:16px">
     <div style="font-size:32px">⏳</div>
     <div>
-      <div style="font-size:13px;font-weight:700;color:var(--orange);letter-spacing:2px">P0 EN COURS — 11/18 TÂCHES (61%)</div>
+      <div style="font-size:13px;font-weight:700;color:var(--orange);letter-spacing:2px">P0 EN COURS — 16/18 TÂCHES (89%)</div>
       <div style="font-size:12px;color:var(--dim);margin-top:4px">
-        Backend et tooling fonctionnels. Reste : <strong style="color:var(--text)">SonarCloud (P0-06)</strong>, 
-        <strong style="color:var(--text)">secrets GitHub (P0-07)</strong>, 
-        <strong style="color:var(--text)">setup Expo complet (P0-08 à P0-11)</strong>, 
-        <strong style="color:var(--text)">Axiom (P0-16)</strong> et 
+        Backend, tooling, CI/CD, SonarCloud et mobile fonctionnels. Reste :
+        <strong style="color:var(--text)">Axiom (P0-16)</strong> et
         <strong style="color:var(--text)">Sentry DSN (P0-17)</strong>.
       </div>
     </div>

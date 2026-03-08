@@ -6,12 +6,8 @@ import { z } from "zod";
 export const envSchema = z.object({
   // ── Serveur ──────────────────────────────────────────────────────────────
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
-
   PORT: z.string().regex(/^\d+$/, "PORT doit être un nombre").default("3000").transform(Number),
-  // .transform(Number) convertit la string "3000" en number 3000
-  // Les variables d'env sont toujours des strings, transform permet de les typer correctement
 
-  // ── Base de données ──────────────────────────────────────────────────────
   DATABASE_URL: z
     .url("DATABASE_URL doit être une URL valide")
     .refine(
@@ -19,9 +15,7 @@ export const envSchema = z.object({
       "DATABASE_URL doit commencer par postgresql://",
     ),
 
-  // ── Redis ────────────────────────────────────────────────────────────────
   REDIS_HOST: z.string().min(1, "REDIS_HOST est requis"),
-
   REDIS_PORT: z
     .string()
     .regex(/^\d+$/, "REDIS_PORT doit être un nombre")
@@ -29,11 +23,9 @@ export const envSchema = z.object({
     .transform(Number),
 
   REDIS_PASSWORD: z.string().min(1, "REDIS_PASSWORD est requis"),
-
-  // ── Sentry (optionnel en dev, requis en prod) ────────────────────────────
-  SENTRY_DSN: z.string().url("SENTRY_DSN doit être une URL valide").optional().or(z.literal("")),
-  // .or(z.literal("")) permet une string vide en dev
-  // En prod le DSN sera une URL valide
+  SENTRY_DSN: z.url("SENTRY_DSN doit être une URL valide").optional().or(z.literal("")),
+  AXIOM_DATASET: z.string().min(1).optional(),
+  AXIOM_TOKEN: z.string().min(1).optional(),
 });
 
 // Type TypeScript inféré automatiquement depuis le schema Zod

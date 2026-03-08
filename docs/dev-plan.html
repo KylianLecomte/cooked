@@ -278,18 +278,18 @@ const phases = [
 
 // State
 const checked = {
-  // P0 — Backend & tooling fait, mobile + observabilité cloud non fait
+  // P0 — 16/18 tâches complétées
   "p0-1":true,   // Monorepo Turborepo
   "p0-2":true,   // TypeScript strict partagé
   "p0-3":true,   // ESLint + Prettier + Husky + lint-staged
-  "p0-4":true,   // Git + GitHub (branching strategy à définir en P1)
-  "p0-5":true,   // GitHub Actions lint + typecheck + test
-  "p0-6":false,  // ❌ SonarCloud — non intégré
-  "p0-7":false,  // ❌ Secrets GitHub Actions — non configurés
-  "p0-8":false,  // ❌ Expo — non créé
-  "p0-9":false,  // ❌ Expo Router — non configuré
-  "p0-10":false, // ❌ NativeWind — non installé
-  "p0-11":false, // ❌ Émulateur Android — non testé
+  "p0-4":true,   // Git + GitHub
+  "p0-5":true,   // GitHub Actions lint + typecheck + test + coverage LCOV + SonarCloud
+  "p0-6":true,   // ✅ SonarCloud — sonarqube-scan-action@v7, Automatic Analysis désactivé
+  "p0-7":true,   // ✅ Secrets GitHub Actions — SONAR_TOKEN ajouté (autres: phase par phase)
+  "p0-8":true,   // ✅ Expo SDK 55 Managed Workflow — apps/mobile/@cooked/mobile
+  "p0-9":true,   // ✅ Expo Router v55 — app/_layout.tsx + app/index.tsx
+  "p0-10":true,  // ✅ NativeWind v4 + tailwindcss v3 + react-native-css-interop
+  "p0-11":true,  // ✅ Testé sur appareil Android via Expo Go APK SDK 55 (tunnel WSL2)
   "p0-12":true,  // NestJS créé et fonctionnel
   "p0-13":true,  // Prisma 7 + PostgreSQL (Docker local, pas Supabase)
   "p0-14":true,  // Docker Compose PostgreSQL + Redis
