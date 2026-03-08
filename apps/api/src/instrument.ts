@@ -1,9 +1,11 @@
+import * as dotenv from "dotenv";
 import * as Sentry from "@sentry/nestjs";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 // Ce fichier DOIT être importé en premier dans main.ts — avant tout autre import
 // Sentry instrumente les modules Node.js au chargement
 // Si NestJS est chargé avant, certaines intégrations (Prisma, HTTP) ne fonctionneront pas
+dotenv.config();
 
 Sentry.init({
   // Le DSN identifie ton projet Sentry — vide en dev si SENTRY_DSN non configuré
@@ -28,4 +30,6 @@ Sentry.init({
 
   // Ne pas envoyer d'events si pas de DSN configuré (dev sans compte Sentry)
   enabled: !!process.env["SENTRY_DSN"],
+
+  sendDefaultPii: true,
 });

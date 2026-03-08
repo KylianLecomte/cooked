@@ -27,4 +27,6 @@ async function bootstrap() {
   logger.log(`Environment: ${configService.get("NODE_ENV", { infer: true })}`);
 }
 
-bootstrap();
+bootstrap().catch((_: unknown) => {
+  process.exit(1);
+});
