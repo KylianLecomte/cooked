@@ -1,6 +1,11 @@
 import type { Params } from "nestjs-pino";
 import type pino from "pino";
-import { LoggerConfigOptions } from "./logger.type";
+
+export interface LoggerConfigOptions {
+  isDev: boolean;
+  axiomDataset?: string;
+  axiomToken?: string;
+}
 
 export function buildPinoConfig(options: LoggerConfigOptions): Params {
   const { isDev } = options;
