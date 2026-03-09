@@ -63,6 +63,58 @@ Aujourd'hui (solo, pas de prod réelle) : seule `main` existe. Les branches `sta
 - **GitHub Flow** : pas conçu pour multi-environnements, forcerait une migration mid-project
 - **Trunk-Based Development** : demande des feature flags et une maturité de test qu'on n'a pas encore besoin d'imposer
 
+## Architecture d'hébergement
+
+### Local (dev)
+
+```
+WSL2
+├── NestJS (pnpm dev)
+├── Docker : postgres:18-alpine  ←── Prisma (DATABASE_URL=postgresql://cooked:cooked_dev@localhost:5432/cooked_db)
+└── Docker : redis:8-alpine      ←── NestJS Cache (REDIS_URL=redis://:cooked_dev@localhost:6379)
+```
+
+### Staging / Production (Railway)
+
+```
+Railway
+├── Service NestJS      — déployé depuis GitHub, auto-deploy sur merge
+├── Service PostgreSQL  — managé Railway, DATABASE_URL injecté automatiquement
+└── Service Redis       — managé Railway, REDIS_URL injecté automatiquement
+```
+
+Tout au même endroit : un seul dashboard, variables d'env partagées entre services automatiquement, latence interne optimale (pas de réseau externe entre NestJS et sa BDD).
+
+### Note — Neon (alternative future pour PostgreSQL)
+
+**Neon** est un PostgreSQL serverless avec **database branching** : pour chaque PR, Neon crée automatiquement une copie isolée de la BDD de staging. Les migrations Prisma sont testées dessus, la branche est détruite après merge. Free tier : 10 GB, pas de pause.
+
+Pourquoi on ne l'utilise pas maintenant : la valeur réelle n'apparaît qu'en P7+ avec des migrations Prisma non triviales. Railway PostgreSQL suffit largement jusqu'à là. Migration vers Neon = juste changer `DATABASE_URL`. À reconsidérer quand les migrations deviennent un sujet.
+
+## Auth — Better Auth
+
+**Décision : Better Auth** — Supabase Auth retiré de la stack.
+
+### Pourquoi pas Supabase Auth
+
+Supabase Auth brille quand le client se connecte directement à la BDD via SDK Supabase avec Row Level Security. Dans notre architecture, toutes les requêtes passent par NestJS → Prisma. Le RLS n'apporte rien. L'intégration se réduirait à valider un JWT + synchroniser les users dans Prisma — sans aucune synergie réelle avec le reste de Supabase.
+
+### Pourquoi Supabase PostgreSQL est aussi retiré
+
+Supabase n'avait plus qu'un seul rôle : héberger PostgreSQL. Inconvénient concret sur le free tier : projet pausé après 1 semaine sans activité, relance manuelle requise. Avec Supabase Auth retiré, aucune raison de maintenir un provider séparé juste pour le Postgres quand Railway peut tout héberger au même endroit.
+
+### Pourquoi Better Auth
+
+- S'installe directement dans NestJS — aucun service externe
+- Users stockés dans **ta** table `users` Prisma — zéro synchronisation avec un provider tiers
+- `@better-auth/expo` pour le mobile
+- Open-source, zéro vendor lock-in, zéro pricing lié aux MAU
+- Cohérent architecturalement avec NestJS + Prisma
+
+### Pourquoi pas Clerk
+
+Clerk est valide (excellent support Expo, composants UI prêts à l'emploi) mais introduit un vendor externe pour quelque chose que Better Auth fait en interne. Devient payant au-delà de 10k MAU. Better Auth apporte plus de valeur pédagogique dans ce contexte.
+
 ## Phase actuelle : P1 — À DÉMARRER
 
 P0 terminée à 18/18 tâches. Voir dev-plan.html pour le plan complet P0→P8.
@@ -1182,15 +1234,17 @@ Points importants :
 
 ## Secrets GitHub Actions
 
-| Secret          | Ajouté | Phase |
-| --------------- | ------ | ----- |
-| `SONAR_TOKEN`   | ✅     | P0-06 |
-| `AXIOM_TOKEN`   | ✅     | P0-16 |
-| `AXIOM_DATASET` | ✅     | P0-16 |
-| `SENTRY_DSN`    | ✅     | P0-17 |
-| `SUPABASE_URL`  | ❌     | P1+   |
-| `RAILWAY_TOKEN` | ❌     | P8    |
-| `EAS_TOKEN`     | ❌     | P8    |
+| Secret               | Ajouté | Phase                                 |
+| -------------------- | ------ | ------------------------------------- |
+| `SONAR_TOKEN`        | ✅     | P0-06                                 |
+| `AXIOM_TOKEN`        | ✅     | P0-16                                 |
+| `AXIOM_DATASET`      | ✅     | P0-16                                 |
+| `SENTRY_DSN`         | ✅     | P0-17                                 |
+| `RAILWAY_TOKEN`      | ❌     | P8                                    |
+| `DATABASE_URL`       | ❌     | P1+ (Railway PostgreSQL staging/prod) |
+| `REDIS_URL`          | ❌     | P1+ (Railway Redis staging/prod)      |
+| `BETTER_AUTH_SECRET` | ❌     | P1+                                   |
+| `EAS_TOKEN`          | ❌     | P8                                    |
 
 Règle : on ajoute un secret uniquement quand le service correspondant est créé et configuré.
 
@@ -1309,7 +1363,7 @@ mais n'affecte pas l'app ni le hot reload.
 - Conventional Commits : feat/fix/chore/docs/style/refactor/test/perf/ci/build/revert
 - **subject-case: lower-case** — noms de techno en minuscules dans les messages de commit
 - `.env.template` (pas `.env.example`)
-- BDD locale = Docker en dev / Supabase = staging+prod uniquement
+- BDD locale = Docker en dev / Railway PostgreSQL = staging+prod uniquement
 - **Jamais `console.log`** dans NestJS → toujours `Logger` de `@nestjs/common`
 - `--max-warnings=0` ESLint — les warnings bloquent les commits
 - `instrument.ts` TOUJOURS premier import dans `main.ts`, avec `dotenv.config()` en tout premier

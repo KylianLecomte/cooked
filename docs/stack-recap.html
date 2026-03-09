@@ -58,9 +58,15 @@
       <span class="tag">CI/CD + Sonar</span><span class="tag">Marché Nantes ✓</span>
     </div>
     <div class="changelog">
-      <div class="changelog-title">CHANGELOG v2</div>
+      <div class="changelog-title">CHANGELOG v3</div>
       <div class="changelog-items">
+        <span class="cl-item" style="background:#4ADE8015;color:#4ADE80">expo-secure-store + AsyncStorage ← MMKV</span>
+        <span class="cl-item" style="background:#F472B615;color:#F472B6">+ TanStack Query v5 (mobile)</span>
+        <span class="cl-item" style="background:#61DAFB15;color:#61DAFB">TanStack Start ← Vite + TanStack Router (web P8)</span>
+        <span class="cl-item" style="background:#FB923C15;color:#FB923C">EAS Dev Build dès P1 ← Expo Go</span>
         <span class="cl-item" style="background:#61DAFB15;color:#61DAFB">Redis ← NestJS Cache mémoire</span>
+        <span class="cl-item" style="background:#FB923C15;color:#FB923C">Better Auth ← Supabase Auth</span>
+        <span class="cl-item" style="background:#FB923C15;color:#FB923C">Railway PostgreSQL ← Supabase</span>
         <span class="cl-item" style="background:#F472B615;color:#F472B6">+ Prometheus &amp; Grafana</span>
         <span class="cl-item" style="background:#FACC1515;color:#FACC15">+ SonarCloud</span>
         <span class="cl-item" style="background:#9B6EFF15;color:#9B6EFF">Expo Managed Workflow</span>
@@ -83,15 +89,14 @@
     <div><div class="market-tech" style="color:#9B6EFF">React Native</div><div class="market-count">Quelques offres</div><div class="market-status">✅ Complément</div></div>
   </div>
 
-  <div class="footer">GÉNÉRÉ AVEC CLAUDE — v2 — 2026</div>
+  <div class="footer">GÉNÉRÉ AVEC CLAUDE — v3 — 2026</div>
 </div>
 <script>
 const sections = [
   { label:"FRONTEND WEB", color:"#61DAFB", icon:"⚛", items:[
     {name:"React 19",role:"UI Library",note:"Base de tout, hooks, composants"},
-    {name:"Vite",role:"Bundler",note:"Ultra rapide, zéro config inutile"},
-    {name:"TanStack Router",role:"Routing",note:"Type-safe, explicite, pas de magie"},
-    {name:"TanStack Query",role:"Data Fetching",note:"Cache, sync, états async"},
+    {name:"TanStack Start",role:"Meta-framework Web",note:"SSR + file-based routing + Server Functions explicites — construit sur TanStack Router + Vinxi/Vite. Pas de magie implicite, pas de vendor lock-in. Décision à confirmer en P8 (maturité croissante). Vercel adapter officiel."},
+    {name:"TanStack Query v5",role:"Data Fetching",note:"Cache serveur, sync états async, intégration first-party avec TanStack Start — cohérence avec apps/mobile"},
     {name:"Zustand",role:"State Global",note:"Simple, léger, pas de boilerplate"},
     {name:"shadcn/ui",role:"UI Components",note:"Accessible, customisable, copié dans ton code"},
     {name:"Tailwind CSS",role:"Styling",note:"Utility-first, DX excellente"},
@@ -103,8 +108,10 @@ const sections = [
     {name:"Expo Router v55",role:"Navigation",note:"File-based routing — app/_layout.tsx, app/index.tsx. scheme: cooked obligatoire."},
     {name:"NativeWind v4",role:"Styling",note:"Tailwind v3 (pas v4) sur React Native. react-native-css-interop requis séparément."},
     {name:"expo-barcode-scanner",role:"Scan Code-barre",note:"Killer feature : scan aliment instantané — P4"},
-    {name:"React Native MMKV",role:"Storage Local",note:"Stockage rapide et sécurisé (remplace AsyncStorage) — P1"},
-    {name:"Expo EAS Build",role:"Build & Deploy",note:"APK Android cloud sans Android Studio — P8"},
+    {name:"expo-secure-store",role:"Storage Sécurisé",note:"Tokens JWT, refresh tokens — iOS Keychain / Android Keystore. Chiffrement OS obligatoire pour données sensibles. 2KB max/entrée iOS. — P1"},
+    {name:"AsyncStorage",role:"Storage Non-Sensible",note:"Préférences UI, cache léger — @react-native-async-storage/async-storage v2 (New Architecture compatible). Pour données non sensibles uniquement. — P1"},
+    {name:"TanStack Query v5",role:"Data Fetching",note:"Cache serveur, déduplication requêtes, optimistic updates, refetch au focus — pure JS, zéro code natif, cohérence avec apps/web — P1"},
+    {name:"Expo EAS Build",role:"Build & Dev Build",note:"Dev Build dès P1 (expo-dev-client — remplace Expo Go, requis pour modules natifs). APK production en P8. 30 builds/mois gratuit — largement suffisant."},
     {name:"Sentry RN",role:"Crash Reporting",note:"@sentry/react-native — crashes natifs Android capturés — P1"},
   ]},
   { label:"BACKEND", color:"#E535AB", icon:"⚙", items:[
@@ -126,11 +133,11 @@ const sections = [
     {name:"Cache Redis",role:"Stratégie",note:"TTL 7j sur aliments fréquents, partagé entre instances API"},
   ]},
   { label:"AUTH & INFRA", color:"#FB923C", icon:"🔐", items:[
-    {name:"Supabase Auth",role:"Authentification",note:"OAuth Google, JWT, sessions multi-device — zéro code auth"},
-    {name:"Supabase",role:"PostgreSQL Managé",note:"BDD + Storage + Realtime gratuit — staging/prod uniquement"},
-    {name:"Vercel",role:"Hébergement Web",note:"Deploy auto sur push, gratuit"},
-    {name:"Railway",role:"Hébergement API + Redis",note:"NestJS containerisé + Redis managé disponible"},
-    {name:"Docker",role:"Containerisation",note:"postgres:18-alpine + redis:8-alpine en local via Docker Compose"},
+    {name:"Better Auth",role:"Authentification",note:"Installé dans NestJS — users dans ta table Prisma, zéro sync avec provider externe. @better-auth/expo côté mobile. Open-source, zéro vendor lock-in, zéro pricing MAU."},
+    {name:"Railway",role:"Hébergement staging/prod",note:"NestJS + PostgreSQL managé + Redis managé — tout au même endroit, variables d'env partagées entre services, latence interne optimale. Auto-deploy depuis GitHub."},
+    {name:"Vercel",role:"Hébergement Web",note:"Deploy auto sur push, gratuit — apps/web (P8)"},
+    {name:"Docker",role:"Containerisation locale",note:"postgres:18-alpine + redis:8-alpine en local via Docker Compose — staging/prod = Railway"},
+    {name:"Neon ⚑",role:"Alternative PostgreSQL (future)",note:"PostgreSQL serverless avec database branching : BDD isolée par PR pour tester les migrations Prisma. À considérer en P7+ si les migrations deviennent complexes. Migration = changer DATABASE_URL."},
   ]},
   { label:"OBSERVABILITÉ", color:"#F472B6", icon:"🔭", items:[
     {name:"Sentry (3 couches)",role:"Erreurs & Crashes",note:"NestJS (10.42.0) + Web React + React Native — source maps sur les 3"},
@@ -153,7 +160,7 @@ const sections = [
 ];
 
 const roadmap = [
-  {phase:"01",title:"MVP Mobile",color:"#9B6EFF",items:["Auth Supabase","Recherche aliments","Journal alimentaire","Dashboard calories / macros"]},
+  {phase:"01",title:"MVP Mobile",color:"#9B6EFF",items:["Auth Better Auth","Recherche aliments","Journal alimentaire","Dashboard calories / macros"]},
   {phase:"02",title:"Scan & Stats",color:"#4ADE80",items:["Scan code-barre","Historique & graphiques","Objectifs personnalisés","Recettes custom"]},
   {phase:"03",title:"Observabilité",color:"#F472B6",items:["Sentry 3 couches","Pino + Axiom logs","Prometheus + Grafana","/health endpoint enrichi"]},
   {phase:"04",title:"Prod & CI/CD",color:"#FACC15",items:["GitHub Actions complet","SonarCloud sur chaque PR","APK via EAS Build","Front Web React + Vite"]},

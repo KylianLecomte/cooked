@@ -86,8 +86,12 @@
     <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
   </div>
   <div class="changelog">
-    <div class="changelog-title">CHANGELOG v2</div>
+    <div class="changelog-title">CHANGELOG v3</div>
     <div class="changelog-items">
+      <span class="cl" style="background:#4ADE8015;color:#4ADE80">expo-secure-store + AsyncStorage ← MMKV</span>
+      <span class="cl" style="background:#F472B615;color:#F472B6">+ TanStack Query v5 mobile (P1)</span>
+      <span class="cl" style="background:#61DAFB15;color:#61DAFB">TanStack Start ← Vite + TanStack Router (web P8)</span>
+      <span class="cl" style="background:#FB923C15;color:#FB923C">EAS Dev Build dès P1 ← Expo Go</span>
       <span class="cl" style="background:#61DAFB15;color:#61DAFB">Redis ← NestJS Cache</span>
       <span class="cl" style="background:#34D39915;color:#34D399">Prometheus + Grafana en P6</span>
       <span class="cl" style="background:#FACC1515;color:#FACC15">SonarCloud dès P0</span>
@@ -108,7 +112,7 @@
     <div class="summary-cell"><div class="summary-label">QUALITÉ CODE</div><div class="summary-value">SonarCloud dès P0</div><div class="summary-sub">Bloque les PRs si régression</div></div>
     <div class="summary-cell"><div class="summary-label">LIVRABLE CLÉ</div><div class="summary-value">APK Android</div><div class="summary-sub">Distribué via EAS Build automatique</div></div>
   </div>
-  <div class="footer">GÉNÉRÉ AVEC CLAUDE — v2 — 2026</div>
+  <div class="footer">GÉNÉRÉ AVEC CLAUDE — v3 — 2026</div>
 </div>
 
 <script>
@@ -135,7 +139,7 @@ const phases = [
       ]},
       { name:"Backend — Squelette + Observabilité initiale", tasks:[
         {id:"p0-12",text:"Créer le projet NestJS",detail:"nest new api, TypeScript strict, structure modulaire : auth/, foods/, diary/, health/"},
-        {id:"p0-13",text:"Configurer Prisma + PostgreSQL (Supabase)",detail:"Supabase comme hôte PostgreSQL gratuit, prisma init + premier schema User"},
+        {id:"p0-13",text:"Configurer Prisma + PostgreSQL (Docker local)",detail:"Docker Compose postgres:18-alpine — prisma init + premier schema User. Railway PostgreSQL = staging/prod uniquement, configuré en P8."},
         {id:"p0-14",text:"Docker Compose local (PostgreSQL + Redis)",detail:"Lance la BDD et Redis en local avec une seule commande, sans rien installer sur la machine"},
         {id:"p0-15",text:"Remplacer le logger NestJS par Pino",detail:"nestjs-pino : logs JSON structurés dès le départ — chaque requête loguée avec méthode, route, durée, statusCode"},
         {id:"p0-16",text:"Connecter Pino → Axiom",detail:"pino-axiom transport : logs vers Axiom (50GB/mois gratuit) — dashboard de logs dès le premier démarrage"},
@@ -148,11 +152,13 @@ const phases = [
     objective:"L'utilisateur peut créer un compte, se connecter, renseigner son profil nutritionnel",
     categories:[
       { name:"Authentification", tasks:[
-        {id:"p1-1",text:"Intégrer Supabase Auth côté API NestJS",detail:"Guard NestJS qui vérifie le JWT Supabase sur chaque requête protégée"},
+        {id:"p1-1",text:"Intégrer Better Auth dans NestJS",detail:"better-auth installé dans apps/api — prisma adapter configuré, schéma User généré, endpoints auth exposés automatiquement (/api/auth/*). BETTER_AUTH_SECRET en variable d'env"},
         {id:"p1-2",text:"Écran Register (React Native)",detail:"Formulaire email/password + validation Zod côté client, feedback erreur clair"},
-        {id:"p1-3",text:"Écran Login",detail:"Token JWT stocké dans React Native MMKV (sécurisé, rapide), refresh token géré"},
-        {id:"p1-4",text:"Middleware d'auth Expo Router",detail:"Redirect automatique vers /auth/login si token absent ou expiré"},
+        {id:"p1-3",text:"Écran Login",detail:"Session Better Auth gérée par @better-auth/expo — tokens stockés dans expo-secure-store (iOS Keychain / Android Keystore), refresh automatique, pas de gestion manuelle de JWT"},
+        {id:"p1-4",text:"Middleware d'auth Expo Router",detail:"Redirect automatique vers /auth/login si session Better Auth absente ou expirée"},
         {id:"p1-5",text:"Initialiser Sentry React Native",detail:"@sentry/react-native avec userId taggé — chaque crash associé à l'utilisateur concerné"},
+        {id:"p1-6b",text:"Configurer EAS Dev Build",detail:"Installer expo-dev-client, créer eas.json profil development, builder l'APK Dev Build via EAS — remplace définitivement Expo Go. Requis pour expo-secure-store, @sentry/react-native et tout module natif."},
+        {id:"p1-6c",text:"Installer TanStack Query v5",detail:"@tanstack/react-query — QueryClientProvider en racine de l'app, React Query Devtools en dev. Utilisé dès P1 pour les appels auth et profil."},
       ]},
       { name:"Profil & Objectifs", tasks:[
         {id:"p1-6",text:"Schema Prisma : User + Profile",detail:"age, poids, taille, sexe, niveau d'activité, objectif (perte/maintien/prise de masse)"},
@@ -252,7 +258,7 @@ const phases = [
       { name:"UX & Performance", tasks:[
         {id:"p7-5",text:"Skeleton loaders partout",detail:"Remplacer les spinners par des skeletons sur liste aliments, journal, stats"},
         {id:"p7-6",text:"Gestion erreurs globale",detail:"Error boundaries React Native, toast notifications (react-native-toast-message)"},
-        {id:"p7-7",text:"Mode offline basique",detail:"TanStack Query persistCache (MMKV) : journal lisible et éditable sans réseau, sync au retour"},
+        {id:"p7-7",text:"Mode offline basique",detail:"TanStack Query persistCache (AsyncStorage) : journal lisible et éditable sans réseau, sync au retour"},
         {id:"p7-8",text:"Optimisation FlatList",detail:"keyExtractor, getItemLayout, windowSize sur les longues listes d'aliments — scroll fluide 60fps"},
       ]},
     ]
