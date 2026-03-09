@@ -294,8 +294,8 @@ const checked = {
   "p0-13":true,  // Prisma 7 + PostgreSQL (Docker local, pas Supabase)
   "p0-14":true,  // Docker Compose PostgreSQL + Redis
   "p0-15":true,  // Pino installé, pino-pretty en dev, JSON en prod
-  "p0-16":false, // ❌ Axiom — Pino tourne mais non connecté à Axiom
-  "p0-17":false, // ❌ Sentry — installé et configuré dans le code, DSN vide, rien n'est envoyé
+  "p0-16":true,  // ✅ Axiom — @axiomhq/pino transport configuré, logs JSON vers Axiom en production
+  "p0-17":true,  // ✅ Sentry DSN configuré — SentryExceptionFilter custom, dotenv preload dans instrument.ts
   "p0-18":true,  // Variables d'env + validation Zod au boot
 };
 let openPhaseId = 'P0';

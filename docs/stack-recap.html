@@ -115,8 +115,8 @@ const sections = [
     {name:"Redis 8",role:"Cache distribué",note:"docker: redis:8-alpine, AOF activé, TTL par clé, password: cooked_dev"},
     {name:"Swagger / OpenAPI",role:"Documentation",note:"Auto-généré avec NestJS — à configurer en P2"},
     {name:"Zod 4.3.6",role:"Validation",note:"⚠️ v4 : z.url() top-level, error.issues (pas .errors), z.prettifyError()"},
-    {name:"nestjs-pino 4.6.0",role:"Logger structuré",note:"pino-pretty en dev (translateTime HH:MM:ss), JSON brut en prod vers Axiom"},
-    {name:"Sentry NestJS 10.42.0",role:"Error Tracking",note:"@sentry/nestjs + @sentry/profiling-node — instrument.ts PREMIER import main.ts"},
+    {name:"nestjs-pino 4.6.0",role:"Logger structuré",note:"pino-pretty en dev (translateTime HH:MM:ss), prod: stdout JSON + @axiomhq/pino via targets (worker threads). Interface LoggerConfigOptions + buildPinoConfig() dans logger/logger.config.ts"},
+    {name:"Sentry NestJS 10.42.0",role:"Error Tracking",note:"@sentry/nestjs + @sentry/profiling-node — instrument.ts PREMIER import main.ts avec dotenv.config(). SentryExceptionFilter custom (pas SentryGlobalFilter — incompatible Pino multi-transport prod)"},
     {name:"@nestjs/config 4.0.3",role:"Env Config",note:"ConfigModule.forRoot isGlobal:true, validate:validateEnv, ConfigService<EnvSchema> typé"},
   ]},
   { label:"DONNÉES ALIMENTAIRES", color:"#4ADE80", icon:"🥗", items:[

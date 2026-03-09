@@ -455,7 +455,7 @@
       <span class="badge badge-green">✓ PostgreSQL 18.3 GA</span>
       <span class="badge badge-cyan">✓ ESLint v10 + Vitest + SWC</span>
       <span class="badge badge-yellow">✓ Prisma 7 + Zod v4</span>
-      <span class="badge badge-orange">⚠ P0 EN COURS — 16/18 tâches</span>
+      <span class="badge badge-green">✅ P0 TERMINÉ — 18/18 tâches</span>
     </div>
   </header>
 
@@ -464,35 +464,63 @@
   <div class="progress-section">
     <div class="progress-header">
       <span class="progress-title">TÂCHES COMPLÉTÉES</span>
-      <span class="progress-count">16 / 18</span>
+      <span class="progress-count">18 / 18</span>
     </div>
     <div class="progress-track">
-      <div class="progress-fill" style="width:89%"></div>
+      <div class="progress-fill" style="width:100%"></div>
     </div>
     <div class="progress-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span style="color:var(--dim)">Terminé (16) : monorepo, NestJS, Docker, Pino, Prisma, Zod, CI, SonarCloud, Expo SDK 55, Expo Router, NativeWind v4</span></div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div><span style="color:var(--dim)">En attente (2) : Axiom (P0-16), Sentry DSN (P0-17)</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span style="color:var(--dim)">Terminé (18) : monorepo, NestJS, Docker, Pino+Axiom, Prisma, Zod, CI, SonarCloud, Expo SDK 55, Expo Router, NativeWind v4, Sentry DSN</span></div>
     </div>
   </div>
 
-  <!-- TÂCHES EN ATTENTE -->
-  <div class="section-title">TÂCHES EN ATTENTE — À COMPLÉTER</div>
-  <div class="pending-block">
-    <div class="pending-title">⚠ 2 TÂCHES RESTANTES AVANT DE CLORE P0</div>
+  <!-- NOUVEAUX ÉLÉMENTS DOCUMENTÉS EN SESSION 4 -->
+  <div class="section-title">ÉLÉMENTS TECHNIQUES — SESSION 4 (P0-16 / P0-17)</div>
 
-    <div class="pending-item">
-      <span class="pending-id">P0-16</span>
-      <div class="pending-text">
-        <strong>Axiom — Pino tourne mais non connecté</strong><br>
-        <code>pino-axiom</code> transport non configuré. Logs JSON produits localement mais non envoyés vers Axiom. Nécessite AXIOM_DATASET + AXIOM_TOKEN dans <code>.env</code> et dans les secrets GitHub Actions. 50GB/mois gratuit.
+  <div style="background:var(--surface);border:1px solid var(--border2);padding:20px 24px;margin-bottom:40px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--cyan);margin-bottom:16px">AXIOM — P0-16</div>
+    <div style="font-size:12px;color:var(--dim);line-height:1.7">
+      Transport <code>@axiomhq/pino</code> configuré dans <code>logger/logger.config.ts</code>. En production (<code>NODE_ENV=production</code>), Pino utilise <code>targets</code> avec deux transports en worker threads : stdout (JSON brut) + <code>@axiomhq/pino</code> vers Axiom. En dev : <code>pino-pretty</code> sur thread principal.<br><br>
+      <strong style="color:var(--text)">Interface <code>LoggerConfigOptions</code></strong> et <code>buildPinoConfig()</code> colocalisés dans <code>logger/logger.config.ts</code> — pas de <code>logger.type.ts</code> séparé (over-engineering : interface de 3 champs non partagée).
+    </div>
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--border2);padding:20px 24px;margin-bottom:40px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--pink);margin-bottom:16px">SENTRY — P0-17 — 3 BUGS SUCCESSIFS RÉSOLUS</div>
+
+    <div style="border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--red);margin-bottom:6px">BUG 1 — APP_FILTER string au lieu du token NestJS</div>
+      <div style="font-size:12px;color:var(--dim);line-height:1.7">
+        <code>provide: "APP_FILTER"</code> (string) → NestJS enregistre un provider arbitraire, jamais appliqué comme filtre global.<br>
+        <strong style="color:var(--text)">Fix</strong> : <code>provide: APP_FILTER</code> (token importé de <code>@nestjs/core</code>).
       </div>
     </div>
-    <div class="pending-item">
-      <span class="pending-id">P0-17</span>
-      <div class="pending-text">
-        <strong>Sentry DSN — vide, rien n'est envoyé</strong><br>
-        <code>@sentry/nestjs</code> installé et initialisé dans <code>instrument.ts</code> avec <code>enabled: !!process.env.SENTRY_DSN</code> — désactivé car SENTRY_DSN vide dans <code>.env</code>. Créer le projet sur sentry.io + renseigner le DSN.
+
+    <div style="border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px">
+      <div style="font-size:10px;letter-spacing:2px;color:var(--red);margin-bottom:6px">BUG 2 — TIMING DOTENV DANS instrument.ts</div>
+      <div style="font-size:12px;color:var(--dim);line-height:1.7">
+        <code>instrument.ts</code> s'exécute avant <code>@nestjs/config</code> → <code>process.env["SENTRY_DSN"]</code> est <code>undefined</code> → <code>enabled: false</code> → Sentry désactivé silencieusement, aucun event envoyé.<br>
+        <strong style="color:var(--text)">Fix</strong> : ajouter <code>dotenv.config()</code> en premier dans <code>instrument.ts</code>, avant <code>Sentry.init()</code>. <code>dotenv</code> est déjà dans les <code>devDependencies</code>.
       </div>
+    </div>
+
+    <div>
+      <div style="font-size:10px;letter-spacing:2px;color:var(--red);margin-bottom:6px">BUG 3 — SentryGlobalFilter INCOMPATIBLE AVEC PINO MULTI-TRANSPORT EN PRODUCTION</div>
+      <div style="font-size:12px;color:var(--dim);line-height:1.7">
+        <code>buildPinoConfig</code> en production utilise <code>targets</code> (multi-transport) → worker threads pour <code>pino/file</code> + <code>@axiomhq/pino</code>. Ces worker threads interfèrent avec <code>AsyncLocalStorage</code> d'OpenTelemetry (utilisé par Sentry) → contexte async perdu → events créés mais droppés silencieusement.<br>
+        <code>SentryGlobalFilter</code> fonctionne en dev (pino-pretty = thread principal), pas en production.<br>
+        <code>Sentry.captureException()</code> manuel fonctionne partout car pas de dépendance au contexte async.<br>
+        <strong style="color:var(--text)">Fix</strong> : <code>SentryExceptionFilter</code> custom (<code>src/filters/sentry-exception.filter.ts</code>) étendant <code>BaseExceptionFilter</code>, appelle <code>Sentry.captureException()</code> directement. Ne capture pas les <code>HttpException</code> (4xx attendus) — seulement les erreurs non-HTTP (vrais 500).
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--border2);padding:20px 24px;margin-bottom:40px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--yellow);margin-bottom:16px">ESLINT — eslint-plugin-unicorn NON INSTALLÉ</div>
+    <div style="font-size:12px;color:var(--dim);line-height:1.7">
+      <code>eslint-plugin-unicorn</code> n'est pas installé dans ce projet. Référencer <code>// eslint-disable-next-line unicorn/prefer-top-level-await</code> = erreur ESLint au commit (pre-commit hook husky).<br>
+      Erreur symptomatique : <em>"Definition for rule 'unicorn/prefer-top-level-await' was not found."</em><br>
+      <strong style="color:var(--text)">Fix</strong> : supprimer le commentaire <code>eslint-disable</code>. La solution finale pour <code>main.ts</code> est <code>bootstrap().catch((_: unknown) => {'{ process.exit(1); }'})</code> sans aucun commentaire de disable.
     </div>
   </div>
 
@@ -576,15 +604,15 @@
       <div class="task-label"><div class="task-label-text done">nestjs-pino 4.6.0</div><div class="task-label-detail">JSON structuré, pino-pretty en dev</div></div>
       <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-15</span>
     </div>
-    <div class="task-status-item" style="border-left:2px solid var(--orange)">
-      <span class="task-check">❌</span>
-      <div class="task-label"><div class="task-label-text">Pino → Axiom</div><div class="task-label-detail">pino-axiom non configuré, logs non envoyés</div></div>
-      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-16</span>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">Pino → Axiom</div><div class="task-label-detail">@axiomhq/pino — multi-transport prod (worker threads) + pino-pretty dev</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-16</span>
     </div>
-    <div class="task-status-item" style="border-left:2px solid var(--orange)">
-      <span class="task-check">⚠️</span>
-      <div class="task-label"><div class="task-label-text">Sentry NestJS</div><div class="task-label-detail">Installé + initialisé, DSN vide → désactivé</div></div>
-      <span class="task-pill" style="color:var(--orange);border-color:var(--orange)">P0-17</span>
+    <div class="task-status-item">
+      <span class="task-check">✅</span>
+      <div class="task-label"><div class="task-label-text done">Sentry NestJS — DSN configuré</div><div class="task-label-detail">SentryExceptionFilter custom — dotenv.config() dans instrument.ts — 3 bugs corrigés</div></div>
+      <span class="task-pill" style="color:var(--green);border-color:var(--green)">P0-17</span>
     </div>
     <div class="task-status-item">
       <span class="task-check">✅</span>
@@ -713,7 +741,246 @@
 
   </div>
 
-  <!-- DOCKER -->
+  <!-- OUTILS INSTALLÉS — API -->
+  <div class="section-title" style="margin-top:32px">OUTILS INSTALLÉS — APPS/API (NestJS)</div>
+  <div class="tools-grid">
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--pink)"></div>
+      <div class="tool-header">
+        <span class="tool-name" style="color:var(--pink)">NestJS</span>
+        <span class="tool-version">^11.0.0</span>
+      </div>
+      <div class="tool-role">FRAMEWORK BACKEND</div>
+      <div class="tool-desc">Modulaire, DI par décorateurs. Modules installés : <code>ConfigModule</code> (global), <code>LoggerModule</code> (async), <code>SentryModule</code>. <code>bufferLogs: true</code> + <code>useLogger(PinoLogger)</code> obligatoires ensemble.</div>
+      <span class="tool-tag" style="color:var(--pink);border-color:var(--pink)">@nestjs/common</span>
+      <span class="tool-tag" style="color:var(--pink);border-color:var(--pink)">@nestjs/config</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-cyan">TypeScript</span>
+        <span class="tool-version">^5.7.0</span>
+      </div>
+      <div class="tool-role">LANGAGE</div>
+      <div class="tool-desc"><code>strict: true</code>, <code>target: ES2022</code>, <code>module: commonjs</code>. <code>experimentalDecorators</code> + <code>emitDecoratorMetadata</code> obligatoires pour NestJS. Partagé via <code>packages/tsconfig</code>.</div>
+      <span class="tool-tag" style="color:var(--cyan);border-color:var(--cyan)">strict</span>
+      <span class="tool-tag" style="color:var(--cyan);border-color:var(--cyan)">emitDecoratorMetadata</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-green">Vitest</span>
+        <span class="tool-version">^4.0.0</span>
+      </div>
+      <div class="tool-role">TEST RUNNER</div>
+      <div class="tool-desc">+ <code>unplugin-swc</code> + <code>@swc/core</code> — esbuild (défaut Vitest) ne supporte pas <code>emitDecoratorMetadata</code>. <code>@vitest/coverage-v8@^4.0.0</code> doit être sur la même version majeure. <code>coverage.include</code> obligatoire en v4.</div>
+      <span class="tool-tag" style="color:var(--red);border-color:var(--red)">⚠ même version que coverage-v8</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--purple)"></div>
+      <div class="tool-header">
+        <span class="tool-name" style="color:var(--purple)">Prisma</span>
+        <span class="tool-version">7.4.2</span>
+      </div>
+      <div class="tool-role">ORM — ACCÈS BASE DE DONNÉES</div>
+      <div class="tool-desc"><strong>⚠ Breaking v7</strong> : <code>url</code> dans <code>prisma.config.ts</code> (pas <code>schema.prisma</code>). Client généré dans <code>generated/prisma/</code> (gitignored). Import : <code>from "../generated/prisma"</code>. Schema vide en P0, modèles ajoutés en P1+.</div>
+      <span class="tool-tag" style="color:var(--red);border-color:var(--red)">⚠ breaking v7</span>
+      <span class="tool-tag" style="color:var(--purple);border-color:var(--purple)">generated/prisma</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--yellow)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-yellow">Zod</span>
+        <span class="tool-version">4.3.6</span>
+      </div>
+      <div class="tool-role">VALIDATION — ENV + SCHEMAS</div>
+      <div class="tool-desc"><strong>⚠ Breaking v4</strong> : <code>error.issues</code> (pas <code>.errors</code>), <code>z.url()</code> top-level (pas <code>z.string().url()</code>), <code>z.prettifyError(error)</code>. Utilisé pour <code>validateEnv()</code> au boot et schemas P1+.</div>
+      <span class="tool-tag" style="color:var(--red);border-color:var(--red)">⚠ breaking v4</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-orange">nestjs-pino</span>
+        <span class="tool-version">4.6.0</span>
+      </div>
+      <div class="tool-role">LOGGER STRUCTURÉ</div>
+      <div class="tool-desc">Dev : <code>pino-pretty</code> (thread principal, <code>translateTime: HH:MM:ss</code>). Prod : <code>targets</code> = stdout JSON + <code>@axiomhq/pino</code> en worker threads. <code>customProps: () =&gt; ({ env })</code> sur chaque log.</div>
+      <span class="tool-tag" style="color:var(--orange);border-color:var(--orange)">pino-http</span>
+      <span class="tool-tag" style="color:var(--orange);border-color:var(--orange)">worker threads prod</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-cyan">@axiomhq/pino</span>
+        <span class="tool-version">^1.4.0</span>
+      </div>
+      <div class="tool-role">TRANSPORT LOGS → AXIOM</div>
+      <div class="tool-desc">Transport Pino pour Axiom Cloud (50GB/mois gratuit). Activé uniquement si <code>AXIOM_DATASET</code> + <code>AXIOM_TOKEN</code> présents. En prod, tourne dans un worker thread via <code>targets</code>. Logs visibles dans Axiom dashboard.</div>
+      <span class="tool-tag" style="color:var(--cyan);border-color:var(--cyan)">cloud logs</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)"></div>
+      <div class="tool-header">
+        <span class="tool-name" style="color:var(--red)">@sentry/nestjs</span>
+        <span class="tool-version">^10.42.0</span>
+      </div>
+      <div class="tool-role">ERROR TRACKING</div>
+      <div class="tool-desc"><code>instrument.ts</code> = premier import de <code>main.ts</code>, avec <code>dotenv.config()</code> avant <code>Sentry.init()</code>. <strong>SentryExceptionFilter custom</strong> (pas <code>SentryGlobalFilter</code> — incompatible Pino multi-transport). Ne capture pas les 4xx, uniquement les vraies erreurs 5xx.</div>
+      <span class="tool-tag" style="color:var(--red);border-color:var(--red)">⚠ SentryExceptionFilter custom</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-green">SWC</span>
+        <span class="tool-version">@swc/core ^1.15.18</span>
+      </div>
+      <div class="tool-role">COMPILATEUR (remplace tsc)</div>
+      <div class="tool-desc"><code>unplugin-swc</code> + <code>@swc/core</code> + <code>.swcrc</code> : supporte <code>decoratorMetadata</code> (requis par NestJS DI). Utilisé par Vitest ET NestJS CLI (<code>"builder": "swc"</code> dans <code>nest-cli.json</code>). Module ES6 uniquement pour Vitest.</div>
+      <span class="tool-tag" style="color:var(--green);border-color:var(--green)">decoratorMetadata</span>
+    </div>
+
+  </div>
+
+  <!-- OUTILS INSTALLÉS — MOBILE -->
+  <div class="section-title" style="margin-top:32px">OUTILS INSTALLÉS — APPS/MOBILE (Expo)</div>
+  <div class="tools-grid">
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--purple)"></div>
+      <div class="tool-header">
+        <span class="tool-name" style="color:var(--purple)">Expo SDK 55</span>
+        <span class="tool-version">~55.0.5</span>
+      </div>
+      <div class="tool-role">TOOLCHAIN MOBILE MANAGED</div>
+      <div class="tool-desc">Managed Workflow — pas de dossiers <code>android/</code> <code>ios/</code>. React Native 0.83.2, React 19.2.0. <strong>New Architecture obligatoire</strong> (RN 0.83, <code>newArchEnabled</code> supprimé). Expo Go Play Store = SDK 54 → APK SDK 55 depuis expo.dev/go.</div>
+      <span class="tool-tag" style="color:var(--red);border-color:var(--red)">⚠ Expo Go APK SDK 55</span>
+      <span class="tool-tag" style="color:var(--purple);border-color:var(--purple)">New Architecture only</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-cyan">Expo Router</span>
+        <span class="tool-version">^55.0.4</span>
+      </div>
+      <div class="tool-role">ROUTING FILE-BASED</div>
+      <div class="tool-desc">Point d'entrée : <code>"main": "expo-router/entry.js"</code> dans <code>package.json</code>. <code>app/_layout.tsx</code> + <code>app/index.tsx</code>. <code>"scheme": "cooked"</code> obligatoire dans <code>app.json</code> (deep links). Plugin sans options dans <code>app.json</code>.</div>
+      <span class="tool-tag" style="color:var(--red);border-color:var(--red)">⚠ scheme obligatoire</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--green)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-green">NativeWind</span>
+        <span class="tool-version">^4.2.0</span>
+      </div>
+      <div class="tool-role">TAILWIND POUR REACT NATIVE</div>
+      <div class="tool-desc">Tailwind v3 <strong>uniquement</strong> (NativeWind v4 = Tailwind v3, NativeWind v5 = Tailwind v4 non stable). <code>react-native-css-interop</code> installé séparément via <code>expo install</code>. <code>jsxImportSource: "nativewind"</code> dans babel + preset NativeWind.</div>
+      <span class="tool-tag" style="color:var(--red);border-color:var(--red)">⚠ Tailwind v3 seulement</span>
+      <span class="tool-tag" style="color:var(--green);border-color:var(--green)">css-interop séparé</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-orange">Expo Go APK SDK 55</span>
+        <span class="tool-version">installé sur device</span>
+      </div>
+      <div class="tool-role">CLIENT DE DEV MOBILE</div>
+      <div class="tool-desc">APK SDK 55 depuis <strong>expo.dev/go</strong> (pas le Play Store). Tunnel ngrok obligatoire en WSL2 (<code>--tunnel</code> sur tous les scripts dev). Metro bind sur IP WSL2 interne — inaccessible depuis device sans tunnel.</div>
+      <span class="tool-tag" style="color:var(--orange);border-color:var(--orange)">--tunnel obligatoire WSL2</span>
+    </div>
+
+  </div>
+
+  <!-- OBSERVABILITÉ & QUALITÉ -->
+  <div class="section-title" style="margin-top:32px">OBSERVABILITÉ & QUALITÉ — SERVICES CLOUD</div>
+  <div class="tools-grid">
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--orange)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-orange">Sentry</span>
+        <span class="tool-version">10.42.0</span>
+      </div>
+      <div class="tool-role">ERROR TRACKING — 3 COUCHES (P0 + P1)</div>
+      <div class="tool-desc">
+        <strong style="color:var(--text)">Configuré en P0 :</strong> NestJS — <code>@sentry/nestjs</code> + <code>@sentry/profiling-node</code><br>
+        <strong style="color:var(--dim)">À configurer en P1 :</strong> React Native — <code>@sentry/react-native</code><br><br>
+        <strong style="color:var(--text)">URL dashboard :</strong> sentry.io → projet <code>cooked-api</code><br>
+        <strong style="color:var(--text)">Capture :</strong> exceptions non-HTTP uniquement (vraies erreurs 5xx). Les 4xx sont intentionnellement ignorés pour éviter le bruit.<br>
+        <strong style="color:var(--text)">Source maps :</strong> à configurer en P8 pour lire les stack traces sur le code source.<br><br>
+        <code>tracesSampleRate</code> : 100% dev, 10% prod. Ne pas monter en prod — coût élevé.
+      </div>
+      <span class="tool-tag" style="color:var(--orange);border-color:var(--orange)">SENTRY_DSN</span>
+      <span class="tool-tag" style="color:var(--orange);border-color:var(--orange)">SentryExceptionFilter custom</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-cyan">Axiom</span>
+        <span class="tool-version">@axiomhq/pino ^1.4.0</span>
+      </div>
+      <div class="tool-role">AGRÉGATION LOGS — CLOUD</div>
+      <div class="tool-desc">
+        <strong style="color:var(--text)">URL dashboard :</strong> app.axiom.co → dataset <code>cooked-logs</code><br>
+        <strong style="color:var(--text)">Plan :</strong> gratuit — 50 GB/mois, rétention 30 jours<br><br>
+        <strong style="color:var(--text)">Ce qui est loggué :</strong> chaque requête HTTP (méthode, route, statusCode, durée), contexte NestJS par ligne (<code>context: "Bootstrap"</code>, <code>"RoutesResolver"</code>…), champ <code>env: "production"</code> sur chaque log.<br>
+        <strong style="color:var(--text)">Ce qui n'est pas loggué :</strong> erreurs capturées → Sentry. Variables d'env, tokens, mots de passe → jamais dans les logs.<br><br>
+        Activé uniquement si <code>AXIOM_DATASET</code> + <code>AXIOM_TOKEN</code> présents. En dev : seul <code>pino-pretty</code> tourne.
+      </div>
+      <span class="tool-tag" style="color:var(--cyan);border-color:var(--cyan)">AXIOM_DATASET</span>
+      <span class="tool-tag" style="color:var(--cyan);border-color:var(--cyan)">AXIOM_TOKEN</span>
+    </div>
+
+    <div class="tool-card">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--yellow)"></div>
+      <div class="tool-header">
+        <span class="tool-name c-yellow">SonarCloud</span>
+        <span class="tool-version">sonarqube-scan-action@v7</span>
+      </div>
+      <div class="tool-role">QUALITÉ & SÉCURITÉ CODE — CI</div>
+      <div class="tool-desc">
+        <strong style="color:var(--text)">URL dashboard :</strong> sonarcloud.io → organisation <code>cooked</code><br>
+        <strong style="color:var(--text)">Plan :</strong> gratuit — repo public GitHub uniquement<br><br>
+        <strong style="color:var(--text)">Ce qu'il analyse :</strong> complexité cyclomatique, code dupliqué, vulnérabilités de sécurité (OWASP), code smells, coverage (via LCOV uploadé par Vitest en CI).<br>
+        <strong style="color:var(--text)">Bloque les PRs :</strong> Quality Gate échoue si régression coverage, nouvelles vulnérabilités, ou duplication > seuil.<br><br>
+        <strong style="color:var(--text)">Piège :</strong> <strong>Automatic Analysis doit être désactivé</strong> dans l'interface SonarCloud — sinon double analyse = conflit avec le scan GitHub Actions.<br>
+        <strong style="color:var(--text)">Secret requis :</strong> <code>SONAR_TOKEN</code> dans GitHub Actions.
+      </div>
+      <span class="tool-tag" style="color:var(--yellow);border-color:var(--yellow)">SONAR_TOKEN</span>
+      <span class="tool-tag" style="color:var(--yellow);border-color:var(--yellow)">Quality Gate</span>
+      <span class="tool-tag" style="color:var(--red);border-color:var(--red)">⚠ Automatic Analysis OFF</span>
+    </div>
+
+    <div class="tool-card" style="opacity:0.55">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--pink)"></div>
+      <div class="tool-header">
+        <span class="tool-name" style="color:var(--pink)">Prometheus + Grafana</span>
+        <span class="tool-version">planifié P6</span>
+      </div>
+      <div class="tool-role">MÉTRIQUES TEMPS RÉEL — NON CONFIGURÉ EN P0</div>
+      <div class="tool-desc">
+        Prévu en P6 (Observabilité complète).<br><br>
+        <strong style="color:var(--text)">Prometheus :</strong> <code>@willsoto/nestjs-prometheus</code> — expose <code>/metrics</code> : <code>http_requests_total</code>, latence p50/p95/p99, connexions BDD + Redis.<br>
+        <strong style="color:var(--text)">Grafana :</strong> dashboard pré-configuré, alertes sur seuils (latence > 1s, taux d'erreurs > 1%, connexions BDD saturées).<br><br>
+        En P0, <code>GET /health</code> ne retourne que le statut API — pas encore de métriques Prometheus.
+      </div>
+      <span class="tool-tag" style="color:var(--pink);border-color:var(--pink)">prévu P6</span>
+    </div>
+
+  </div>
+
   <div class="section-title">INFRASTRUCTURE LOCALE — DOCKER</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px">
 
@@ -920,7 +1187,31 @@
       <div class="issue-tag" style="color:var(--cyan);border-color:var(--cyan)">INFO</div>
       <div class="issue-text"><strong>Pas de mémoire entre conversations Claude</strong> — Une conversation par phase. Maintenir <code>CONTEXT.md</code> + le coller en début de chaque nouvelle conversation. Claude met à jour ce fichier en fin de phase.</div>
     </div>
-  </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>APP_FILTER string au lieu du token NestJS</strong> — <code>provide: "APP_FILTER"</code> enregistre un provider arbitraire, NestJS ne l'applique jamais comme filtre global. Fix : <code>provide: APP_FILTER</code> importé de <code>@nestjs/core</code>.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>Timing dotenv dans instrument.ts</strong> — <code>instrument.ts</code> s'exécute avant <code>@nestjs/config</code> → <code>process.env["SENTRY_DSN"]</code> est <code>undefined</code> → Sentry désactivé silencieusement. Fix : <code>dotenv.config()</code> en tête de <code>instrument.ts</code> avant <code>Sentry.init()</code>.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>SentryGlobalFilter incompatible avec Pino multi-transport en production</strong> — <code>targets</code> Pino spawn des worker threads (<code>@axiomhq/pino</code>) qui cassent l'<code>AsyncLocalStorage</code> d'OpenTelemetry → contexte Sentry perdu → events droppés silencieusement. Fix : <code>SentryExceptionFilter</code> custom étendant <code>BaseExceptionFilter</code>, appelle <code>Sentry.captureException()</code> directement sans dépendre du contexte async.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>eslint-disable-next-line unicorn/prefer-top-level-await cassait le pre-commit</strong> — <code>eslint-plugin-unicorn</code> n'est pas installé → référencer une règle inexistante = erreur ESLint. Fix : supprimer le commentaire <code>eslint-disable</code>. La solution finale est <code>bootstrap().catch((_: unknown) =&gt; {'{ process.exit(1); }'})</code> sans commentaire de disable.</div>
+    </div>
+    <div class="issue-row">
+      <div class="issue-icon">✅</div>
+      <div class="issue-tag" style="color:var(--green);border-color:var(--green)">RÉSOLU</div>
+      <div class="issue-text"><strong>logger.type.ts — fichier vide accidentellement créé</strong> — Interface <code>LoggerConfigOptions</code> de 3 champs n'utilisant que <code>logger.config.ts</code> → fichier séparé = over-engineering. Fix : interface intégrée directement dans <code>logger.config.ts</code>, <code>logger.type.ts</code> supprimé.</div>
+    </div>
 
   <!-- ÉTAT ACTUEL SYNTHÈSE -->
   <div class="section-title" style="margin-top:40px">ÉTAT ACTUEL P0 — SYNTHÈSE</div>
@@ -933,7 +1224,7 @@
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">NESTJS API</div>
       <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
-      <div style="font-size:11px;color:var(--dim)">Scaffold + Pino JSON + Sentry (DSN vide)</div>
+      <div style="font-size:11px;color:var(--dim)">Scaffold + Pino JSON + Sentry DSN (SentryExceptionFilter custom)</div>
     </div>
     <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">DOCKER</div>
@@ -965,27 +1256,26 @@
       <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
       <div style="font-size:11px;color:var(--dim)">SDK 55 + Expo Router + NativeWind v4 — testé sur Android</div>
     </div>
-    <div style="background:var(--surface);padding:16px 20px;border:1px solid var(--orange)">
+    <div style="background:var(--surface);padding:16px 20px">
       <div style="font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">OBSERVABILITÉ CLOUD</div>
-      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--orange)">⚠</div>
-      <div style="font-size:11px;color:var(--dim)">Pino local OK — Axiom non connecté, Sentry DSN vide</div>
+      <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)">✓</div>
+      <div style="font-size:11px;color:var(--dim)">Pino → Axiom OK + Sentry DSN configuré (SentryExceptionFilter custom)</div>
     </div>
   </div>
 
   <!-- STATUT FINAL -->
-  <div style="background:var(--surface);border:1px solid var(--orange);padding:20px 24px;margin-bottom:40px;display:flex;align-items:center;gap:16px">
-    <div style="font-size:32px">⏳</div>
+  <div style="background:var(--surface);border:1px solid var(--green);padding:20px 24px;margin-bottom:40px;display:flex;align-items:center;gap:16px">
+    <div style="font-size:32px">✅</div>
     <div>
-      <div style="font-size:13px;font-weight:700;color:var(--orange);letter-spacing:2px">P0 EN COURS — 16/18 TÂCHES (89%)</div>
+      <div style="font-size:13px;font-weight:700;color:var(--green);letter-spacing:2px">P0 TERMINÉ — 18/18 TÂCHES (100%)</div>
       <div style="font-size:12px;color:var(--dim);margin-top:4px">
-        Backend, tooling, CI/CD, SonarCloud et mobile fonctionnels. Reste :
-        <strong style="color:var(--text)">Axiom (P0-16)</strong> et
-        <strong style="color:var(--text)">Sentry DSN (P0-17)</strong>.
+        Backend, tooling, CI/CD, SonarCloud, mobile, Axiom et Sentry entièrement configurés et fonctionnels.
+        Prochaine étape : <strong style="color:var(--text)">P1 — Auth & Profil Utilisateur</strong>.
       </div>
     </div>
   </div>
 
-  <footer>COOKED — DOCUMENTATION P0 — MARS 2026 — v2.1</footer>
+  <footer>COOKED — DOCUMENTATION P0 — MARS 2026 — v3.0 — P0 COMPLET 18/18</footer>
 
 </div>
 </body>
