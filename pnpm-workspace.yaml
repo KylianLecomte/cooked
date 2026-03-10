@@ -3,7 +3,9 @@ packages:
   - packages/*
 
 ignoredBuiltDependencies:
+  - "@nestjs/core"
   - "@prisma/engines"
   - "@sentry-internal/node-cpu-profiler"
   - "@swc/core"
+  - esbuild
   - prisma
