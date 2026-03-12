@@ -1,6 +1,6 @@
-import * as dotenv from "dotenv";
 import * as Sentry from "@sentry/nestjs";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
+import * as dotenv from "dotenv";
 
 // Ce fichier DOIT être importé en premier dans main.ts — avant tout autre import
 // Sentry instrumente les modules Node.js au chargement
