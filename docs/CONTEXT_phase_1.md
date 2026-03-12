@@ -63,21 +63,21 @@ Branches permanentes protégées, aucun commit direct autorisé.
 
 ## Stack technique (résumé — détails dans stack-recap.html)
 
-| Couche             | Techno                      | Version                                    |
-| ------------------ | --------------------------- | ------------------------------------------ |
-| Monorepo           | Turborepo                   | 2.8.13                                     |
-| Backend            | NestJS                      | ^11.0.0                                    |
-| ORM                | Prisma                      | 7.4.2                                      |
-| Auth               | **Better Auth**             | à installer en P1                          |
-| BDD locale         | PostgreSQL (Docker)         | postgres:18-alpine                         |
-| Cache              | Redis (Docker)              | redis:8-alpine                             |
-| Mobile             | Expo SDK                    | 55                                         |
-| Navigation         | Expo Router                 | ^55.0.4                                    |
-| Styling            | NativeWind v4 + Tailwind v3 | -                                          |
-| HTTP client mobile | **TanStack Query v5**       | à installer en P1                          |
-| Logging            | nestjs-pino + Axiom         | -                                          |
-| Monitoring         | Sentry                      | @sentry/nestjs + @sentry/react-native (P1) |
-| Qualité            | SonarCloud                  | -                                          |
+| Couche             | Techno                      | Version                                           |
+| ------------------ | --------------------------- | ------------------------------------------------- |
+| Monorepo           | Turborepo                   | 2.8.13                                            |
+| Backend            | NestJS                      | ^11.0.1                                           |
+| ORM                | Prisma                      | 7.5.0                                             |
+| Auth               | **Better Auth**             | 1.5.5 ✅ installé                                 |
+| BDD locale         | PostgreSQL (Docker)         | postgres:18-alpine                                |
+| Cache              | Redis (Docker)              | redis:8-alpine                                    |
+| Mobile             | Expo SDK                    | 55                                                |
+| Navigation         | Expo Router                 | ^55.0.4                                           |
+| Styling            | NativeWind v4 + Tailwind v3 | -                                                 |
+| HTTP client mobile | **TanStack Query v5**       | à installer                                       |
+| Logging            | nestjs-pino + Axiom         | -                                                 |
+| Monitoring         | Sentry                      | @sentry/nestjs ✅, @sentry/react-native (à faire) |
+| Qualité            | SonarCloud                  | -                                                 |
 
 ---
 
@@ -91,126 +91,251 @@ Branches permanentes protégées, aucun commit direct autorisé.
 
 ---
 
-## P1 — Auth & Profil Utilisateur (1–2 semaines)
-
-**Objectif** : L'utilisateur peut créer un compte, se connecter, renseigner son profil nutritionnel.
-
-### Catégorie : Authentification
+## P1 — État des tâches
 
 | ID    | Tâche                                               | Status |
 | ----- | --------------------------------------------------- | ------ |
-| p1-1  | Intégrer Better Auth dans NestJS                    | ⬜     |
+| p1-6b | Configurer EAS Dev Build                            | ✅     |
+| p1-1  | Intégrer Better Auth dans NestJS                    | ✅     |
+| p1-6  | Schema Prisma : User + Profile                      | ✅     |
 | p1-2  | Écran Register (React Native)                       | ⬜     |
 | p1-3  | Écran Login + @better-auth/expo + expo-secure-store | ⬜     |
 | p1-4  | Middleware d'auth Expo Router                       | ⬜     |
 | p1-5  | Initialiser Sentry React Native                     | ⬜     |
-| p1-6b | Configurer EAS Dev Build                            | ⬜     |
 | p1-6c | Installer TanStack Query v5                         | ⬜     |
-
-### Catégorie : Profil & Objectifs
-
-| ID   | Tâche                                     | Status |
-| ---- | ----------------------------------------- | ------ |
-| p1-6 | Schema Prisma : User + Profile            | ⬜     |
-| p1-7 | Calcul automatique TDEE (Mifflin-St Jeor) | ⬜     |
-| p1-8 | Écran Onboarding multi-étapes             | ⬜     |
-| p1-9 | Écran Paramètres / Modifier profil        | ⬜     |
+| p1-7  | Calcul automatique TDEE                             | ⬜     |
+| p1-8  | Écran Onboarding multi-étapes                       | ⬜     |
+| p1-9  | Écran Paramètres / Modifier profil                  | ⬜     |
 
 ---
 
-## Détails techniques P1
+## Configuration actuelle apps/api (état final)
 
-### p1-1 — Better Auth dans NestJS
+### Compilateur
 
-Better Auth s'installe directement dans NestJS (pas de service externe). Il expose automatiquement
-les endpoints `/api/auth/*`. Il utilise l'adapter Prisma pour stocker les users dans notre propre
-table `users`.
+- **tsc** (TypeScript compiler standard) — SWC a été tenté mais abandonné pour l'instant
+  - SWC sera peut-être réintroduit plus tard
+  - Raison de l'abandon : conflits de config SWC entre NestJS CLI et Vitest (`es6` vs `commonjs`)
 
-**Variables d'env à ajouter** :
+### Fichiers de configuration
 
+**`apps/api/nest-cli.json`** :
+
+```json
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "tsConfigPath": "tsconfig.build.json",
+    "deleteOutDir": true
+  }
+}
 ```
-BETTER_AUTH_SECRET=   # secret aléatoire fort (min 32 chars)
-BETTER_AUTH_URL=      # ex: http://localhost:3000 (URL de l'API NestJS)
+
+⚠️ Pas de `"builder": "swc"` — on utilise tsc.
+
+**`apps/api/tsconfig.json`** :
+
+```json
+{
+  "extends": "@cooked/tsconfig/node.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@cooked/shared": ["../../packages/shared/src/index.ts"]
+    },
+    "types": ["vitest/globals", "node"]
+  },
+  "include": ["src/**/*", "test/**/*"]
+}
 ```
 
-**Secret GitHub à ajouter** : `BETTER_AUTH_SECRET` (lors de la mise en staging/prod).
+⚠️ `"rootDir": "."` et `"outDir": "./dist"` sont **obligatoires explicitement** — ne pas les hériter du tsconfig parent.
 
-**Endpoints exposés automatiquement** :
+**`apps/api/tsconfig.build.json`** :
 
-- `POST /api/auth/sign-up/email`
-- `POST /api/auth/sign-in/email`
-- `POST /api/auth/sign-out`
-- `GET  /api/auth/session`
-- `POST /api/auth/forget-password`
-- etc.
+```json
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["node_modules", "dist", "test", "**/*.spec.ts", "**/*.e2e-spec.ts"]
+}
+```
 
-**Prisma adapter** : Better Auth génère automatiquement les modèles Prisma nécessaires
-(`user`, `session`, `account`, `verification`) via `npx @better-auth/cli generate`.
-Ces modèles sont à intégrer dans `schema.prisma`.
+**`apps/api/package.json`** (dépendances importantes) :
 
-**⚠️ Intégration NestJS** : Better Auth expose un handler HTTP. Dans NestJS, on crée
-un contrôleur `auth.controller.ts` qui délègue toutes les requêtes `/api/auth/*` au handler
-Better Auth. Il faut désactiver le body parser de NestJS pour ces routes (Better Auth gère
-lui-même le parsing).
+```json
+{
+  "dependencies": {
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/platform-express": "^11.0.1",
+    "@prisma/adapter-pg": "^7.5.0",
+    "@prisma/client": "^7.5.0",
+    "@thallesp/nestjs-better-auth": "^2.5.1",
+    "better-auth": "^1.5.5",
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "prisma": "^7.5.0"
+  }
+}
+```
 
-### p1-3 — @better-auth/expo + expo-secure-store
+⚠️ `@prisma/client` doit être en **`dependencies`** (runtime), pas `devDependencies`.
 
-`@better-auth/expo` est le client Better Auth pour Expo/React Native. Il gère :
+**`package.json` racine** (overrides pnpm) :
 
-- Le stockage des tokens via `expo-secure-store` (iOS Keychain / Android Keystore)
-- Le refresh automatique de session
-- Les headers d'auth sur chaque requête
+```json
+{
+  "pnpm": {
+    "overrides": {
+      "@nestjs/core": "^11.0.0",
+      "@nestjs/common": "^11.0.0",
+      "@nestjs/platform-express": "^11.0.0"
+    }
+  }
+}
+```
 
-`expo-secure-store` est un **module natif** → nécessite un **Development Build** (pas Expo Go).
-C'est pourquoi `p1-6b` (EAS Dev Build) est une prérequis à `p1-2`/`p1-3` dans l'ordre logique.
+Ces overrides forcent une unique instance de `@nestjs/core` dans tout le monorepo — nécessaire pour éviter l'erreur `ApplicationConfig` avec `@thallesp/nestjs-better-auth`.
 
-### p1-5 — Sentry React Native
+---
 
-`@sentry/react-native` est aussi un **module natif** → nécessite un Development Build.
-À configurer après p1-6b. Le `userId` doit être taggé dans Sentry à la connexion pour
-associer chaque crash à l'utilisateur concerné.
+## Fichiers créés en P1
 
-### p1-6b — EAS Dev Build
+### `apps/api/src/auth/auth.ts`
 
-**Pourquoi un Dev Build et non Expo Go** :
-Expo Go est un client générique qui ne peut charger que du code JavaScript pur. Dès qu'une
-dépendance contient du code natif (expo-secure-store, @sentry/react-native, expo-barcode-scanner, etc.),
-il faut un APK custom compilé avec ces modules.
+```ts
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-**Ce que ça implique** :
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
+export const prisma = new PrismaClient({ adapter });
 
-- Installer `expo-dev-client` dans apps/mobile
-- Créer `eas.json` avec un profil `development`
-- Builder l'APK via EAS Cloud (`eas build --profile development --platform android`)
-- L'APK Dev Build remplace définitivement Expo Go
+export const auth = betterAuth({
+  basePath: "/api/auth",
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
+  }),
+  secret: process.env.BETTER_AUTH_SECRET,
+  baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
+  trustedOrigins: [
+    "http://localhost:8081", // Metro Expo dev server
+  ],
+  emailAndPassword: {
+    enabled: true,
+  },
+});
 
-**Conséquence sur les scripts** : `expo start --tunnel` reste utilisé, mais avec l'APK Dev Build
-installé sur l'appareil au lieu d'Expo Go.
+export type Session = typeof auth.$Infer.Session;
+export type User = typeof auth.$Infer.Session.user;
+```
 
-### p1-6c — TanStack Query v5
+### `apps/api/src/prisma/prisma.service.ts`
 
-`@tanstack/react-query` v5. Utilisé dès P1 pour :
+```ts
+import { Injectable, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-- Les appels auth (login, register, session)
-- Les données de profil utilisateur
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
 
-Setup : `QueryClientProvider` en racine de l'app dans `app/_layout.tsx`.
-React Query Devtools disponibles en dev (package séparé pour React Native).
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+  constructor() {
+    super({ adapter });
+  }
 
-**⚠️ Breaking changes v5 vs v4** :
+  async onModuleInit(): Promise<void> {
+    await this.$connect();
+  }
 
-- `useQuery({ queryKey, queryFn })` — objet unique, plus de positional args
-- `isLoading` → `isPending` pour les nouvelles requêtes
-- `onSuccess`/`onError` callbacks supprimés de `useQuery` → utiliser `useEffect` ou `useMutation`
-- `cacheTime` → `gcTime`
+  async onModuleDestroy(): Promise<void> {
+    await this.$disconnect();
+  }
+}
+```
 
-### p1-6 — Schema Prisma : User + Profile
+### `apps/api/src/prisma/prisma.module.ts`
 
-Better Auth génère ses propres modèles (`user`, `session`, `account`, `verification`).
-On ajoute un modèle `Profile` lié au `user` de Better Auth via relation 1-to-1.
+```ts
+import { Global, Module } from "@nestjs/common";
+import { PrismaService } from "./prisma.service";
+
+@Global()
+@Module({ providers: [PrismaService], exports: [PrismaService] })
+export class PrismaModule {}
+```
+
+### `apps/api/src/app.module.ts`
+
+```ts
+import { Module } from "@nestjs/common";
+import { APP_FILTER } from "@nestjs/core";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { LoggerModule } from "nestjs-pino";
+import { SentryModule } from "@sentry/nestjs/setup";
+import { AuthModule } from "@thallesp/nestjs-better-auth";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { validateEnv } from "./config/env.validation";
+import type { EnvSchema } from "./config/env.schema";
+import { buildPinoConfig } from "./logger/logger.config";
+import { SentryExceptionFilter } from "./filter/sentry-exception.filter";
+import { PrismaModule } from "./prisma/prisma.module";
+import { auth } from "./auth/auth";
+
+@Module({
+  imports: [
+    SentryModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ".env",
+      validate: validateEnv,
+    }),
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService<EnvSchema>) =>
+        buildPinoConfig({
+          isDev: config.get("NODE_ENV", { infer: true }) === "development",
+          axiomDataset: config.get("AXIOM_DATASET", { infer: true }),
+          axiomToken: config.get("AXIOM_TOKEN", { infer: true }),
+        }),
+    }),
+    PrismaModule,
+    AuthModule.forRoot({ auth, disableGlobalAuthGuard: true }),
+  ],
+  controllers: [AppController],
+  providers: [{ provide: APP_FILTER, useClass: SentryExceptionFilter }, AppService],
+})
+export class AppModule {}
+```
+
+⚠️ `disableGlobalAuthGuard: true` est obligatoire — sinon toutes les routes sont protégées par défaut.
+⚠️ `bodyParser: false` dans `main.ts` est obligatoire pour `@thallesp/nestjs-better-auth`.
+⚠️ Pas de `RouterModule` — inutile ici.
+
+### `apps/api/prisma/schema.prisma`
 
 ```prisma
-// Modèles générés par Better Auth (via @better-auth/cli generate) :
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model user {
   id            String    @id
   name          String
@@ -222,37 +347,71 @@ model user {
   sessions      session[]
   accounts      account[]
   profile       Profile?
+
+  @@map("user")
 }
 
-model session { ... }
-model account { ... }
-model verification { ... }
+model session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-// Notre modèle métier :
+  @@map("session")
+}
+
+model account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
 model Profile {
-  id             String   @id @default(cuid())
-  userId         String   @unique
-  user           user     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // Données physiques
+  id             String         @id @default(cuid())
+  userId         String         @unique
+  user           user           @relation(fields: [userId], references: [id], onDelete: Cascade)
   birthDate      DateTime?
   gender         Gender?
   heightCm       Float?
   weightKg       Float?
-
-  // Objectif nutritionnel
   activityLevel  ActivityLevel?
   goal           Goal?
-
-  // Objectifs calculés (sauvegardés après calcul TDEE)
   tdeeKcal       Int?
   targetKcal     Int?
   targetProteinG Int?
   targetCarbsG   Int?
   targetFatG     Int?
-
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
 enum Gender {
@@ -262,143 +421,124 @@ enum Gender {
 }
 
 enum ActivityLevel {
-  SEDENTARY        // ×1.2
-  LIGHTLY_ACTIVE   // ×1.375
-  MODERATELY_ACTIVE // ×1.55
-  VERY_ACTIVE      // ×1.725
-  EXTRA_ACTIVE     // ×1.9
+  SEDENTARY
+  LIGHTLY_ACTIVE
+  MODERATELY_ACTIVE
+  VERY_ACTIVE
+  EXTRA_ACTIVE
 }
 
 enum Goal {
-  LOSE_WEIGHT      // -500 kcal/j
-  MAINTAIN         // ±0
-  GAIN_MUSCLE      // +300 kcal/j
+  LOSE_WEIGHT
+  MAINTAIN
+  GAIN_MUSCLE
 }
 ```
 
-**⚠️ Prisma 7** : le client est importé depuis `../generated/prisma`, pas `@prisma/client`.
+### Migration Prisma
 
-### p1-7 — Calcul TDEE (Mifflin-St Jeor)
-
-La formule Mifflin-St Jeor est la référence actuelle (plus précise que Harris-Benedict).
-
-```
-BMR (homme) = (10 × poids_kg) + (6.25 × taille_cm) - (5 × âge) + 5
-BMR (femme) = (10 × poids_kg) + (6.25 × taille_cm) - (5 × âge) - 161
-```
-
-`TDEE = BMR × facteur_activité`
-
-Ajustement selon objectif :
-
-- `LOSE_WEIGHT` : TDEE - 500 kcal/j
-- `MAINTAIN` : TDEE
-- `GAIN_MUSCLE` : TDEE + 300 kcal/j
-
-Répartition macros par défaut (40/30/30 — glucides/protéines/lipides) :
-
-```
-protéines (g) = (targetKcal × 0.30) / 4
-glucides  (g) = (targetKcal × 0.40) / 4
-lipides   (g) = (targetKcal × 0.30) / 9
-```
-
-Ce calcul sera dans un service dédié `TdeeService` (ou méthode dans `ProfileService`) — logique pure,
-testable unitairement.
+Créée et appliquée : `prisma/migrations/20260310091400_init_auth_profile/`
 
 ---
 
-## Structure de fichiers nouvelles en P1
+## Variables d'environnement ajoutées en P1
+
+Dans `apps/api/.env` :
 
 ```
-apps/api/src/
-├── auth/
-│   ├── auth.module.ts
-│   ├── auth.controller.ts     ← délègue à Better Auth handler
-│   └── auth.service.ts        ← initialise Better Auth, expose l'instance
-├── profile/
-│   ├── profile.module.ts
-│   ├── profile.controller.ts  ← GET/PATCH /profile
-│   ├── profile.service.ts     ← logique métier + TDEE
-│   └── profile.dto.ts         ← DTOs Zod ou class-validator
-└── prisma/
-    └── prisma.service.ts      ← PrismaService (singleton, onModuleInit)
+BETTER_AUTH_SECRET=<openssl rand -base64 32>
+BETTER_AUTH_URL=http://localhost:3000
+```
 
-apps/mobile/app/
-├── (auth)/
-│   ├── _layout.tsx            ← layout pour les écrans non-authentifiés
-│   ├── login.tsx
-│   └── register.tsx
-├── (app)/
-│   ├── _layout.tsx            ← layout protégé (tab bar)
-│   └── index.tsx              ← journal (home)
-├── onboarding/
-│   ├── _layout.tsx
-│   ├── step-1.tsx             ← infos perso
-│   ├── step-2.tsx             ← objectif
-│   └── step-3.tsx             ← résumé + calories
-└── _layout.tsx                ← layout racine (QueryClientProvider, auth check)
+Dans `apps/api/src/config/env.schema.ts`, ajouter :
+
+```ts
+BETTER_AUTH_SECRET: z.string().min(32),
+BETTER_AUTH_URL: z.string().default("http://localhost:3000"),
 ```
 
 ---
 
-## Secrets GitHub Actions à ajouter en P1
+## Endpoints Better Auth testés et fonctionnels
 
-| Secret               | Quand                                                      |
-| -------------------- | ---------------------------------------------------------- |
-| `BETTER_AUTH_SECRET` | Dès que Better Auth est configuré                          |
-| `DATABASE_URL`       | Quand Railway PostgreSQL staging est créé (P8 ou plus tôt) |
+| Méthode | URL                       | Body                        | Notes                        |
+| ------- | ------------------------- | --------------------------- | ---------------------------- |
+| POST    | `/api/auth/sign-up/email` | `{ email, password, name }` | ✅                           |
+| POST    | `/api/auth/sign-in/email` | `{ email, password }`       | ✅ — retourne cookie session |
+| GET     | `/api/auth/get-session`   | —                           | ✅ — cookie requis           |
+| POST    | `/api/auth/sign-out`      | —                           | ✅ — header `Origin` requis  |
 
----
-
-## Conventions ajoutées en P1
-
-_(à compléter au fur et à mesure)_
-
-- Import Prisma Client depuis `../generated/prisma` (cf. breaking change Prisma 7 — documenté en P0)
-- Better Auth : jamais de `BETTER_AUTH_SECRET` dans le code — toujours via variable d'env
-- `PrismaService` = singleton NestJS, `onModuleInit` pour `$connect()`, `onModuleDestroy` pour `$disconnect()`
-- `expo install` pour toute dépendance Expo/React Native native (gère la compatibilité SDK)
-- EAS Dev Build requis dès qu'un module natif est ajouté (expo-secure-store, @sentry/react-native)
+⚠️ **`Origin` header obligatoire** sur toutes les requêtes POST — Better Auth protège contre le CSRF.
+L'`Origin` doit correspondre à une valeur dans `trustedOrigins` de `auth.ts`.
+En test depuis Insomnia/curl : ajouter `Origin: http://localhost:8081`.
+En production depuis l'app mobile, Expo envoie automatiquement le bon `Origin`.
 
 ---
 
 ## Breaking changes documentés en P1
 
-_(à compléter au fur et à mesure)_
+### `@thallesp/nestjs-better-auth` — double instance `@nestjs/core`
+
+- **Symptôme** : `UnknownDependenciesException: ApplicationConfig at index [0]`
+- **Cause** : pnpm installe des copies séparées de `@nestjs/core` pour le package et pour l'app
+- **Fix** : `pnpm.overrides` dans `package.json` racine avec les versions NestJS explicites
+- **⚠️ Syntaxe** : utiliser `"^11.0.0"` (version explicite) et non `"$@nestjs/core"` (qui cherche dans les deps racine)
+
+### `@thallesp/nestjs-better-auth` — `forRoot` sans `disableGlobalAuthGuard`
+
+- **Symptôme** : toutes les routes retournent 403 même sans authentification
+- **Fix** : `AuthModule.forRoot({ auth, disableGlobalAuthGuard: true })`
+
+### NestJS SWC builder — `outDir` hérité résolu depuis le mauvais répertoire
+
+- **Symptôme** : fichiers compilés dans `packages/tsconfig/dist/` au lieu de `apps/api/dist/`
+- **Cause** : NestJS CLI SWC résout `outDir` hérité depuis le fichier tsconfig parent (pas l'héritier)
+- **Fix** : toujours déclarer `"outDir": "./dist"` **explicitement** dans `apps/api/tsconfig.json`
+- **Contrairement à tsc** qui respecte la spec TypeScript et résout depuis le fichier héritier
+
+### NestJS SWC builder — conflit ESM/CommonJS avec `.swcrc`
+
+- **Symptôme** : `ERR_MODULE_NOT_FOUND` sur `instrument` — Node.js détecte le fichier comme ESM
+- **Cause** : `.swcrc` avec `"module": { "type": "es6" }` — NestJS CLI lit `.swcrc` et produit de l'ESM
+- **Solution théorique** : `swcOptions` dans `nest-cli.json` override `.swcrc` pour le NestJS CLI uniquement
+- **Décision** : SWC abandonné pour l'instant — on reste sur tsc
+
+### Prisma 7 — `provider = "prisma-client"` génère du TypeScript non compilé
+
+- **Symptôme** : `Cannot find module '../../generated/prisma/client'` au runtime
+- **Cause** : ce provider génère des `.ts` source — Node.js ne peut pas les charger directement
+- **Fix** : utiliser `provider = "prisma-client-js"` (génère du `.js`) ou supprimer l'`output` custom
+- **Décision** : suppression de l'output custom — import depuis `@prisma/client` standard
+
+### Prisma 7 — `@prisma/client` doit être en `dependencies`
+
+- **Mauvaise pratique** : le mettre en `devDependencies`
+- **Fix** : `pnpm add @prisma/client --filter @cooked/api` (sans `-D`)
+
+### Better Auth — `MISSING_OR_NULL_ORIGIN` sur les POST
+
+- **Symptôme** : `403 Forbidden` avec `{ "code": "MISSING_OR_NULL_ORIGIN" }`
+- **Cause** : protection CSRF de Better Auth — vérifie que l'`Origin` est dans `trustedOrigins`
+- **Fix** : ajouter header `Origin: http://localhost:8081` dans Insomnia/curl
+- En production depuis l'app mobile, Expo envoie automatiquement le bon `Origin`
 
 ---
 
-## Fichiers de configuration P1
+## Prochaines étapes (dans l'ordre)
 
-_(complétés au fur et à mesure)_
-
-### eas.json (apps/mobile)
-
-```json
-{
-  "cli": {
-    "version": ">= 16.0.0"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {}
-  }
-}
-```
+1. **p1-6c** — Installer TanStack Query v5 dans `apps/mobile`
+2. **p1-2** — Écran Register (React Native)
+3. **p1-3** — Écran Login + `@better-auth/expo` + `expo-secure-store`
+4. **p1-4** — Middleware d'auth Expo Router
+5. **p1-5** — Initialiser Sentry React Native
+6. **p1-7** — Calcul automatique TDEE
+7. **p1-8** — Écran Onboarding multi-étapes
+8. **p1-9** — Écran Paramètres / Modifier profil
 
 ---
 
 ## Rappel — Breaking changes P0 (les plus importants)
 
-- **Prisma 7** : `import { PrismaClient } from "../generated/prisma"` (pas `@prisma/client`)
-- **Prisma 7** : `datasourceUrl` dans `prisma.config.ts`, pas `url = env(...)` dans `schema.prisma`
 - **Zod v4** : `z.prettifyError(error)` pour formatter, `error.issues` (pas `error.errors`)
 - **SentryExceptionFilter** custom — incompatible avec Pino multi-transport (voir CONTEXT_phase_0.md)
 - **APP_FILTER** = token importé de `@nestjs/core`, jamais la string
@@ -406,3 +546,4 @@ _(complétés au fur et à mesure)_
 - **NativeWind v4** : tailwindcss v3 uniquement (pas v4)
 - **Expo SDK 55** : New Architecture obligatoire, Expo Go APK SDK 55 depuis expo.dev/go
 - **`--tunnel`** obligatoire sur tous les scripts dev mobile (WSL2)
+- **`node-linker=hoisted`** dans `.npmrc` racine — obligatoire pour Gradle autolinking React Native dans monorepo pnpm
