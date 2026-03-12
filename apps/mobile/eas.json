@@ -9,18 +9,12 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      },
-      "env": {
-        "DATABASE_URL": "postgresql://placeholder:placeholder@localhost:5432/placeholder"
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      },
-      "env": {
-        "DATABASE_URL": "postgresql://placeholder:placeholder@localhost:5432/placeholder"
       }
     },
     "production": {

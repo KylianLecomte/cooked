@@ -18,6 +18,13 @@
     "node": ">=22",
     "pnpm": ">=10"
   },
+  "pnpm": {
+    "overrides": {
+      "@nestjs/core": "^11.0.0",
+      "@nestjs/common": "^11.0.0",
+      "@nestjs/platform-express": "^11.0.0"
+    }
+  },
   "devDependencies": {
     "@biomejs/biome": "2.4.6",
     "@commitlint/cli": "^20.4.3",

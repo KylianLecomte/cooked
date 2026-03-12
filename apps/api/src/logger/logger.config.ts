@@ -18,6 +18,8 @@ export function buildPinoConfig(options: LoggerConfigOptions): Params {
       customSuccessMessage: (req, res) => `${req.method} ${req.url} ${res.statusCode}`,
       customErrorMessage: (req, res, err) =>
         `${req.method} ${req.url} ${res.statusCode} — ${err.message}`,
+      // Filtre les requêtes health check des logs pour éviter le bruit
+      // Le endpoint /health sera ajouté quand Railway sera configuré (P8)
       autoLogging: { ignore: (req) => req.url === "/health" },
     },
   };

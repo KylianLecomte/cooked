@@ -75,6 +75,7 @@ Branches permanentes protégées, aucun commit direct autorisé.
 | Navigation         | Expo Router                 | ^55.0.4                                           |
 | Styling            | NativeWind v4 + Tailwind v3 | -                                                 |
 | HTTP client mobile | **TanStack Query v5**       | à installer                                       |
+| Linting/Formatting | **Biome**                   | 2.4.6                                             |
 | Logging            | nestjs-pino + Axiom         | -                                                 |
 | Monitoring         | Sentry                      | @sentry/nestjs ✅, @sentry/react-native (à faire) |
 | Qualité            | SonarCloud                  | -                                                 |
@@ -113,9 +114,19 @@ Branches permanentes protégées, aucun commit direct autorisé.
 
 ### Compilateur
 
-- **tsc** (TypeScript compiler standard) — SWC a été tenté mais abandonné pour l'instant
-  - SWC sera peut-être réintroduit plus tard
+- **tsc** (TypeScript compiler standard) — SWC a été tenté mais abandonné
+  - `.swcrc` reste pour Vitest uniquement (`unplugin-swc`)
   - Raison de l'abandon : conflits de config SWC entre NestJS CLI et Vitest (`es6` vs `commonjs`)
+
+### Instance PrismaClient unique
+
+L'application utilise une **seule instance PrismaClient**, définie dans `src/prisma/prisma.instance.ts` et partagée entre :
+- **Better Auth** (`src/auth/auth.ts`) — qui en a besoin au chargement du module (avant NestJS)
+- **PrismaService** (`src/prisma/prisma.service.ts`) — qui l'expose dans le conteneur DI de NestJS
+
+Cela évite d'ouvrir deux pools de connexions PostgreSQL distincts et permet les transactions cross-modèles.
+
+`process.env.DATABASE_URL` est lu directement dans `prisma.instance.ts` car l'instance est créée avant l'initialisation de NestJS. La validation Zod dans `env.schema.ts` vérifie la variable au boot — si elle est invalide, l'app s'arrête avec un message d'erreur clair.
 
 ### Fichiers de configuration
 
@@ -141,8 +152,6 @@ Branches permanentes protégées, aucun commit direct autorisé.
 {
   "extends": "@cooked/tsconfig/node.json",
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
       "@cooked/shared": ["../../packages/shared/src/index.ts"]
@@ -153,14 +162,14 @@ Branches permanentes protégées, aucun commit direct autorisé.
 }
 ```
 
-⚠️ `"rootDir": "."` et `"outDir": "./dist"` sont **obligatoires explicitement** — ne pas les hériter du tsconfig parent.
+⚠️ `"rootDir"` et `"outDir"` sont **hérités** de `@cooked/tsconfig/node.json`. Ne pas les redéclarer.
 
 **`apps/api/tsconfig.build.json`** :
 
 ```json
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "dist", "test", "**/*.spec.ts", "**/*.e2e-spec.ts"]
+  "exclude": ["node_modules", "dist", "test", "**/*.spec.ts", "**/*.e2e-spec.ts", "generated"]
 }
 ```
 
@@ -204,20 +213,27 @@ Ces overrides forcent une unique instance de `@nestjs/core` dans tout le monorep
 
 ---
 
-## Fichiers créés en P1
+## Fichiers créés/modifiés en P1
+
+### `apps/api/src/prisma/prisma.instance.ts` — instance unique PrismaClient
+
+```ts
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../../generated/prisma/client";
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
+
+export const prisma = new PrismaClient({ adapter });
+```
 
 ### `apps/api/src/auth/auth.ts`
 
 ```ts
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-});
-export const prisma = new PrismaClient({ adapter });
+import { prisma } from "../prisma/prisma.instance";
 
 export const auth = betterAuth({
   basePath: "/api/auth",
@@ -241,29 +257,25 @@ export type User = typeof auth.$Infer.Session.user;
 ### `apps/api/src/prisma/prisma.service.ts`
 
 ```ts
-import { Injectable, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
-import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-});
+import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
+import { prisma } from "./prisma.instance";
 
 @Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
-  constructor() {
-    super({ adapter });
-  }
+export class PrismaService implements OnModuleInit, OnModuleDestroy {
+  readonly client = prisma;
 
   async onModuleInit(): Promise<void> {
-    await this.$connect();
+    await this.client.$connect();
   }
 
   async onModuleDestroy(): Promise<void> {
-    await this.$disconnect();
+    await this.client.$disconnect();
   }
 }
 ```
+
+⚠️ `PrismaService` n'étend plus `PrismaClient` — il expose l'instance via `.client`.
+Usage dans les services : `this.prisma.client.user.findMany()`
 
 ### `apps/api/src/prisma/prisma.module.ts`
 
@@ -280,19 +292,19 @@ export class PrismaModule {}
 
 ```ts
 import { Module } from "@nestjs/common";
-import { APP_FILTER } from "@nestjs/core";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { LoggerModule } from "nestjs-pino";
+import { APP_FILTER } from "@nestjs/core";
 import { SentryModule } from "@sentry/nestjs/setup";
 import { AuthModule } from "@thallesp/nestjs-better-auth";
+import { LoggerModule } from "nestjs-pino";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { validateEnv } from "./config/env.validation";
-import type { EnvSchema } from "./config/env.schema";
-import { buildPinoConfig } from "./logger/logger.config";
-import { SentryExceptionFilter } from "./filter/sentry-exception.filter";
-import { PrismaModule } from "./prisma/prisma.module";
 import { auth } from "./auth/auth";
+import type { EnvSchema } from "./config/env.schema";
+import { validateEnv } from "./config/env.validation";
+import { SentryExceptionFilter } from "./filter/sentry-exception.filter";
+import { buildPinoConfig } from "./logger/logger.config";
+import { PrismaModule } from "./prisma/prisma.module";
 
 @Module({
   imports: [
@@ -304,12 +316,13 @@ import { auth } from "./auth/auth";
     }),
     LoggerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService<EnvSchema>) =>
-        buildPinoConfig({
+      useFactory: (config: ConfigService<EnvSchema>) => {
+        return buildPinoConfig({
           isDev: config.get("NODE_ENV", { infer: true }) === "development",
           axiomDataset: config.get("AXIOM_DATASET", { infer: true }),
           axiomToken: config.get("AXIOM_TOKEN", { infer: true }),
-        }),
+        });
+      },
     }),
     PrismaModule,
     AuthModule.forRoot({ auth, disableGlobalAuthGuard: true }),
@@ -322,55 +335,57 @@ export class AppModule {}
 
 ⚠️ `disableGlobalAuthGuard: true` est obligatoire — sinon toutes les routes sont protégées par défaut.
 ⚠️ `bodyParser: false` dans `main.ts` est obligatoire pour `@thallesp/nestjs-better-auth`.
-⚠️ Pas de `RouterModule` — inutile ici.
 
 ### `apps/api/prisma/schema.prisma`
 
 ```prisma
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
-model user {
+model User {
   id            String    @id
   name          String
-  email         String    @unique
-  emailVerified Boolean
+  email         String
+  emailVerified Boolean   @default(false)
   image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      session[]
-  accounts      account[]
-  profile       Profile?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  profiles      Profile?
 
+  @@unique([email])
   @@map("user")
 }
 
-model session {
+model Session {
   id        String   @id
   expiresAt DateTime
-  token     String   @unique
-  createdAt DateTime
-  updatedAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   ipAddress String?
   userAgent String?
   userId    String
-  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([token])
+  @@index([userId])
   @@map("session")
 }
 
-model account {
+model Account {
   id                    String    @id
   accountId             String
   providerId            String
   userId                String
-  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -378,40 +393,47 @@ model account {
   refreshTokenExpiresAt DateTime?
   scope                 String?
   password              String?
-  createdAt             DateTime
-  updatedAt             DateTime
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
+  @@index([userId])
   @@map("account")
 }
 
-model verification {
-  id         String    @id
+model Verification {
+  id         String   @id
   identifier String
   value      String
   expiresAt  DateTime
-  createdAt  DateTime?
-  updatedAt  DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
+  @@index([identifier])
   @@map("verification")
 }
 
 model Profile {
-  id             String         @id @default(cuid())
-  userId         String         @unique
-  user           user           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  birthDate      DateTime?
-  gender         Gender?
-  heightCm       Float?
-  weightKg       Float?
-  activityLevel  ActivityLevel?
-  goal           Goal?
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  birthDate     DateTime?
+  gender        Gender?
+  heightCm      Float?
+  weightKg      Float?
+  activityLevel ActivityLevel?
+  goal          Goal?
+
   tdeeKcal       Int?
   targetKcal     Int?
   targetProteinG Int?
   targetCarbsG   Int?
   targetFatG     Int?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("profile")
 }
 
 enum Gender {
@@ -435,6 +457,13 @@ enum Goal {
 }
 ```
 
+Points importants :
+- `provider = "prisma-client"` avec `output = "../generated/prisma"` — Prisma 7 génère dans un dossier custom
+- `datasource db` sans URL — gérée par `prisma.config.ts`
+- Les modèles User, Session, Account, Verification sont requis par Better Auth
+- Le modèle Profile est le modèle métier COOKED (TDEE, macros, objectifs)
+- Import dans le code : `from "../../generated/prisma/client"` (chemin relatif, pas `@prisma/client`)
+
 ### Migration Prisma
 
 Créée et appliquée : `prisma/migrations/20260310091400_init_auth_profile/`
@@ -450,10 +479,10 @@ BETTER_AUTH_SECRET=<openssl rand -base64 32>
 BETTER_AUTH_URL=http://localhost:3000
 ```
 
-Dans `apps/api/src/config/env.schema.ts`, ajouter :
+Dans `apps/api/src/config/env.schema.ts` :
 
 ```ts
-BETTER_AUTH_SECRET: z.string().min(32),
+BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET doit faire au minimum 32 caractères"),
 BETTER_AUTH_URL: z.string().default("http://localhost:3000"),
 ```
 
@@ -494,21 +523,19 @@ En production depuis l'app mobile, Expo envoie automatiquement le bon `Origin`.
 - **Symptôme** : fichiers compilés dans `packages/tsconfig/dist/` au lieu de `apps/api/dist/`
 - **Cause** : NestJS CLI SWC résout `outDir` hérité depuis le fichier tsconfig parent (pas l'héritier)
 - **Fix** : toujours déclarer `"outDir": "./dist"` **explicitement** dans `apps/api/tsconfig.json`
-- **Contrairement à tsc** qui respecte la spec TypeScript et résout depuis le fichier héritier
+- **Note** : non nécessaire actuellement car on utilise tsc (pas SWC builder)
 
 ### NestJS SWC builder — conflit ESM/CommonJS avec `.swcrc`
 
 - **Symptôme** : `ERR_MODULE_NOT_FOUND` sur `instrument` — Node.js détecte le fichier comme ESM
 - **Cause** : `.swcrc` avec `"module": { "type": "es6" }` — NestJS CLI lit `.swcrc` et produit de l'ESM
-- **Solution théorique** : `swcOptions` dans `nest-cli.json` override `.swcrc` pour le NestJS CLI uniquement
-- **Décision** : SWC abandonné pour l'instant — on reste sur tsc
+- **Décision** : SWC builder abandonné — on reste sur tsc. `.swcrc` reste pour Vitest uniquement.
 
-### Prisma 7 — `provider = "prisma-client"` génère du TypeScript non compilé
+### Prisma 7 — `provider = "prisma-client"` génère du TypeScript
 
-- **Symptôme** : `Cannot find module '../../generated/prisma/client'` au runtime
-- **Cause** : ce provider génère des `.ts` source — Node.js ne peut pas les charger directement
-- **Fix** : utiliser `provider = "prisma-client-js"` (génère du `.js`) ou supprimer l'`output` custom
-- **Décision** : suppression de l'output custom — import depuis `@prisma/client` standard
+- **Symptôme** : `Cannot find module '../../generated/prisma/client'` au runtime si mal configuré
+- **Cause** : ce provider génère des `.ts` source dans le dossier `output`
+- **Fix** : les imports doivent pointer vers `../../generated/prisma/client` (chemin relatif)
 
 ### Prisma 7 — `@prisma/client` doit être en `dependencies`
 
@@ -521,6 +548,13 @@ En production depuis l'app mobile, Expo envoie automatiquement le bon `Origin`.
 - **Cause** : protection CSRF de Better Auth — vérifie que l'`Origin` est dans `trustedOrigins`
 - **Fix** : ajouter header `Origin: http://localhost:8081` dans Insomnia/curl
 - En production depuis l'app mobile, Expo envoie automatiquement le bon `Origin`
+
+### Double PrismaClient — corrigé
+
+- **Symptôme** : deux pools de connexions PostgreSQL (un pour auth.ts, un pour prisma.service.ts)
+- **Cause** : chaque fichier créait son propre `new PrismaClient()` avec `new PrismaPg()`
+- **Fix** : instance unique dans `prisma/prisma.instance.ts`, importée par les deux
+- **Impact** : `PrismaService` n'étend plus `PrismaClient`, il expose `.client`
 
 ---
 
@@ -539,11 +573,13 @@ En production depuis l'app mobile, Expo envoie automatiquement le bon `Origin`.
 
 ## Rappel — Breaking changes P0 (les plus importants)
 
+- **Biome 2.4.6** : remplace ESLint + Prettier — `biome check --write` pour lint + format
 - **Zod v4** : `z.prettifyError(error)` pour formatter, `error.issues` (pas `error.errors`)
 - **SentryExceptionFilter** custom — incompatible avec Pino multi-transport (voir CONTEXT_phase_0.md)
 - **APP_FILTER** = token importé de `@nestjs/core`, jamais la string
-- **`bootstrap().catch(...)`** — jamais `void bootstrap()`
+- **`bootstrap().catch(...)`** — jamais `void bootstrap()`, log l'erreur avant `process.exit(1)`
 - **NativeWind v4** : tailwindcss v3 uniquement (pas v4)
 - **Expo SDK 55** : New Architecture obligatoire, Expo Go APK SDK 55 depuis expo.dev/go
 - **`--tunnel`** obligatoire sur tous les scripts dev mobile (WSL2)
 - **`node-linker=hoisted`** dans `.npmrc` racine — obligatoire pour Gradle autolinking React Native dans monorepo pnpm
+- **Instance PrismaClient unique** dans `prisma/prisma.instance.ts` — `PrismaService.client` pour y accéder

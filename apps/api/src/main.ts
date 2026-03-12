@@ -22,12 +22,12 @@ async function bootstrap() {
 
   await app.listen(port ?? 3000);
 
-  // Ces logs passent maintenant par Pino
   const logger = new Logger("Bootstrap");
   logger.log(`API running on port ${port}`);
   logger.log(`Environment: ${configService.get("NODE_ENV", { infer: true })}`);
 }
 
-bootstrap().catch((_: unknown) => {
+bootstrap().catch((error: unknown) => {
+  console.error("Bootstrap failed:", error);
   process.exit(1);
 });

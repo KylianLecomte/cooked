@@ -43,5 +43,11 @@ coverage/
 # Docker
 docker-compose.override.yml
 
+# Prisma generated client
+generated/
+
+# npm lockfile (projet utilise pnpm)
+package-lock.json
+
 # Windows Zone.Identifier streams
 *:Zone.Identifier

@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@nestjs/core': ^11.0.0
+  '@nestjs/common': ^11.0.0
+  '@nestjs/platform-express': ^11.0.0
+
 importers:
 
   .:
@@ -36,16 +41,16 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       '@nestjs/common':
-        specifier: ^11.0.1
+        specifier: ^11.0.0
         version: 11.1.16(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/config':
         specifier: ^4.0.3
         version: 4.0.3(@nestjs/common@11.1.16(reflect-metadata@0.2.2)(rxjs@7.8.2))(rxjs@7.8.2)
       '@nestjs/core':
-        specifier: ^11.0.1
+        specifier: ^11.0.0
         version: 11.1.16(@nestjs/common@11.1.16(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.16)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/platform-express':
-        specifier: ^11.0.1
+        specifier: ^11.0.0
         version: 11.1.16(@nestjs/common@11.1.16(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.16)
       '@prisma/adapter-pg':
         specifier: ^7.5.0
@@ -138,9 +143,6 @@ importers:
 
   apps/mobile:
     dependencies:
-      dotenv:
-        specifier: ^17.3.1
-        version: 17.3.1
       expo:
         specifier: ~55.0.5
         version: 55.0.5(@babel/core@7.29.0)(@expo/dom-webview@55.0.3)(@expo/metro-runtime@55.0.6)(expo-router@55.0.4)(react-dom@19.2.4(react@19.2.0))(react-native@0.83.2(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
@@ -1577,7 +1579,7 @@ packages:
   '@nestjs/config@4.0.3':
     resolution: {integrity: sha512-FQ3M3Ohqfl+nHAn5tp7++wUQw0f2nAk+SFKe8EpNRnIifPqvfJP6JQxPKtFLMOHbyer4X646prFG4zSRYEssQQ==}
     peerDependencies:
-      '@nestjs/common': ^10.0.0 || ^11.0.0
+      '@nestjs/common': ^11.0.0
       rxjs: ^7.1.0
 
   '@nestjs/core@11.1.16':
@@ -2434,8 +2436,8 @@ packages:
     resolution: {integrity: sha512-ISfULcCtwo3vrLZUy/lxv5LFDWdUz+qkaPpvTw0t1CyMcrhHMBVshUfxXklbnvGmwSAeXioDT4XyKMZKYViEFA==}
     engines: {node: '>=18'}
     peerDependencies:
-      '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
-      '@nestjs/core': ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
+      '@nestjs/common': ^11.0.0
+      '@nestjs/core': ^11.0.0
 
   '@sentry/node-core@10.42.0':
     resolution: {integrity: sha512-9tf3fPV6M071aps72D+PEtdQPTuj+SuqO2+PpTfdPP5ZL4TTKYo3VK0li76SL+5wGdTFGV5qmsokHq9IRBA0iA==}
@@ -2582,8 +2584,8 @@ packages:
     resolution: {integrity: sha512-pEp7om4KOD7sE9CmzpAXsCppzed24NY/TNwbmA8Gomjbn30SrxNfapUFMg/Dw1z2do51dGP7QVNF4oEXNVjsCQ==}
     engines: {node: '>=22.22.1'}
     peerDependencies:
-      '@nestjs/common': ^11.1.6
-      '@nestjs/core': ^11.1.6
+      '@nestjs/common': ^11.0.0
+      '@nestjs/core': ^11.0.0
       '@nestjs/graphql': ^13.1.0
       '@nestjs/websockets': ^11.1.6
       better-auth: '>=1.5.0 <2.0.0'
@@ -5062,7 +5064,7 @@ packages:
     resolution: {integrity: sha512-MzSgnOu9MhRT/f7MsvoDnxat11D9JRJYwL1t+tI6J44UrNz9rUVDpceEh9VFsyfiiIJKUri5S+/snMOoaWh7YA==}
     engines: {node: '>= 14'}
     peerDependencies:
-      '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
+      '@nestjs/common': ^11.0.0
       pino: ^7.5.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
       pino-http: ^6.4.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
       rxjs: ^7.1.0

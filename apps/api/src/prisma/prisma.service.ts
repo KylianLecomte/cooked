@@ -1,22 +1,24 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client";
+import { prisma } from "./prisma.instance";
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-});
-
+// PrismaService expose l'instance unique de PrismaClient dans le conteneur DI de NestJS
+// L'instance est créée dans prisma.instance.ts et partagée avec Better Auth (auth.ts)
+// Cela évite d'ouvrir deux pools de connexions PostgreSQL distincts
+//
+// On n'étend pas PrismaClient ici car l'instance est créée en dehors du constructeur
+// (nécessaire pour que Better Auth y accède avant l'initialisation de NestJS)
+// À la place, on délègue toutes les opérations via la propriété `client`
 @Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
-  constructor() {
-    super({ adapter });
-  }
+export class PrismaService implements OnModuleInit, OnModuleDestroy {
+  // L'instance PrismaClient unique — utiliser prismaService.client dans les services
+  // Ex: this.prisma.client.user.findMany()
+  readonly client = prisma;
 
   async onModuleInit(): Promise<void> {
-    await this.$connect();
+    await this.client.$connect();
   }
 
   async onModuleDestroy(): Promise<void> {
-    await this.$disconnect();
+    await this.client.$disconnect();
   }
 }
