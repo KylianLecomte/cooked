@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COOKED — Style A Complet</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ─────────── TOKENS ─────────── */
+:root{
+  --bg:    #080808;
+  --s1:    #0E0E0E;
+  --s2:    #141414;
+  --s3:    #1a1a1a;
+  --b1:    #1a1a1a;
+  --b2:    #242424;
+  --b3:    #2e2e2e;
+  --or:    #FF6B2C;
+  --or-s:  rgba(255,107,44,.10);
+  --or-m:  rgba(255,107,44,.30);
+  --gr:    #4ADE80;
+  --bl:    #60A5FA;
+  --ye:    #FBBF24;
+  --pu:    #A78BFA;
+  --te:    #2DD4BF;
+  --re:    #F87171;
+  --tx:    #E8E8E8;
+  --tm:    #666666;   /* labels section — lisibles */
+  --ts:    #444444;   /* labels secondaires */
+  --tf:    #2a2a2a;   /* texte fantôme */
+  --num:   'DM Mono', monospace; /* police unique pour tous les chiffres */
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#050507;color:var(--tx);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding:24px 16px 60px;gap:16px;}
+
+/* ── Header page ── */
+.ph{display:flex;align-items:center;gap:10px;}
+.ph-logo{width:36px;height:36px;background:var(--or);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:17px;}
+.ph-t{font-family:'DM Serif Display',serif;font-size:24px;letter-spacing:-1px;}
+.ph-b{font-family:var(--num);font-size:9px;color:var(--ts);
+  background:var(--s1);border:1px solid var(--b2);padding:3px 10px;border-radius:20px;letter-spacing:2px;}
+
+/* ── Nav ── */
+.nw{display:flex;flex-direction:column;align-items:center;gap:9px;width:100%;max-width:820px;}
+.ng{display:flex;flex-direction:column;align-items:center;gap:5px;width:100%;}
+.ngl{font-family:var(--num);font-size:8px;letter-spacing:3px;color:var(--tf);}
+.nav{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}
+.nb{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;
+  border:1px solid var(--b2);background:var(--s1);color:var(--ts);
+  font-family:'DM Sans',sans-serif;transition:all .15s;}
+.nb:hover{border-color:var(--or-m);color:var(--tx);}
+.nb.on{background:var(--or);border-color:var(--or);color:#fff;font-weight:800;}
+.nb.t.on{background:var(--te);border-color:var(--te);color:#000;}
+.sep{width:100%;max-width:820px;height:1px;background:var(--b1);}
+
+/* ── Phone ── */
+.phone{width:375px;height:812px;background:var(--bg);border-radius:50px;overflow:hidden;
+  border:10px solid #151515;
+  box-shadow:0 0 0 1px #0A0A0A,0 50px 120px rgba(0,0,0,.95),inset 0 0 0 1px #222;
+  display:flex;flex-direction:column;}
+
+/* Status bar */
+.sb{height:44px;background:var(--bg);display:flex;align-items:center;
+  justify-content:space-between;padding:0 28px;flex-shrink:0;position:relative;}
+.isl{position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  width:120px;height:28px;background:#0A0A0A;border-radius:20px;border:1px solid #1a1a1a;}
+.stm{font-family:var(--num);font-size:13px;font-weight:700;}
+.bat{width:22px;height:11px;border:1.5px solid var(--tx);border-radius:3px;
+  display:flex;align-items:center;padding:0 1px;}
+.batf{width:70%;height:6px;background:var(--gr);border-radius:1px;}
+.sig{font-family:var(--num);font-size:10px;color:var(--ts);letter-spacing:-1px;}
+
+/* Screen */
+.sc{display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden;}
+.sc.vis{display:flex;}
+.sk{flex:1;overflow-y:auto;padding:14px 15px 12px;}
+.sk::-webkit-scrollbar{display:none;}
+
+/* ── Typography helpers ── */
+/* Section label — lisible */
+.sl{font-family:var(--num);font-size:9px;letter-spacing:3px;color:var(--tm);text-transform:uppercase;}
+/* All numbers → DM Mono */
+.n{font-family:var(--num);}
+/* Back button */
+.bk{display:flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;
+  color:var(--ts);font-size:12px;font-family:'DM Sans',sans-serif;padding:4px 0;margin-bottom:13px;}
+
+/* ── Cards ── */
+.cd{background:var(--s1);border:1px solid var(--b1);border-radius:16px;
+  position:relative;overflow:hidden;}
+/* Grain overlay */
+.cd::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  opacity:.7;border-radius:16px;}
+
+/* ── Macro bars ── */
+.mb{margin-bottom:8px;}
+.mbh{display:flex;justify-content:space-between;margin-bottom:4px;}
+.mbl{font-size:11px;color:var(--ts);font-weight:600;}
+/* macro value → DM Mono */
+.mbv{font-family:var(--num);font-size:11px;color:var(--tx);font-weight:700;}
+.mbt{height:4px;background:var(--b2);border-radius:2px;overflow:hidden;}
+.mbf{height:100%;border-radius:2px;}
+
+/* ── Nutrient rows ── */
+.nr{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--b1);}
+.nr:last-child{border-bottom:none;}
+.ni{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:12px;flex-shrink:0;}
+.nb2{flex:1;height:3px;background:var(--b2);border-radius:2px;overflow:hidden;max-width:65px;}
+.nbf{height:100%;border-radius:2px;}
+/* pct → DM Mono */
+.np{font-family:var(--num);font-size:11px;font-weight:700;min-width:34px;text-align:right;}
+
+/* ── Meal sections ── */
+.ms{background:var(--s1);border:1px solid var(--b1);border-radius:14px;margin-bottom:7px;overflow:hidden;}
+.msh{padding:11px 13px;display:flex;align-items:center;}
+.mr{padding:8px 13px;display:flex;align-items:center;border-top:1px solid var(--b1);}
+.madd{width:22px;height:22px;border-radius:6px;background:var(--or-s);border:1px solid var(--or-m);
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--or);font-size:14px;cursor:pointer;margin-right:5px;line-height:1;flex-shrink:0;}
+
+/* ── Shopping items ── */
+.si{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--b1);}
+.si:last-child{border-bottom:none;}
+.sch{width:22px;height:22px;border-radius:7px;border:2px solid var(--b3);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-family:var(--num);font-size:11px;font-weight:700;color:#000;transition:all .15s;}
+.sch.done{background:var(--te);border-color:var(--te);}
+
+/* ── Plan ── */
+.pday{background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:12px;margin-bottom:8px;}
+.psl{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--b1);}
+.psl:last-child{border-bottom:none;}
+.pmt{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:13px;flex-shrink:0;}
+
+/* ── Toggle ── */
+.tog{width:44px;height:26px;border-radius:13px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.tog.on{background:var(--or);}
+.tog.off{background:var(--b2);}
+.togk{position:absolute;top:3px;width:20px;height:20px;border-radius:10px;
+  background:white;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.tog.on .togk{left:21px;}
+.tog.off .togk{left:3px;}
+.tr{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--b1);}
+.tr:last-child{border-bottom:none;}
+
+/* ── Settings rows ── */
+.sr{padding:12px 13px;display:flex;align-items:center;gap:12px;cursor:pointer;
+  border-bottom:1px solid var(--b1);}
+.sr:last-child{border-bottom:none;}
+
+/* ── Portion presets ── */
+.pp{flex:1;padding:7px 0;border-radius:9px;font-family:var(--num);font-size:11px;
+  font-weight:700;cursor:pointer;background:var(--s2);border:1px solid var(--b1);
+  color:var(--ts);transition:all .15s;}
+.pp.sel{background:var(--or-s);border-color:var(--or-m);color:var(--or);}
+
+/* ── Category pills ── */
+.catpill{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;}
+.catpill.sel{background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);color:var(--te);}
+.catpill.unsel{background:var(--s2);border:1px solid var(--b2);color:var(--ts);}
+
+/* ── Onboarding dots ── */
+.dots{display:flex;gap:5px;margin-bottom:22px;}
+.dot{flex:1;height:4px;border-radius:2px;}
+
+/* ── Button ── */
+.btn{width:100%;border:none;border-radius:13px;padding:14px;color:#fff;
+  font-size:14px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* ── Input ── */
+.inp{background:var(--s2);border:1px solid var(--b2);border-radius:12px;
+  padding:12px 14px;color:var(--tx);font-size:14px;font-family:'DM Sans',sans-serif;width:100%;}
+.inpl{font-family:var(--num);font-size:9px;letter-spacing:2px;color:var(--tm);
+  display:block;margin-bottom:6px;}
+
+/* ── Tab bar ── */
+.tab{height:80px;background:var(--s1);border-top:1px solid var(--b1);
+  display:flex;align-items:flex-start;padding-top:7px;flex-shrink:0;}
+.ti{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;background:none;border:none;padding:4px 0;font-family:'DM Sans',sans-serif;}
+.tp{padding:4px 12px;border-radius:13px;transition:background .2s;}
+.tp.on{background:var(--or-s);}
+.tp.on-t{background:rgba(45,212,191,.1);}
+.tl{font-size:9px;font-weight:600;color:var(--ts);}
+.tl.on{color:var(--or);font-weight:800;}
+.tl.on-t{color:var(--te);font-weight:800;}
+
+/* ── Scan animation ── */
+@keyframes scl{0%,100%{top:12%;opacity:.5}50%{top:82%;opacity:1}}
+.scl{position:absolute;left:4px;right:4px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--or),transparent);
+  animation:scl 2s ease-in-out infinite;}
+
+/* ── Recipe step ── */
+.step-num{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-family:var(--num);font-size:11px;font-weight:700;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="ph">
+  <div class="ph-logo">🔥</div>
+  <span class="ph-t">COOKED</span>
+  <span class="ph-b">STYLE A · COMPLET · 17 ÉCRANS</span>
+</div>
+
+<!-- Nav -->
+<div class="nw">
+  <div class="ng">
+    <span class="ngl">AUTHENTIFICATION</span>
+    <div class="nav">
+      <button class="nb on" onclick="G('login')">🔑 Login</button>
+      <button class="nb" onclick="G('register')">📝 Register</button>
+      <button class="nb" onclick="G('ob1')">👤 Onboarding 1</button>
+      <button class="nb" onclick="G('ob2')">🎯 Onboarding 2</button>
+      <button class="nb" onclick="G('ob3')">✅ Onboarding 3 — TDEE</button>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="ng">
+    <span class="ngl">JOURNAL</span>
+    <div class="nav">
+      <button class="nb" onclick="G('journal')">📓 Journal</button>
+      <button class="nb" onclick="G('micro-full')">🔬 Micronutriments complet</button>
+      <button class="nb" onclick="G('micro-detail')">⚡ Détail nutriment</button>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="ng">
+    <span class="ngl">RECHERCHE</span>
+    <div class="nav">
+      <button class="nb" onclick="G('search')">🔍 Recherche</button>
+      <button class="nb" onclick="G('scan')">📷 Scanner</button>
+      <button class="nb" onclick="G('food')">🥩 Détail aliment</button>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="ng">
+    <span class="ngl">MEAL PLANNING</span>
+    <div class="nav">
+      <button class="nb t" onclick="G('planner')">📅 Planning semaine</button>
+      <button class="nb t" onclick="G('planday')">🍽 Journée planifiée</button>
+      <button class="nb t" onclick="G('recipe')">📖 Recette</button>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="ng">
+    <span class="ngl">LISTE DE COURSES</span>
+    <div class="nav">
+      <button class="nb t" onclick="G('shopping')">🛒 Liste groupée</button>
+      <button class="nb t" onclick="G('shopping-flat')">🛒 Liste à plat</button>
+      <button class="nb t" onclick="G('shopping-add')">➕ Ajouter manuellement</button>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="ng">
+    <span class="ngl">PROFIL & PARAMÈTRES</span>
+    <div class="nav">
+      <button class="nb" onclick="G('profile')">👤 Profil + Stats</button>
+      <button class="nb" onclick="G('settings')">⚙️ Paramètres affichage</button>
+    </div>
+  </div>
+</div>
+
+<!-- PHONE -->
+<div class="phone">
+  <div class="sb">
+    <span class="stm">9:41</span>
+    <div class="isl"></div>
+    <div style="display:flex;gap:5px;align-items:center;">
+      <span class="sig">▲▲▲</span>
+      <div class="bat"><div class="batf"></div></div>
+    </div>
+  </div>
+
+  <!-- ═══ LOGIN ═══ -->
+  <div class="sc vis" id="s-login">
+    <div class="sk" style="display:flex;flex-direction:column;justify-content:center;flex:1;padding:32px 22px 40px;">
+      <div style="margin-bottom:42px;">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:10px;">
+          <div style="width:46px;height:46px;background:var(--or);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:23px;">🔥</div>
+          <span style="font-family:'DM Serif Display',serif;font-size:34px;letter-spacing:-1px;color:var(--tx);">COOKED</span>
+        </div>
+        <p style="color:var(--ts);font-size:13px;line-height:1.7;">Nutrition · Meal planning · Micronutriments.</p>
+      </div>
+      <div style="margin-bottom:12px;"><label class="inpl">EMAIL</label><div class="inp" style="color:var(--ts);">kylian@example.com</div></div>
+      <div style="margin-bottom:28px;"><label class="inpl">MOT DE PASSE</label><div class="inp" style="letter-spacing:4px;color:var(--ts);">••••••••</div></div>
+      <button class="btn" style="background:var(--or);" onclick="G('journal')">Se connecter</button>
+      <div style="text-align:center;margin-top:18px;">
+        <span style="color:var(--ts);font-size:13px;">Pas encore de compte ? </span>
+        <button onclick="G('register')" style="background:none;border:none;color:var(--or);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Créer un compte</button>
+      </div>
+    </div>
+    <p style="text-align:center;font-family:var(--num);font-size:9px;color:var(--tf);padding:0 18px 20px;line-height:1.6;letter-spacing:1px;">CGU · POLITIQUE DE CONFIDENTIALITÉ</p>
+  </div>
+
+  <!-- ═══ REGISTER ═══ -->
+  <div class="sc" id="s-register">
+    <div class="sk">
+      <button class="bk" onclick="G('login')">← Retour</button>
+      <h2 style="font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:5px;">Créer un compte</h2>
+      <p style="color:var(--ts);font-size:12px;margin-bottom:24px;line-height:1.6;">Gratuit · Sans pub · Tes données t'appartiennent.</p>
+      <div style="margin-bottom:11px;"><label class="inpl">PRÉNOM</label><div class="inp">Kylian</div></div>
+      <div style="margin-bottom:11px;"><label class="inpl">EMAIL</label><div class="inp" style="color:var(--ts);">kylian@example.com</div></div>
+      <div style="margin-bottom:22px;"><label class="inpl">MOT DE PASSE</label><div class="inp" style="color:var(--tf);">Min. 8 caractères</div></div>
+      <div style="background:var(--or-s);border:1px solid var(--or-m);border-radius:11px;padding:10px 13px;margin-bottom:24px;display:flex;gap:8px;">
+        <span style="font-size:13px;">ℹ️</span>
+        <p style="font-size:11px;color:var(--or);line-height:1.6;">Après l'inscription, tu renseigneras ton profil physique pour calculer tes objectifs nutritionnels.</p>
+      </div>
+      <button class="btn" style="background:var(--or);" onclick="G('ob1')">Créer mon compte →</button>
+    </div>
+  </div>
+
+  <!-- ═══ ONBOARDING 1 ═══ -->
+  <div class="sc" id="s-ob1">
+    <div class="sk">
+      <div class="dots"><div class="dot" style="background:var(--or);"></div><div class="dot" style="background:var(--b2);"></div><div class="dot" style="background:var(--b2);"></div></div>
+      <p class="sl" style="margin-bottom:5px;">ÉTAPE 1 / 3</p>
+      <h2 style="font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:5px;">Infos personnelles</h2>
+      <p style="color:var(--ts);font-size:12px;margin-bottom:22px;line-height:1.6;">Servent à calculer ton métabolisme de base (formule Mifflin-St Jeor).</p>
+      <div style="margin-bottom:11px;"><label class="inpl">DATE DE NAISSANCE</label><div class="inp">15 / 03 / 1998</div></div>
+      <div style="margin-bottom:11px;"><label class="inpl">TAILLE</label><div class="inp">178 cm</div></div>
+      <div style="margin-bottom:20px;"><label class="inpl">POIDS ACTUEL</label><div class="inp">75 kg</div></div>
+      <div style="margin-bottom:28px;">
+        <label class="inpl" style="margin-bottom:9px;">SEXE BIOLOGIQUE</label>
+        <div style="display:flex;gap:7px;">
+          <div style="flex:1;padding:11px 6px;border-radius:11px;text-align:center;border:1px solid var(--or);background:var(--or-s);color:var(--or);font-size:12px;font-weight:700;cursor:pointer;">Homme</div>
+          <div style="flex:1;padding:11px 6px;border-radius:11px;text-align:center;border:1px solid var(--b2);background:var(--s2);color:var(--ts);font-size:12px;cursor:pointer;">Femme</div>
+          <div style="flex:1;padding:11px 6px;border-radius:11px;text-align:center;border:1px solid var(--b2);background:var(--s2);color:var(--ts);font-size:12px;cursor:pointer;">Autre</div>
+        </div>
+      </div>
+      <button class="btn" style="background:var(--or);" onclick="G('ob2')">Continuer →</button>
+    </div>
+  </div>
+
+  <!-- ═══ ONBOARDING 2 ═══ -->
+  <div class="sc" id="s-ob2">
+    <div class="sk">
+      <div class="dots"><div class="dot" style="background:var(--or);"></div><div class="dot" style="background:var(--or);"></div><div class="dot" style="background:var(--b2);"></div></div>
+      <p class="sl" style="margin-bottom:5px;">ÉTAPE 2 / 3</p>
+      <h2 style="font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:22px;">Activité & Objectif</h2>
+      <p class="sl" style="margin-bottom:10px;">NIVEAU D'ACTIVITÉ</p>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px;">
+        <div style="padding:11px 13px;border-radius:11px;border:1px solid var(--b2);background:var(--s2);display:flex;align-items:center;cursor:pointer;"><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Sédentaire</div><div style="font-size:10px;color:var(--ts);">Bureau, peu de sport</div></div><span class="n" style="font-size:10px;color:var(--tf);">×1.2</span></div>
+        <div style="padding:11px 13px;border-radius:11px;border:1px solid var(--or);background:var(--or-s);display:flex;align-items:center;cursor:pointer;"><div style="flex:1;"><div style="font-size:12px;font-weight:700;color:var(--or);">Légèrement actif</div><div style="font-size:10px;color:var(--ts);">Sport 1–3×/semaine</div></div><span class="n" style="font-size:10px;color:var(--or);font-weight:700;">×1.375</span></div>
+        <div style="padding:11px 13px;border-radius:11px;border:1px solid var(--b2);background:var(--s2);display:flex;align-items:center;cursor:pointer;"><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Modérément actif</div><div style="font-size:10px;color:var(--ts);">Sport 3–5×/semaine</div></div><span class="n" style="font-size:10px;color:var(--tf);">×1.55</span></div>
+        <div style="padding:11px 13px;border-radius:11px;border:1px solid var(--b2);background:var(--s2);display:flex;align-items:center;cursor:pointer;"><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Très actif</div><div style="font-size:10px;color:var(--ts);">Sport 6–7×/semaine</div></div><span class="n" style="font-size:10px;color:var(--tf);">×1.725</span></div>
+      </div>
+      <p class="sl" style="margin-bottom:10px;">OBJECTIF</p>
+      <div style="display:flex;gap:7px;margin-bottom:28px;">
+        <div style="flex:1;padding:13px 6px;border-radius:13px;text-align:center;border:1px solid var(--b2);background:var(--s2);cursor:pointer;"><div style="font-size:20px;margin-bottom:3px;">↓</div><div style="font-size:11px;font-weight:700;margin-bottom:2px;">Perdre</div><div class="n" style="font-size:9px;color:var(--ts);">−500 kcal/j</div></div>
+        <div style="flex:1;padding:13px 6px;border-radius:13px;text-align:center;border:1px solid var(--b2);background:var(--s2);cursor:pointer;"><div style="font-size:20px;margin-bottom:3px;">→</div><div style="font-size:11px;font-weight:700;margin-bottom:2px;">Maintenir</div><div class="n" style="font-size:9px;color:var(--ts);">±0 kcal/j</div></div>
+        <div style="flex:1;padding:13px 6px;border-radius:13px;text-align:center;border:1px solid var(--or);background:var(--or-s);cursor:pointer;"><div style="font-size:20px;margin-bottom:3px;">↑</div><div style="font-size:11px;font-weight:700;color:var(--or);margin-bottom:2px;">Muscle</div><div class="n" style="font-size:9px;color:var(--ts);">+300 kcal/j</div></div>
+      </div>
+      <button class="btn" style="background:var(--or);" onclick="G('ob3')">Calculer mes objectifs →</button>
+    </div>
+  </div>
+
+  <!-- ═══ ONBOARDING 3 ═══ -->
+  <div class="sc" id="s-ob3">
+    <div class="sk">
+      <div class="dots"><div class="dot" style="background:var(--or);"></div><div class="dot" style="background:var(--or);"></div><div class="dot" style="background:var(--or);"></div></div>
+      <p class="sl" style="margin-bottom:5px;">ÉTAPE 3 / 3</p>
+      <h2 style="font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:5px;">Tes objectifs</h2>
+      <p style="color:var(--ts);font-size:12px;margin-bottom:20px;line-height:1.5;">Calculés via Mifflin-St Jeor. Modifiables dans les paramètres.</p>
+      <div class="cd" style="padding:20px;margin-bottom:13px;">
+        <div style="text-align:center;margin-bottom:20px;">
+          <!-- Calorie principale — taille modérée, DM Mono -->
+          <div style="font-family:var(--num);font-size:54px;font-weight:700;color:var(--or);letter-spacing:-2px;line-height:1;text-shadow:0 0 40px rgba(255,107,44,.25);">2 350</div>
+          <div style="font-family:var(--num);font-size:11px;color:var(--ts);letter-spacing:2px;margin-top:5px;">KCAL / JOUR</div>
+          <div style="font-family:var(--num);font-size:9px;color:var(--tf);margin-top:4px;letter-spacing:1px;">TDEE 2050 · PRISE MUSCLE +300</div>
+        </div>
+        <div style="display:flex;gap:7px;">
+          <div style="flex:1;background:var(--bg);border-radius:11px;padding:11px 6px;text-align:center;border:1px solid var(--b2);"><div class="n" style="font-size:17px;font-weight:700;color:var(--bl);">176g</div><div style="font-size:9px;color:var(--ts);margin-top:2px;">Protéines</div><div class="n" style="font-size:9px;color:var(--tf);">30%</div></div>
+          <div style="flex:1;background:var(--bg);border-radius:11px;padding:11px 6px;text-align:center;border:1px solid var(--b2);"><div class="n" style="font-size:17px;font-weight:700;color:var(--ye);">235g</div><div style="font-size:9px;color:var(--ts);margin-top:2px;">Glucides</div><div class="n" style="font-size:9px;color:var(--tf);">40%</div></div>
+          <div style="flex:1;background:var(--bg);border-radius:11px;padding:11px 6px;text-align:center;border:1px solid var(--b2);"><div class="n" style="font-size:17px;font-weight:700;color:var(--or);">78g</div><div style="font-size:9px;color:var(--ts);margin-top:2px;">Lipides</div><div class="n" style="font-size:9px;color:var(--tf);">30%</div></div>
+        </div>
+      </div>
+      <div style="background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:11px;padding:10px 13px;margin-bottom:22px;display:flex;gap:8px;">
+        <span style="font-size:13px;">✅</span>
+        <p style="font-size:11px;color:var(--gr);line-height:1.6;">Profil créé ! Personnalisable dans Paramètres → Objectifs.</p>
+      </div>
+      <button class="btn" style="background:var(--or);font-size:16px;padding:16px;" onclick="G('journal')">Commencer à logger 🔥</button>
+    </div>
+  </div>
+
+  <!-- ═══ JOURNAL ═══ -->
+  <div class="sc" id="s-journal">
+    <div class="sk">
+      <!-- Date -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;">
+        <div>
+          <p class="sl" style="margin-bottom:3px;">MERCREDI</p>
+          <h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;">11 Mars 2026</h1>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <div style="width:30px;height:30px;border-radius:8px;background:var(--s1);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--ts);">‹</div>
+          <div style="width:30px;height:30px;border-radius:8px;background:var(--s1);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--ts);">›</div>
+        </div>
+      </div>
+
+      <!-- CARD MACROS -->
+      <div class="cd" style="padding:15px;margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <p class="sl">CALORIES & MACROS</p>
+          <span class="n" style="font-size:10px;color:var(--or);font-weight:700;">2350 kcal obj.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:13px;">
+          <!-- Anneau SVG -->
+          <div style="position:relative;flex-shrink:0;">
+            <svg width="86" height="86" style="transform:rotate(-90deg);">
+              <circle cx="43" cy="43" r="35" fill="none" stroke="var(--b2)" stroke-width="7"/>
+              <circle cx="43" cy="43" r="35" fill="none" stroke="var(--or)" stroke-width="7"
+                stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="99"
+                style="filter:drop-shadow(0 0 5px rgba(255,107,44,.35))"/>
+            </svg>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+              <!-- DM Mono pour le chiffre central -->
+              <div class="n" style="font-size:20px;font-weight:700;color:var(--or);line-height:1;">1260</div>
+              <div class="n" style="font-size:9px;color:var(--ts);letter-spacing:1px;">KCAL</div>
+            </div>
+          </div>
+          <!-- Barres macros -->
+          <div style="flex:1;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+              <div><div style="font-size:9px;color:var(--ts);font-weight:600;margin-bottom:1px;">Objectif</div><div class="n" style="font-size:15px;font-weight:700;color:var(--tx);">2350</div></div>
+              <div style="text-align:right;"><div style="font-size:9px;color:var(--ts);font-weight:600;margin-bottom:1px;">Restant</div><div class="n" style="font-size:15px;font-weight:700;color:var(--gr);">1090</div></div>
+            </div>
+            <div class="mb"><div class="mbh"><span class="mbl">Protéines</span><span class="mbv" style="color:var(--bl);">98<span style="color:var(--ts);">/176g</span></span></div><div class="mbt"><div class="mbf" style="width:56%;background:var(--bl);"></div></div></div>
+            <div class="mb"><div class="mbh"><span class="mbl">Glucides</span><span class="mbv" style="color:var(--ye);">142<span style="color:var(--ts);">/235g</span></span></div><div class="mbt"><div class="mbf" style="width:60%;background:var(--ye);"></div></div></div>
+            <div class="mb" style="margin-bottom:0;"><div class="mbh"><span class="mbl">Lipides</span><span class="mbv" style="color:var(--or);">42<span style="color:var(--ts);">/78g</span></span></div><div class="mbt"><div class="mbf" style="width:54%;background:var(--or);"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD MICRONUTRIMENTS -->
+      <div class="cd" style="padding:13px;margin-bottom:11px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;">
+          <p class="sl">MICRONUTRIMENTS</p>
+          <!-- Score DM Mono -->
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div style="position:relative;">
+              <svg width="26" height="26" style="transform:rotate(-90deg);">
+                <circle cx="13" cy="13" r="9" fill="none" stroke="var(--b2)" stroke-width="3"/>
+                <circle cx="13" cy="13" r="9" fill="none" stroke="var(--pu)" stroke-width="3"
+                  stroke-dasharray="57" stroke-dashoffset="17" stroke-linecap="round"/>
+              </svg>
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+                <span class="n" style="font-size:7px;font-weight:700;color:var(--pu);">70</span>
+              </div>
+            </div>
+            <span class="n" style="font-size:10px;color:var(--pu);font-weight:700;">/100</span>
+          </div>
+        </div>
+        <!-- Nutrient rows — DM Mono pour tous les chiffres -->
+        <div class="nr"><div class="ni" style="background:rgba(251,191,36,.08);">☀️</div><div style="flex:1;font-size:11px;font-weight:700;">Vitamine D</div><div class="nb2"><div class="nbf" style="width:21%;background:var(--re);"></div></div><span class="np" style="color:var(--re);">21%</span></div>
+        <div class="nr"><div class="ni" style="background:rgba(167,139,250,.08);">⚡</div><div style="flex:1;font-size:11px;font-weight:700;">Magnésium</div><div class="nb2"><div class="nbf" style="width:26%;background:var(--re);"></div></div><span class="np" style="color:var(--re);">26%</span></div>
+        <div class="nr"><div class="ni" style="background:rgba(74,222,128,.08);">🍊</div><div style="flex:1;font-size:11px;font-weight:700;">Vitamine C</div><div class="nb2"><div class="nbf" style="width:58%;background:var(--ye);"></div></div><span class="np" style="color:var(--ye);">58%</span></div>
+        <div class="nr"><div class="ni" style="background:rgba(96,165,250,.08);">🦴</div><div style="flex:1;font-size:11px;font-weight:700;">Calcium</div><div class="nb2"><div class="nbf" style="width:68%;background:var(--ye);"></div></div><span class="np" style="color:var(--ye);">68%</span></div>
+        <div class="nr"><div class="ni" style="background:rgba(74,222,128,.08);">💊</div><div style="flex:1;font-size:11px;font-weight:700;color:var(--ts);">Vitamine B12</div><div class="nb2"><div class="nbf" style="width:88%;background:var(--gr);"></div></div><span class="np" style="color:var(--gr);">88%</span></div>
+        <button onclick="G('micro-full')" style="width:100%;margin-top:10px;padding:8px;border-radius:9px;background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);color:var(--pu);font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Voir tous les micronutriments →</button>
+      </div>
+
+      <!-- Repas -->
+      <div class="ms">
+        <div class="msh"><span style="font-size:13px;font-weight:800;flex:1;">Petit-déjeuner</span><span class="n" style="font-size:11px;color:var(--ts);margin-right:8px;">420 kcal</span><span class="madd">+</span><span style="color:var(--tf);font-size:12px;">↓</span></div>
+        <div class="mr"><div style="flex:1;"><div style="font-size:12px;font-weight:600;">Flocons d'avoine</div><div style="font-size:10px;color:var(--ts);">Quaker · 60g</div></div><span class="n" style="font-size:12px;font-weight:700;color:var(--or);">180</span></div>
+        <div class="mr"><div style="flex:1;"><div style="font-size:12px;font-weight:600;">Banane</div><div style="font-size:10px;color:var(--ts);">120g</div></div><span class="n" style="font-size:12px;font-weight:700;color:var(--or);">95</span></div>
+        <div class="mr"><div style="flex:1;"><div style="font-size:12px;font-weight:600;">Lait demi-écrémé</div><div style="font-size:10px;color:var(--ts);">Lactel · 250ml</div></div><span class="n" style="font-size:12px;font-weight:700;color:var(--or);">145</span></div>
+      </div>
+      <div class="ms"><div class="msh"><span style="font-size:13px;font-weight:800;flex:1;">Déjeuner</span><span class="n" style="font-size:11px;color:var(--ts);margin-right:8px;">680 kcal</span><span class="madd">+</span><span style="color:var(--tf);font-size:12px;">›</span></div></div>
+      <div class="ms"><div class="msh"><span style="font-size:13px;font-weight:800;color:var(--ts);flex:1;">Dîner</span><span class="n" style="font-size:11px;color:var(--tf);margin-right:8px;">—</span><span class="madd">+</span><span style="color:var(--tf);font-size:12px;">›</span></div></div>
+      <div class="ms" style="margin-bottom:0;"><div class="msh"><span style="font-size:13px;font-weight:800;flex:1;">Collations</span><span class="n" style="font-size:11px;color:var(--ts);margin-right:8px;">160 kcal</span><span class="madd">+</span><span style="color:var(--tf);font-size:12px;">›</span></div></div>
+    </div>
+  </div>
+
+  <!-- ═══ MICRO FULL ═══ -->
+  <div class="sc" id="s-micro-full">
+    <div class="sk">
+      <button class="bk" onclick="G('journal')">← Journal</button>
+      <h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;margin-bottom:3px;">Micronutriments</h1>
+      <p style="font-size:11px;color:var(--ts);margin-bottom:13px;">11 Mars · basé sur les aliments loggués</p>
+      <!-- Score card -->
+      <div class="cd" style="padding:14px;margin-bottom:11px;">
+        <div style="display:flex;align-items:center;gap:13px;">
+          <div style="position:relative;flex-shrink:0;">
+            <svg width="64" height="64" style="transform:rotate(-90deg);">
+              <circle cx="32" cy="32" r="24" fill="none" stroke="var(--b2)" stroke-width="6"/>
+              <circle cx="32" cy="32" r="24" fill="none" stroke="var(--pu)" stroke-width="6"
+                stroke-linecap="round" stroke-dasharray="151" stroke-dashoffset="45"/>
+            </svg>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+              <div class="n" style="font-size:14px;font-weight:700;color:var(--pu);line-height:1;">70</div>
+              <div class="n" style="font-size:7px;color:var(--ts);">/100</div>
+            </div>
+          </div>
+          <div style="flex:1;"><div style="font-size:13px;font-weight:800;color:var(--pu);margin-bottom:3px;">Score nutritionnel</div><p style="font-size:11px;color:var(--ts);line-height:1.6;">Vitamine D et Magnésium insuffisants. Ajoute des amandes ou des épinards ce soir.</p></div>
+        </div>
+      </div>
+      <p class="sl" style="margin-bottom:8px;">VITAMINES</p>
+      <div class="cd" style="padding:13px;margin-bottom:10px;">
+        <div class="nr" onclick="G('micro-detail')" style="cursor:pointer;"><div class="ni" style="background:rgba(251,191,36,.08);">☀️</div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Vitamine D</div><div class="n" style="font-size:9px;color:var(--ts);">4.2 µg / 20 µg</div></div><div class="nb2"><div class="nbf" style="width:21%;background:var(--re);"></div></div><span class="np" style="color:var(--re);">21%</span></div>
+        <div class="nr" onclick="G('micro-detail')" style="cursor:pointer;"><div class="ni" style="background:rgba(96,165,250,.08);">💊</div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Vitamine B12</div><div class="n" style="font-size:9px;color:var(--ts);">2.1 µg / 2.4 µg</div></div><div class="nb2"><div class="nbf" style="width:88%;background:var(--gr);"></div></div><span class="np" style="color:var(--gr);">88%</span></div>
+        <div class="nr" onclick="G('micro-detail')" style="cursor:pointer;"><div class="ni" style="background:rgba(74,222,128,.08);">🍊</div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Vitamine C</div><div class="n" style="font-size:9px;color:var(--ts);">64 mg / 110 mg</div></div><div class="nb2"><div class="nbf" style="width:58%;background:var(--ye);"></div></div><span class="np" style="color:var(--ye);">58%</span></div>
+        <div class="nr" onclick="G('micro-detail')" style="cursor:pointer;"><div class="ni" style="background:rgba(167,139,250,.08);">🔴</div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Vitamine B9</div><div class="n" style="font-size:9px;color:var(--ts);">180 µg / 400 µg</div></div><div class="nb2"><div class="nbf" style="width:45%;background:var(--ye);"></div></div><span class="np" style="color:var(--ye);">45%</span></div>
+        <div class="nr"><div class="ni" style="background:rgba(255,107,44,.08);">🅰️</div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Vitamine A</div><div class="n" style="font-size:9px;color:var(--ts);">820 µg / 900 µg</div></div><div class="nb2"><div class="nbf" style="width:91%;background:var(--gr);"></div></div><span class="np" style="color:var(--gr);">91%</span></div>
+      </div>
+      <p class="sl" style="margin-bottom:8px;">MINÉRAUX</p>
+      <div class="cd" style="padding:13px;">
+        <div class="nr" onclick="G('micro-detail')" style="cursor:pointer;"><div class="ni" style="background:rgba(45,212,191,.08);">🦴</div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Calcium</div><div class="n" style="font-size:9px;color:var(--ts);">680 mg / 1000 mg</div></div><div class="nb2"><div class="nbf" style="width:68%;background:var(--ye);"></div></div><span class="np" style="color:var(--ye);">68%</span></div>
+        <div class="nr" onclick="G('micro-detail')" style="cursor:pointer;"><div class="ni" style="background:rgba(167,139,250,.08);">⚡</div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Magnésium</div><div class="n" style="font-size:9px;color:var(--ts);">98 mg / 375 mg</div></div><div class="nb2"><div class="nbf" style="width:26%;background:var(--re);"></div></div><span class="np" style="color:var(--re);">26%</span></div>
+        <div class="nr" onclick="G('micro-detail')" style="cursor:pointer;"><div class="ni" style="background:rgba(248,113,113,.08);">🔴</div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Fer</div><div class="n" style="font-size:9px;color:var(--ts);">12 mg / 16 mg</div></div><div class="nb2"><div class="nbf" style="width:75%;background:var(--gr);"></div></div><span class="np" style="color:var(--gr);">75%</span></div>
+        <div class="nr" onclick="G('micro-detail')" style="cursor:pointer;"><div class="ni" style="background:rgba(96,165,250,.08);">💧</div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Potassium</div><div class="n" style="font-size:9px;color:var(--ts);">2800 mg / 3500 mg</div></div><div class="nb2"><div class="nbf" style="width:80%;background:var(--gr);"></div></div><span class="np" style="color:var(--gr);">80%</span></div>
+        <div class="nr"><div class="ni" style="background:rgba(251,191,36,.08);">🔵</div><div style="flex:1;"><div style="font-size:11px;font-weight:700;">Zinc</div><div class="n" style="font-size:9px;color:var(--ts);">9.2 mg / 11 mg</div></div><div class="nb2"><div class="nbf" style="width:84%;background:var(--gr);"></div></div><span class="np" style="color:var(--gr);">84%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MICRO DETAIL ═══ -->
+  <div class="sc" id="s-micro-detail">
+    <div class="sk">
+      <button class="bk" onclick="G('micro-full')">← Micronutriments</button>
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px;">
+        <div style="width:46px;height:46px;border-radius:13px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">⚡</div>
+        <div><h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;">Magnésium</h1><p class="n" style="font-size:10px;color:var(--ts);">Minéral · AJR : 375 mg/j</p></div>
+      </div>
+      <div class="cd" style="padding:16px;margin-bottom:11px;text-align:center;">
+        <!-- Valeur principale — DM Mono -->
+        <div class="n" style="font-size:52px;font-weight:700;color:var(--re);letter-spacing:-2px;line-height:1;text-shadow:0 0 30px rgba(248,113,113,.2);">98</div>
+        <div class="n" style="font-size:11px;color:var(--ts);margin-bottom:13px;letter-spacing:1px;">mg / 375 mg</div>
+        <div style="height:6px;background:var(--b2);border-radius:3px;overflow:hidden;margin-bottom:8px;"><div style="width:26%;height:100%;background:var(--re);border-radius:3px;"></div></div>
+        <div style="display:flex;justify-content:space-between;"><span class="n" style="font-size:10px;color:var(--re);font-weight:700;">26% de l'AJR</span><span class="n" style="font-size:10px;color:var(--ts);">−277 mg rest.</span></div>
+      </div>
+      <div class="cd" style="padding:13px;margin-bottom:11px;">
+        <p class="sl" style="margin-bottom:8px;">RÔLE</p>
+        <p style="font-size:12px;color:var(--ts);line-height:1.8;">300+ réactions enzymatiques. Essentiel pour la contraction musculaire, la transmission nerveuse et la synthèse des protéines.</p>
+      </div>
+      <p class="sl" style="margin-bottom:8px;">MEILLEURES SOURCES</p>
+      <div class="cd" style="padding:13px;margin-bottom:11px;">
+        <div class="si"><span style="font-size:14px;">🥜</span><div style="flex:1;font-size:12px;font-weight:700;">Amandes (30g)</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">+75 mg</span></div>
+        <div class="si"><span style="font-size:14px;">🌿</span><div style="flex:1;font-size:12px;font-weight:700;">Épinards cuits (100g)</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">+53 mg</span></div>
+        <div class="si"><span style="font-size:14px;">🍫</span><div style="flex:1;font-size:12px;font-weight:700;">Chocolat noir 70% (30g)</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">+50 mg</span></div>
+        <div class="si"><span style="font-size:14px;">🫘</span><div style="flex:1;font-size:12px;font-weight:700;">Haricots noirs (100g)</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">+70 mg</span></div>
+      </div>
+      <p class="sl" style="margin-bottom:8px;">TENDANCE 7 JOURS</p>
+      <div class="cd" style="padding:13px;">
+        <div style="display:flex;align-items:flex-end;gap:5px;height:52px;margin-bottom:8px;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;"><div style="width:100%;border-radius:3px 3px 0 0;background:rgba(167,139,250,.4);height:36px;"></div><span class="n" style="font-size:8px;color:var(--ts);">L</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;"><div style="width:100%;border-radius:3px 3px 0 0;background:rgba(167,139,250,.4);height:42px;"></div><span class="n" style="font-size:8px;color:var(--ts);">M</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;"><div style="width:100%;border-radius:3px 3px 0 0;background:rgba(167,139,250,.4);height:48px;"></div><span class="n" style="font-size:8px;color:var(--ts);">M</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;"><div style="width:100%;border-radius:3px 3px 0 0;background:rgba(167,139,250,.4);height:38px;"></div><span class="n" style="font-size:8px;color:var(--ts);">J</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;"><div style="width:100%;border-radius:3px 3px 0 0;background:rgba(167,139,250,.4);height:50px;"></div><span class="n" style="font-size:8px;color:var(--ts);">V</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;"><div style="width:100%;border-radius:3px 3px 0 0;background:rgba(167,139,250,.4);height:32px;"></div><span class="n" style="font-size:8px;color:var(--ts);">S</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;"><div style="width:100%;border-radius:3px 3px 0 0;background:var(--re);height:14px;"></div><span class="n" style="font-size:8px;color:var(--or);font-weight:700;">D</span></div>
+        </div>
+        <div style="border-top:1px dashed var(--b2);padding-top:7px;display:flex;justify-content:space-between;">
+          <span style="font-size:10px;color:var(--ts);">Moy. semaine</span>
+          <span class="n" style="font-size:10px;color:var(--pu);font-weight:700;">214 / 375 mg</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SEARCH ═══ -->
+  <div class="sc" id="s-search">
+    <div style="padding:13px 15px 8px;flex-shrink:0;">
+      <h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;margin-bottom:11px;">Recherche</h1>
+      <div style="display:flex;gap:7px;margin-bottom:9px;">
+        <div style="flex:1;background:var(--s1);border:1px solid var(--b2);border-radius:12px;padding:10px 13px;display:flex;align-items:center;gap:9px;"><span style="color:var(--ts);">🔍</span><span style="font-size:13px;color:var(--tf);">Poulet, riz, yaourt...</span></div>
+        <div onclick="G('scan')" style="width:44px;border-radius:12px;background:var(--or-s);border:1px solid var(--or-m);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;">▦</div>
+      </div>
+      <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:3px;">
+        <div style="padding:5px 11px;border-radius:20px;background:var(--or-s);border:1px solid var(--or-m);color:var(--or);font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0;">Récents</div>
+        <div style="padding:5px 11px;border-radius:20px;background:var(--s2);border:1px solid var(--b2);color:var(--ts);font-size:11px;white-space:nowrap;flex-shrink:0;">Fréquents</div>
+        <div style="padding:5px 11px;border-radius:20px;background:var(--s2);border:1px solid var(--b2);color:var(--ts);font-size:11px;white-space:nowrap;flex-shrink:0;">Mes aliments</div>
+        <div style="padding:5px 11px;border-radius:20px;background:var(--s2);border:1px solid var(--b2);color:var(--ts);font-size:11px;white-space:nowrap;flex-shrink:0;">Mes repas</div>
+      </div>
+    </div>
+    <div class="sk" style="padding-top:4px;">
+      <p class="sl" style="margin-bottom:8px;">RÉSULTATS</p>
+      <div onclick="G('food')" style="background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;">
+        <div style="flex:1;"><div style="font-size:12px;font-weight:700;margin-bottom:2px;">Poulet grillé (blanc)</div><div style="font-size:10px;color:var(--ts);margin-bottom:5px;">Générique · 100g</div><div style="display:flex;gap:8px;"><span class="n" style="font-size:10px;color:var(--bl);font-weight:700;">P 31g</span><span class="n" style="font-size:10px;color:var(--ye);font-weight:700;">G 0g</span><span class="n" style="font-size:10px;color:var(--or);font-weight:700;">L 3.6g</span></div></div>
+        <div style="text-align:right;"><div class="n" style="font-size:16px;font-weight:700;color:var(--or);">165</div><div style="font-size:9px;color:var(--ts);">kcal</div></div>
+      </div>
+      <div onclick="G('food')" style="background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;">
+        <div style="flex:1;"><div style="font-size:12px;font-weight:700;margin-bottom:2px;">Riz complet cuit</div><div style="font-size:10px;color:var(--ts);margin-bottom:5px;">Uncle Ben's · 100g</div><div style="display:flex;gap:8px;"><span class="n" style="font-size:10px;color:var(--bl);font-weight:700;">P 2.6g</span><span class="n" style="font-size:10px;color:var(--ye);font-weight:700;">G 23g</span><span class="n" style="font-size:10px;color:var(--or);font-weight:700;">L 0.9g</span></div></div>
+        <div style="text-align:right;"><div class="n" style="font-size:16px;font-weight:700;color:var(--or);">111</div><div style="font-size:9px;color:var(--ts);">kcal</div></div>
+      </div>
+      <div onclick="G('food')" style="background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:12px;cursor:pointer;display:flex;align-items:center;">
+        <div style="flex:1;"><div style="font-size:12px;font-weight:700;margin-bottom:2px;">Yaourt grec 0%</div><div style="font-size:10px;color:var(--ts);margin-bottom:5px;">Fage · 100g</div><div style="display:flex;gap:8px;"><span class="n" style="font-size:10px;color:var(--bl);font-weight:700;">P 10g</span><span class="n" style="font-size:10px;color:var(--ye);font-weight:700;">G 3.6g</span><span class="n" style="font-size:10px;color:var(--or);font-weight:700;">L 0.2g</span></div></div>
+        <div style="text-align:right;"><div class="n" style="font-size:16px;font-weight:700;color:var(--or);">57</div><div style="font-size:9px;color:var(--ts);">kcal</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCAN ═══ -->
+  <div class="sc" id="s-scan" style="position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#060E06,#0A140A);"></div>
+    <div style="position:absolute;inset:0;opacity:.05;background-image:repeating-linear-gradient(0deg,transparent,transparent 30px,#4ADE80 30px,#4ADE80 31px),repeating-linear-gradient(90deg,transparent,transparent 30px,#4ADE80 30px,#4ADE80 31px);"></div>
+    <div style="position:relative;display:flex;flex-direction:column;flex:1;">
+      <div style="padding:11px 15px;display:flex;align-items:center;gap:9px;">
+        <div onclick="G('search')" style="width:36px;height:36px;border-radius:10px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;">←</div>
+        <h1 style="flex:1;font-size:16px;font-weight:800;text-align:center;">Scanner un produit</h1>
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;">⚡</div>
+      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <div style="width:230px;height:140px;position:relative;">
+          <div style="position:absolute;top:0;left:0;width:20px;height:20px;border-top:3px solid var(--or);border-left:3px solid var(--or);"></div>
+          <div style="position:absolute;top:0;right:0;width:20px;height:20px;border-top:3px solid var(--or);border-right:3px solid var(--or);"></div>
+          <div style="position:absolute;bottom:0;left:0;width:20px;height:20px;border-bottom:3px solid var(--or);border-left:3px solid var(--or);"></div>
+          <div style="position:absolute;bottom:0;right:0;width:20px;height:20px;border-bottom:3px solid var(--or);border-right:3px solid var(--or);"></div>
+          <div class="scl"></div>
+        </div>
+      </div>
+      <div style="padding:18px 16px 26px;text-align:center;">
+        <p style="color:var(--ts);font-size:13px;line-height:1.7;margin-bottom:16px;">Pointe la caméra vers le code-barre.<br><span class="n" style="font-size:9px;color:var(--tf);">OPEN FOOD FACTS · 3M+ PRODUITS</span></p>
+        <button onclick="G('food')" style="background:var(--or-s);border:1px solid var(--or);border-radius:13px;padding:11px 26px;color:var(--or);font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Saisie manuelle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FOOD DETAIL ═══ -->
+  <div class="sc" id="s-food">
+    <div class="sk">
+      <button class="bk" onclick="G('search')">← Recherche</button>
+      <p class="sl" style="margin-bottom:3px;">GÉNÉRIQUE</p>
+      <h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;margin-bottom:13px;">Poulet grillé (blanc)</h1>
+      <!-- Tabs -->
+      <div style="display:flex;background:var(--s1);border:1px solid var(--b2);border-radius:11px;padding:3px;margin-bottom:12px;">
+        <div id="ft-m" onclick="fTab('m')" style="flex:1;text-align:center;padding:7px;border-radius:8px;background:var(--or);cursor:pointer;transition:all .2s;"><span style="font-size:12px;font-weight:700;color:#fff;">Macros</span></div>
+        <div id="ft-mu" onclick="fTab('mu')" style="flex:1;text-align:center;padding:7px;border-radius:8px;cursor:pointer;transition:all .2s;"><span style="font-size:12px;font-weight:600;color:var(--ts);">Micronutriments</span></div>
+      </div>
+      <!-- Macro panel -->
+      <div id="fp-m">
+        <div class="cd" style="padding:16px;margin-bottom:11px;text-align:center;">
+          <div id="fd-k" class="n" style="font-size:52px;font-weight:700;color:var(--or);letter-spacing:-2px;line-height:1;text-shadow:0 0 30px rgba(255,107,44,.2);">297</div>
+          <div class="n" style="font-size:11px;color:var(--ts);margin-bottom:14px;letter-spacing:1px;">KCAL</div>
+          <div style="display:flex;justify-content:center;gap:24px;">
+            <div><div id="fd-p" class="n" style="font-size:18px;font-weight:700;color:var(--bl);">55.8g</div><div style="font-size:10px;color:var(--ts);">Protéines</div></div>
+            <div><div id="fd-c" class="n" style="font-size:18px;font-weight:700;color:var(--ye);">0.0g</div><div style="font-size:10px;color:var(--ts);">Glucides</div></div>
+            <div><div id="fd-f" class="n" style="font-size:18px;font-weight:700;color:var(--or);">6.5g</div><div style="font-size:10px;color:var(--ts);">Lipides</div></div>
+          </div>
+        </div>
+        <div class="cd" style="padding:13px;margin-bottom:11px;">
+          <p class="sl" style="margin-bottom:9px;">QUANTITÉ</p>
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;">
+            <button onclick="aQ(-10)" style="width:38px;height:38px;border-radius:10px;background:var(--s2);border:1px solid var(--b2);color:var(--tx);font-size:19px;cursor:pointer;font-weight:700;font-family:'DM Sans',sans-serif;">−</button>
+            <div style="flex:1;background:var(--bg);border-radius:10px;padding:8px;text-align:center;border:1px solid var(--b2);">
+              <span id="qd" class="n" style="font-size:22px;font-weight:700;color:var(--tx);">180</span><span class="n" style="font-size:12px;color:var(--ts);"> g</span>
+            </div>
+            <button onclick="aQ(10)" style="width:38px;height:38px;border-radius:10px;background:var(--s2);border:1px solid var(--b2);color:var(--tx);font-size:19px;cursor:pointer;font-weight:700;font-family:'DM Sans',sans-serif;">+</button>
+          </div>
+          <div style="display:flex;gap:5px;">
+            <button onclick="sQ(50)" id="p50" class="pp">50g</button>
+            <button onclick="sQ(100)" id="p100" class="pp">100g</button>
+            <button onclick="sQ(150)" id="p150" class="pp">150g</button>
+            <button onclick="sQ(200)" id="p200" class="pp">200g</button>
+          </div>
+        </div>
+        <p class="sl" style="margin-bottom:7px;">AJOUTER À</p>
+        <div style="display:flex;gap:5px;margin-bottom:14px;">
+          <div style="flex:1;padding:8px 4px;border-radius:9px;text-align:center;border:1px solid var(--b2);background:var(--s2);color:var(--ts);font-size:10px;cursor:pointer;">Petit-déj.</div>
+          <div style="flex:1;padding:8px 4px;border-radius:9px;text-align:center;border:1px solid var(--or);background:var(--or-s);color:var(--or);font-size:10px;font-weight:700;cursor:pointer;">Déjeuner</div>
+          <div style="flex:1;padding:8px 4px;border-radius:9px;text-align:center;border:1px solid var(--b2);background:var(--s2);color:var(--ts);font-size:10px;cursor:pointer;">Dîner</div>
+          <div style="flex:1;padding:8px 4px;border-radius:9px;text-align:center;border:1px solid var(--b2);background:var(--s2);color:var(--ts);font-size:10px;cursor:pointer;">Collation</div>
+        </div>
+        <button class="btn" style="background:var(--or);" onclick="G('journal')">Ajouter au journal →</button>
+      </div>
+      <!-- Micro panel -->
+      <div id="fp-mu" style="display:none;">
+        <div style="background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.2);border-radius:11px;padding:9px 13px;margin-bottom:11px;display:flex;gap:7px;"><span>⚠️</span><p style="font-size:10px;color:var(--pu);line-height:1.6;">Données Open Food Facts — incomplètes sur certains produits transformés.</p></div>
+        <div class="cd" style="padding:13px;margin-bottom:9px;">
+          <p class="sl" style="margin-bottom:9px;">VITAMINES (100g)</p>
+          <div class="nr"><div class="ni" style="background:rgba(251,191,36,.08);font-family:var(--num);font-size:10px;font-weight:700;color:var(--ye);">B3</div><div style="flex:1;font-size:11px;font-weight:700;">Niacine</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">13.7 mg</span></div>
+          <div class="nr"><div class="ni" style="background:rgba(96,165,250,.08);font-family:var(--num);font-size:10px;font-weight:700;color:var(--bl);">B6</div><div style="flex:1;font-size:11px;font-weight:700;">Pyridoxine</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">0.9 mg</span></div>
+          <div class="nr"><div class="ni" style="background:rgba(74,222,128,.08);font-family:var(--num);font-size:10px;font-weight:700;color:var(--gr);">B12</div><div style="flex:1;font-size:11px;font-weight:700;">Cobalamine</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">0.3 µg</span></div>
+        </div>
+        <div class="cd" style="padding:13px;">
+          <p class="sl" style="margin-bottom:9px;">MINÉRAUX (100g)</p>
+          <div class="nr"><div class="ni" style="background:rgba(167,139,250,.08);">⚡</div><div style="flex:1;font-size:11px;font-weight:700;">Phosphore</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">220 mg</span></div>
+          <div class="nr"><div class="ni" style="background:rgba(96,165,250,.08);">💧</div><div style="flex:1;font-size:11px;font-weight:700;">Potassium</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">390 mg</span></div>
+          <div class="nr"><div class="ni" style="background:rgba(251,191,36,.08);">🔵</div><div style="flex:1;font-size:11px;font-weight:700;">Zinc</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">1.0 mg</span></div>
+          <div class="nr"><div class="ni" style="background:rgba(255,107,44,.08);">🔴</div><div style="flex:1;font-size:11px;font-weight:700;">Sélénium</div><span class="n" style="font-size:11px;color:var(--pu);font-weight:700;">27 µg</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PLANNER ═══ -->
+  <div class="sc" id="s-planner">
+    <div style="padding:12px 15px 8px;flex-shrink:0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div><p class="sl" style="margin-bottom:3px;">SEMAINE DU</p><h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;">10 — 16 Mars</h1></div>
+        <div style="display:flex;gap:4px;">
+          <div style="width:28px;height:28px;border-radius:7px;background:var(--s1);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:var(--ts);">‹</div>
+          <div style="width:28px;height:28px;border-radius:7px;background:var(--s1);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:var(--ts);">›</div>
+        </div>
+      </div>
+      <!-- Calendar strip -->
+      <div style="display:flex;gap:3px;">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><span class="n" style="font-size:8px;color:var(--ts);">L</span><div style="width:26px;height:26px;border-radius:8px;background:var(--s1);display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="n" style="font-size:11px;font-weight:700;color:var(--ts);">10</span></div><div style="width:4px;height:4px;border-radius:50%;background:var(--te);"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><span class="n" style="font-size:8px;color:var(--ts);">M</span><div style="width:26px;height:26px;border-radius:8px;background:var(--s1);display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="n" style="font-size:11px;font-weight:700;color:var(--ts);">11</span></div><div style="width:4px;height:4px;border-radius:50%;background:var(--te);"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><span class="n" style="font-size:8px;color:var(--ts);">M</span><div style="width:26px;height:26px;border-radius:8px;background:var(--te);display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="n" style="font-size:11px;font-weight:800;color:#000;">12</span></div><div style="width:4px;height:4px;border-radius:50%;background:var(--te);"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><span class="n" style="font-size:8px;color:var(--ts);">J</span><div style="width:26px;height:26px;border-radius:8px;background:var(--s1);display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="n" style="font-size:11px;font-weight:700;color:var(--tf);">13</span></div><div style="width:4px;height:4px;border-radius:50%;background:var(--b2);"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><span class="n" style="font-size:8px;color:var(--ts);">V</span><div style="width:26px;height:26px;border-radius:8px;background:var(--s1);display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="n" style="font-size:11px;font-weight:700;color:var(--tf);">14</span></div><div style="width:4px;height:4px;border-radius:50%;background:var(--b2);"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><span class="n" style="font-size:8px;color:var(--ts);">S</span><div style="width:26px;height:26px;border-radius:8px;background:var(--s1);display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="n" style="font-size:11px;font-weight:700;color:var(--tf);">15</span></div><div style="width:4px;height:4px;border-radius:50%;background:var(--b2);"></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;"><span class="n" style="font-size:8px;color:var(--ts);">D</span><div style="width:26px;height:26px;border-radius:8px;background:var(--s1);display:flex;align-items:center;justify-content:center;cursor:pointer;"><span class="n" style="font-size:11px;font-weight:700;color:var(--tf);">16</span></div><div style="width:4px;height:4px;border-radius:50%;background:var(--b2);"></div></div>
+      </div>
+    </div>
+    <div class="sk" style="padding-top:8px;">
+      <div style="background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.2);border-radius:13px;padding:11px 13px;margin-bottom:11px;display:flex;align-items:center;gap:11px;cursor:pointer;">
+        <div style="font-size:18px;">✨</div>
+        <div style="flex:1;"><div style="font-size:12px;font-weight:800;color:var(--te);">Générer un plan semaine</div><div style="font-size:10px;color:var(--ts);margin-top:1px;">Basé sur tes préférences</div></div>
+        <span style="color:var(--te);font-size:14px;">›</span>
+      </div>
+      <div onclick="G('planday')" class="pday" style="border-color:rgba(45,212,191,.2);background:rgba(45,212,191,.03);cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;"><div style="font-size:12px;font-weight:800;color:var(--te);">Mercredi 12 — Aujourd'hui</div><span style="font-size:10px;color:var(--ts);">Voir ›</span></div>
+        <div class="psl"><div class="pmt" style="background:rgba(251,191,36,.08);">🌅</div><div style="flex:1;font-size:11px;font-weight:700;">Porridge avoine banane</div><span class="n" style="font-size:10px;color:var(--ts);">420 kcal</span></div>
+        <div class="psl"><div class="pmt" style="background:rgba(74,222,128,.08);">☀️</div><div style="flex:1;font-size:11px;font-weight:700;">Poulet riz légumes</div><span class="n" style="font-size:10px;color:var(--ts);">680 kcal</span></div>
+        <div class="psl"><div class="pmt" style="background:rgba(96,165,250,.08);">🌙</div><div style="flex:1;font-size:11px;color:var(--tf);">Dîner à planifier…</div><div style="width:22px;height:22px;border-radius:7px;background:var(--s2);border:1px dashed var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--tf);">+</div></div>
+      </div>
+      <div class="pday">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;"><div style="font-size:12px;font-weight:800;">Jeudi 13</div><span style="font-size:10px;color:var(--tf);">Non planifié</span></div>
+        <div style="display:flex;gap:6px;">
+          <div style="flex:1;padding:9px;border-radius:10px;background:var(--s2);border:1px dashed var(--b2);text-align:center;cursor:pointer;"><div style="font-size:15px;margin-bottom:2px;">+</div><div style="font-size:9px;color:var(--tf);">Planifier</div></div>
+          <div style="flex:1;padding:9px;border-radius:10px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.2);text-align:center;cursor:pointer;"><div style="font-size:15px;margin-bottom:2px;">♻️</div><div style="font-size:9px;color:var(--te);">Répéter mer.</div></div>
+        </div>
+      </div>
+      <button class="btn" style="background:var(--te);color:#000;" onclick="G('shopping')">🛒 Générer liste de courses</button>
+    </div>
+  </div>
+
+  <!-- ═══ PLAN DAY ═══ -->
+  <div class="sc" id="s-planday">
+    <div class="sk">
+      <button class="bk" onclick="G('planner')">← Planning</button>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:15px;">
+        <div><p class="sl" style="margin-bottom:3px;">PLAN DU JOUR</p><h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;">Mercredi 12 Mars</h1></div>
+        <div style="text-align:right;"><div class="n" style="font-size:16px;font-weight:700;color:var(--te);">1 760</div><div style="font-size:9px;color:var(--ts);">kcal planifiées</div></div>
+      </div>
+      <div class="cd" style="padding:13px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;"><div style="font-size:17px;">🌅</div><div style="flex:1;font-size:13px;font-weight:800;">Petit-déjeuner</div><span class="n" style="font-size:11px;color:var(--ts);">420 kcal</span></div>
+        <div style="background:var(--s2);border-radius:11px;padding:11px;margin-bottom:7px;">
+          <div style="font-size:12px;font-weight:700;margin-bottom:2px;">Porridge avoine banane</div>
+          <div style="font-size:10px;color:var(--ts);margin-bottom:7px;">Flocons d'avoine · Banane · Lait</div>
+          <div style="display:flex;gap:7px;"><span onclick="G('recipe')" style="font-size:9px;padding:2px 8px;border-radius:6px;background:rgba(251,191,36,.08);color:var(--ye);font-weight:700;cursor:pointer;">🥣 Recette</span><span style="font-size:9px;padding:2px 8px;border-radius:6px;background:var(--s1);color:var(--ts);border:1px solid var(--b2);">5 min</span></div>
+        </div>
+        <button style="width:100%;padding:8px;border-radius:9px;background:var(--s2);border:1px dashed var(--b2);color:var(--tf);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">+ Ajouter un aliment</button>
+      </div>
+      <div class="cd" style="padding:13px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;"><div style="font-size:17px;">☀️</div><div style="flex:1;font-size:13px;font-weight:800;">Déjeuner</div><span class="n" style="font-size:11px;color:var(--ts);">680 kcal</span></div>
+        <div style="background:var(--s2);border-radius:11px;padding:11px;margin-bottom:7px;">
+          <div style="font-size:12px;font-weight:700;margin-bottom:2px;">Poulet riz légumes</div>
+          <div style="font-size:10px;color:var(--ts);margin-bottom:7px;">Poulet · Riz complet · Courgettes · Huile</div>
+          <div style="display:flex;gap:7px;"><span onclick="G('recipe')" style="font-size:9px;padding:2px 8px;border-radius:6px;background:rgba(251,191,36,.08);color:var(--ye);font-weight:700;cursor:pointer;">🥣 Recette</span><span style="font-size:9px;padding:2px 8px;border-radius:6px;background:var(--s1);color:var(--ts);border:1px solid var(--b2);">20 min</span></div>
+        </div>
+        <button style="width:100%;padding:8px;border-radius:9px;background:var(--s2);border:1px dashed var(--b2);color:var(--tf);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">+ Ajouter un aliment</button>
+      </div>
+      <div class="cd" style="padding:13px;margin-bottom:13px;opacity:.6;border-style:dashed;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;"><div style="font-size:17px;">🌙</div><div style="flex:1;font-size:13px;font-weight:800;color:var(--ts);">Dîner</div><span style="font-size:11px;color:var(--tf);">Non planifié</span></div>
+        <div style="display:flex;gap:7px;">
+          <button style="flex:1;padding:9px;border-radius:9px;background:var(--s2);border:1px dashed var(--b2);color:var(--ts);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">+ Aliment</button>
+          <button onclick="G('recipe')" style="flex:1;padding:9px;border-radius:9px;background:rgba(45,212,191,.07);border:1px solid rgba(45,212,191,.2);color:var(--te);font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">+ Recette</button>
+        </div>
+      </div>
+      <button class="btn" style="background:var(--te);color:#000;" onclick="G('shopping')">🛒 Courses manquantes</button>
+    </div>
+  </div>
+
+  <!-- ═══ RECIPE ═══ -->
+  <div class="sc" id="s-recipe">
+    <div class="sk">
+      <button class="bk" onclick="G('planday')">← Plan du jour</button>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:3px;">
+        <h1 style="font-size:18px;font-weight:900;letter-spacing:-.5px;flex:1;padding-right:10px;">Poulet riz légumes</h1>
+        <div style="background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2);border-radius:9px;padding:4px 9px;white-space:nowrap;"><span class="n" style="font-size:9px;color:var(--ye);font-weight:700;">⭐ MA RECETTE</span></div>
+      </div>
+      <p style="font-size:11px;color:var(--ts);margin-bottom:14px;"><span class="n">1</span> portion · <span class="n">20</span> min · Facile</p>
+      <div style="display:flex;gap:6px;margin-bottom:13px;">
+        <div style="flex:1;background:var(--s1);border:1px solid var(--b2);border-radius:11px;padding:9px 6px;text-align:center;"><div class="n" style="font-size:15px;font-weight:700;color:var(--or);">680</div><div style="font-size:9px;color:var(--ts);">kcal</div></div>
+        <div style="flex:1;background:var(--s1);border:1px solid var(--b2);border-radius:11px;padding:9px 6px;text-align:center;"><div class="n" style="font-size:15px;font-weight:700;color:var(--bl);">52g</div><div style="font-size:9px;color:var(--ts);">protéines</div></div>
+        <div style="flex:1;background:var(--s1);border:1px solid var(--b2);border-radius:11px;padding:9px 6px;text-align:center;"><div class="n" style="font-size:15px;font-weight:700;color:var(--ye);">68g</div><div style="font-size:9px;color:var(--ts);">glucides</div></div>
+        <div style="flex:1;background:var(--s1);border:1px solid var(--b2);border-radius:11px;padding:9px 6px;text-align:center;"><div class="n" style="font-size:15px;font-weight:700;color:var(--or);">12g</div><div style="font-size:9px;color:var(--ts);">lipides</div></div>
+      </div>
+      <p class="sl" style="margin-bottom:8px;">INGRÉDIENTS (1 PORTION)</p>
+      <div class="cd" style="padding:13px;margin-bottom:11px;">
+        <div class="si"><div class="sch done">✓</div><div style="flex:1;font-size:12px;font-weight:700;">Poulet (blanc)</div><span class="n" style="font-size:11px;color:var(--ts);">180g</span></div>
+        <div class="si"><div class="sch done">✓</div><div style="flex:1;font-size:12px;font-weight:700;">Riz complet</div><span class="n" style="font-size:11px;color:var(--ts);">80g cru</span></div>
+        <div class="si"><div class="sch done">✓</div><div style="flex:1;font-size:12px;font-weight:700;">Courgettes</div><span class="n" style="font-size:11px;color:var(--ts);">150g</span></div>
+        <div class="si"><div class="sch"></div><div style="flex:1;font-size:12px;font-weight:700;">Huile d'olive</div><span class="n" style="font-size:11px;color:var(--ts);">10ml</span></div>
+      </div>
+      <p class="sl" style="margin-bottom:8px;">PRÉPARATION</p>
+      <div class="cd" style="padding:13px;margin-bottom:13px;">
+        <div style="display:flex;gap:10px;margin-bottom:11px;"><div class="step-num" style="background:var(--te);color:#000;">1</div><p style="font-size:12px;color:var(--tx);line-height:1.7;">Cuire le riz dans 2× son volume d'eau salée, <span class="n">20</span> min.</p></div>
+        <div style="display:flex;gap:10px;margin-bottom:11px;"><div class="step-num" style="background:var(--s2);border:1px solid var(--b2);color:var(--ts);">2</div><p style="font-size:12px;color:var(--tx);line-height:1.7;">Griller le poulet <span class="n">6–8</span> min à feu moyen avec huile.</p></div>
+        <div style="display:flex;gap:10px;"><div class="step-num" style="background:var(--s2);border:1px solid var(--b2);color:var(--ts);">3</div><p style="font-size:12px;color:var(--tx);line-height:1.7;">Faire revenir les courgettes <span class="n">5</span> min. Assembler.</p></div>
+      </div>
+      <button class="btn" style="background:var(--te);color:#000;">Ajouter au plan du jour ✓</button>
+    </div>
+  </div>
+
+  <!-- ═══ SHOPPING GROUPED ═══ -->
+  <div class="sc" id="s-shopping">
+    <div style="padding:12px 15px 8px;flex-shrink:0;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px;">
+        <h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;">Courses</h1>
+        <div style="background:rgba(45,212,191,.07);border:1px solid rgba(45,212,191,.2);border-radius:9px;padding:4px 9px;"><span class="n" style="font-size:11px;color:var(--te);font-weight:700;" id="sc1">5 / 11</span></div>
+      </div>
+      <p class="n" style="font-size:9px;color:var(--ts);margin-bottom:8px;letter-spacing:1px;">Semaine du 10–16 mars 2026</p>
+      <div style="height:3px;background:var(--b2);border-radius:2px;overflow:hidden;margin-bottom:9px;"><div style="width:45%;height:100%;background:var(--te);border-radius:2px;" id="sp1"></div></div>
+      <!-- Toggle -->
+      <div style="display:flex;background:var(--s1);border:1px solid var(--b2);border-radius:10px;padding:3px;margin-bottom:9px;">
+        <div onclick="G('shopping')" style="flex:1;text-align:center;padding:6px;border-radius:7px;background:var(--te);cursor:pointer;"><span class="n" style="font-size:11px;font-weight:700;color:#000;">Par catégorie</span></div>
+        <div onclick="G('shopping-flat')" style="flex:1;text-align:center;padding:6px;border-radius:7px;cursor:pointer;"><span style="font-size:11px;font-weight:600;color:var(--ts);">Liste à plat</span></div>
+      </div>
+    </div>
+    <div class="sk" style="padding-top:4px;">
+      <p class="sl" style="margin-bottom:7px;">🥩 PROTÉINES</p>
+      <div class="cd" style="padding:12px;margin-bottom:9px;">
+        <div class="si"><div class="sch done" id="g1" onclick="gC('g1',this)">✓</div><div style="flex:1;"><div style="font-size:12px;font-weight:700;text-decoration:line-through;color:var(--ts);">Poulet blanc (800g)</div><div class="n" style="font-size:9px;color:var(--tf);">4 repas · ~7€</div></div></div>
+        <div class="si"><div class="sch done" id="g2" onclick="gC('g2',this)">✓</div><div style="flex:1;"><div style="font-size:12px;font-weight:700;text-decoration:line-through;color:var(--ts);">Œufs ×12</div><div class="n" style="font-size:9px;color:var(--tf);">3 repas · ~3€</div></div></div>
+        <div class="si"><div class="sch" id="g3" onclick="gC('g3',this)"></div><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Saumon (400g)</div><div class="n" style="font-size:9px;color:var(--ts);">2 repas · ~9€</div></div></div>
+      </div>
+      <p class="sl" style="margin-bottom:7px;">🍚 FÉCULENTS</p>
+      <div class="cd" style="padding:12px;margin-bottom:9px;">
+        <div class="si"><div class="sch done" id="g4" onclick="gC('g4',this)">✓</div><div style="flex:1;"><div style="font-size:12px;font-weight:700;text-decoration:line-through;color:var(--ts);">Riz complet (1kg)</div><div class="n" style="font-size:9px;color:var(--tf);">5 repas · ~2€</div></div></div>
+        <div class="si"><div class="sch done" id="g5" onclick="gC('g5',this)">✓</div><div style="flex:1;"><div style="font-size:12px;font-weight:700;text-decoration:line-through;color:var(--ts);">Flocons d'avoine (500g)</div><div class="n" style="font-size:9px;color:var(--tf);">7 petits-déj. · ~2€</div></div></div>
+        <div class="si"><div class="sch" id="g6" onclick="gC('g6',this)"></div><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Patates douces (1kg)</div><div class="n" style="font-size:9px;color:var(--ts);">3 repas · ~2.5€</div></div></div>
+      </div>
+      <p class="sl" style="margin-bottom:7px;">🥦 LÉGUMES</p>
+      <div class="cd" style="padding:12px;margin-bottom:9px;">
+        <div class="si"><div class="sch" id="g7" onclick="gC('g7',this)"></div><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Brocolis (500g)</div><div class="n" style="font-size:9px;color:var(--ts);">3 repas · ~1.5€</div></div></div>
+        <div class="si"><div class="sch" id="g8" onclick="gC('g8',this)"></div><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Courgettes ×4</div><div class="n" style="font-size:9px;color:var(--ts);">4 repas · ~2€</div></div></div>
+        <div class="si"><div class="sch" id="g9" onclick="gC('g9',this)"></div><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Épinards frais (250g)</div><div class="n" style="font-size:9px;color:var(--ts);">2 repas · ~2€</div></div></div>
+      </div>
+      <p class="sl" style="margin-bottom:7px;">📦 AUTRE</p>
+      <div class="cd" style="padding:12px;margin-bottom:11px;">
+        <div class="si"><div class="sch" id="g10" onclick="gC('g10',this)"></div><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Sacs poubelle</div><div class="n" style="font-size:9px;color:var(--te);">✏ Ajouté manuellement</div></div></div>
+        <div class="si"><div class="sch" id="g11" onclick="gC('g11',this)"></div><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Liquide vaisselle</div><div class="n" style="font-size:9px;color:var(--te);">✏ Ajouté manuellement</div></div></div>
+      </div>
+      <div style="display:flex;gap:7px;">
+        <button onclick="G('shopping-add')" style="flex:1;padding:11px;border-radius:12px;background:var(--s1);border:1px dashed var(--b2);color:var(--ts);font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">+ Ajouter</button>
+        <button style="flex:1;padding:11px;border-radius:12px;background:var(--te);border:none;color:#000;font-size:12px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;">Partager ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SHOPPING FLAT ═══ -->
+  <div class="sc" id="s-shopping-flat">
+    <div style="padding:12px 15px 8px;flex-shrink:0;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px;">
+        <h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;">Courses</h1>
+        <div style="background:rgba(45,212,191,.07);border:1px solid rgba(45,212,191,.2);border-radius:9px;padding:4px 9px;"><span class="n" style="font-size:11px;color:var(--te);font-weight:700;">5 / 11</span></div>
+      </div>
+      <p class="n" style="font-size:9px;color:var(--ts);margin-bottom:8px;letter-spacing:1px;">Semaine du 10–16 mars 2026</p>
+      <div style="height:3px;background:var(--b2);border-radius:2px;overflow:hidden;margin-bottom:9px;"><div style="width:45%;height:100%;background:var(--te);border-radius:2px;"></div></div>
+      <div style="display:flex;background:var(--s1);border:1px solid var(--b2);border-radius:10px;padding:3px;margin-bottom:9px;">
+        <div onclick="G('shopping')" style="flex:1;text-align:center;padding:6px;border-radius:7px;cursor:pointer;"><span style="font-size:11px;font-weight:600;color:var(--ts);">Par catégorie</span></div>
+        <div onclick="G('shopping-flat')" style="flex:1;text-align:center;padding:6px;border-radius:7px;background:var(--te);cursor:pointer;"><span class="n" style="font-size:11px;font-weight:700;color:#000;">Liste à plat</span></div>
+      </div>
+    </div>
+    <div class="sk" style="padding-top:4px;">
+      <div class="cd" style="padding:12px;margin-bottom:11px;">
+        <div class="si"><div class="sch done">✓</div><div style="flex:1;font-size:12px;font-weight:700;text-decoration:line-through;color:var(--ts);">Poulet blanc (800g)</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(96,165,250,.08);color:var(--bl);font-weight:700;">Protéines</span></div>
+        <div class="si"><div class="sch done">✓</div><div style="flex:1;font-size:12px;font-weight:700;text-decoration:line-through;color:var(--ts);">Œufs ×12</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(96,165,250,.08);color:var(--bl);font-weight:700;">Protéines</span></div>
+        <div class="si"><div class="sch done">✓</div><div style="flex:1;font-size:12px;font-weight:700;text-decoration:line-through;color:var(--ts);">Riz complet (1kg)</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(251,191,36,.08);color:var(--ye);font-weight:700;">Féculents</span></div>
+        <div class="si"><div class="sch done">✓</div><div style="flex:1;font-size:12px;font-weight:700;text-decoration:line-through;color:var(--ts);">Flocons d'avoine</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(251,191,36,.08);color:var(--ye);font-weight:700;">Féculents</span></div>
+        <div class="si"><div class="sch done">✓</div><div style="flex:1;font-size:12px;font-weight:700;text-decoration:line-through;color:var(--ts);">Saumon (400g)</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(96,165,250,.08);color:var(--bl);font-weight:700;">Protéines</span></div>
+        <div class="si"><div class="sch"></div><div style="flex:1;font-size:12px;font-weight:700;">Brocolis (500g)</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(74,222,128,.08);color:var(--gr);font-weight:700;">Légumes</span></div>
+        <div class="si"><div class="sch"></div><div style="flex:1;font-size:12px;font-weight:700;">Courgettes ×4</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(74,222,128,.08);color:var(--gr);font-weight:700;">Légumes</span></div>
+        <div class="si"><div class="sch"></div><div style="flex:1;font-size:12px;font-weight:700;">Patates douces (1kg)</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(251,191,36,.08);color:var(--ye);font-weight:700;">Féculents</span></div>
+        <div class="si"><div class="sch"></div><div style="flex:1;font-size:12px;font-weight:700;">Épinards frais</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(74,222,128,.08);color:var(--gr);font-weight:700;">Légumes</span></div>
+        <div class="si"><div class="sch"></div><div style="flex:1;font-size:12px;font-weight:700;">Sacs poubelle</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(45,212,191,.07);color:var(--te);font-weight:700;">Autre</span></div>
+        <div class="si"><div class="sch"></div><div style="flex:1;font-size:12px;font-weight:700;">Liquide vaisselle</div><span style="font-size:9px;padding:2px 7px;border-radius:6px;background:rgba(45,212,191,.07);color:var(--te);font-weight:700;">Autre</span></div>
+      </div>
+      <div style="display:flex;gap:7px;">
+        <button onclick="G('shopping-add')" style="flex:1;padding:11px;border-radius:12px;background:var(--s1);border:1px dashed var(--b2);color:var(--ts);font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">+ Ajouter</button>
+        <button style="flex:1;padding:11px;border-radius:12px;background:var(--te);border:none;color:#000;font-size:12px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;">Partager ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SHOPPING ADD ═══ -->
+  <div class="sc" id="s-shopping-add">
+    <div class="sk">
+      <button class="bk" onclick="G('shopping')">← Courses</button>
+      <h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;margin-bottom:4px;">Ajouter un article</h1>
+      <p style="font-size:12px;color:var(--ts);margin-bottom:20px;line-height:1.5;">Alimentaire ou non. Non lié à une recette planifiée.</p>
+      <div style="margin-bottom:13px;"><label class="inpl">NOM DE L'ARTICLE</label><div class="inp">Sacs poubelle 30L</div></div>
+      <div style="margin-bottom:13px;"><label class="inpl">QUANTITÉ (OPTIONNEL)</label><div class="inp" style="color:var(--tf);">Ex : 1 paquet, 500g, ×3…</div></div>
+      <div style="margin-bottom:20px;">
+        <label class="inpl" style="margin-bottom:9px;">CATÉGORIE</label>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;">
+          <div class="catpill sel">📦 Autre</div>
+          <div class="catpill unsel">🥩 Protéines</div>
+          <div class="catpill unsel">🍚 Féculents</div>
+          <div class="catpill unsel">🥦 Légumes</div>
+          <div class="catpill unsel">🍎 Fruits</div>
+          <div class="catpill unsel">🥛 Laitiers</div>
+          <div class="catpill unsel">🧴 Hygiène</div>
+          <div class="catpill unsel">🧹 Entretien</div>
+          <div class="catpill unsel">🥫 Épicerie</div>
+        </div>
+      </div>
+      <div style="background:var(--s1);border:1px solid var(--b2);border-left:3px solid var(--te);border-radius:11px;padding:10px 13px;margin-bottom:20px;">
+        <p style="font-size:11px;color:var(--ts);line-height:1.7;"><strong style="color:var(--tx);">Autre</strong> regroupe les articles non alimentaires dans la vue par catégorie. Press long pour modifier la catégorie d'un article depuis la liste.</p>
+      </div>
+      <button class="btn" style="background:var(--te);color:#000;" onclick="G('shopping')">Ajouter à la liste ✓</button>
+    </div>
+  </div>
+
+  <!-- ═══ PROFILE ═══ -->
+  <div class="sc" id="s-profile">
+    <div class="sk">
+      <h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;margin-bottom:13px;">Profil</h1>
+      <div class="cd" style="padding:14px;margin-bottom:9px;display:flex;align-items:center;gap:13px;">
+        <div style="width:52px;height:52px;border-radius:15px;background:var(--or-s);border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🧑</div>
+        <div style="flex:1;"><div style="font-size:16px;font-weight:900;">Kylian</div><div style="font-size:11px;color:var(--ts);margin-top:2px;">kylian@example.com</div><div class="n" style="font-size:10px;color:var(--ts);margin-top:3px;">75 kg · 178 cm · 27 ans</div></div>
+        <div style="width:30px;height:30px;border-radius:8px;background:var(--s2);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;">✏️</div>
+      </div>
+      <!-- Objectifs -->
+      <div class="cd" style="padding:13px;margin-bottom:9px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:9px;">
+          <p class="sl">MES OBJECTIFS</p>
+          <button style="font-family:var(--num);font-size:10px;color:var(--or);background:none;border:none;cursor:pointer;font-weight:700;letter-spacing:1px;">MODIFIER</button>
+        </div>
+        <div style="display:flex;gap:5px;">
+          <div style="flex:1;background:var(--bg);border-radius:9px;padding:9px 5px;text-align:center;border:1px solid var(--b2);"><div class="n" style="font-size:14px;font-weight:700;color:var(--or);">2350</div><div style="font-size:8px;color:var(--ts);margin-top:1px;">kcal</div></div>
+          <div style="flex:1;background:var(--bg);border-radius:9px;padding:9px 5px;text-align:center;border:1px solid var(--b2);"><div class="n" style="font-size:14px;font-weight:700;color:var(--bl);">176g</div><div style="font-size:8px;color:var(--ts);margin-top:1px;">prot.</div></div>
+          <div style="flex:1;background:var(--bg);border-radius:9px;padding:9px 5px;text-align:center;border:1px solid var(--b2);"><div class="n" style="font-size:14px;font-weight:700;color:var(--ye);">235g</div><div style="font-size:8px;color:var(--ts);margin-top:1px;">gluc.</div></div>
+          <div style="flex:1;background:var(--bg);border-radius:9px;padding:9px 5px;text-align:center;border:1px solid var(--b2);"><div class="n" style="font-size:14px;font-weight:700;color:var(--ts);">78g</div><div style="font-size:8px;color:var(--ts);margin-top:1px;">lip.</div></div>
+        </div>
+      </div>
+      <!-- Stats -->
+      <div class="cd" style="padding:13px;margin-bottom:9px;background:linear-gradient(145deg,rgba(255,107,44,.04),transparent);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;"><p class="sl">STATISTIQUES</p><span class="n" style="font-size:9px;color:var(--or);font-weight:700;letter-spacing:1px;">CETTE SEMAINE</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;">
+          <div style="background:var(--bg);border-radius:9px;padding:9px;border:1px solid var(--b2);"><div class="n" style="font-size:15px;font-weight:700;color:var(--or);">2268</div><div style="font-size:8px;color:var(--ts);margin-top:1px;">kcal/j moy.</div></div>
+          <div style="background:var(--bg);border-radius:9px;padding:9px;border:1px solid var(--b2);"><div class="n" style="font-size:15px;font-weight:700;color:var(--gr);">4 / 7</div><div style="font-size:8px;color:var(--ts);margin-top:1px;">jours objectif</div></div>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:4px;height:32px;margin-bottom:6px;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;"><div style="width:100%;border-radius:2px 2px 0 0;background:rgba(74,222,128,.5);height:70%;"></div><span class="n" style="font-size:7px;color:var(--ts);">L</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;"><div style="width:100%;border-radius:2px 2px 0 0;background:rgba(248,113,113,.5);height:88%;"></div><span class="n" style="font-size:7px;color:var(--ts);">M</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;"><div style="width:100%;border-radius:2px 2px 0 0;background:rgba(74,222,128,.5);height:64%;"></div><span class="n" style="font-size:7px;color:var(--ts);">M</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;"><div style="width:100%;border-radius:2px 2px 0 0;background:rgba(74,222,128,.5);height:78%;"></div><span class="n" style="font-size:7px;color:var(--ts);">J</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;"><div style="width:100%;border-radius:2px 2px 0 0;background:rgba(248,113,113,.5);height:86%;"></div><span class="n" style="font-size:7px;color:var(--ts);">V</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;"><div style="width:100%;border-radius:2px 2px 0 0;background:rgba(74,222,128,.5);height:68%;"></div><span class="n" style="font-size:7px;color:var(--ts);">S</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;"><div style="width:100%;border-radius:2px 2px 0 0;background:var(--or-s);border:1px solid var(--or-m);height:40%;"></div><span class="n" style="font-size:7px;color:var(--or);font-weight:700;">D</span></div>
+        </div>
+        <button style="width:100%;padding:8px;border-radius:9px;background:var(--or-s);border:1px solid var(--or-m);color:var(--or);font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Voir les stats détaillées →</button>
+      </div>
+      <!-- Links -->
+      <div class="cd" style="padding:0;overflow:hidden;margin-bottom:9px;">
+        <div class="sr" onclick="G('settings')"><div style="width:30px;height:30px;border-radius:8px;background:var(--s2);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">⚙️</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">Paramètres affichage</div><div style="font-size:10px;color:var(--ts);">Macros, micronutriments</div></div><span style="color:var(--tf);">›</span></div>
+        <div class="sr"><div style="width:30px;height:30px;border-radius:8px;background:var(--s2);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">👤</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">Modifier le profil</div><div style="font-size:10px;color:var(--ts);">Poids, taille, objectifs</div></div><span style="color:var(--tf);">›</span></div>
+        <div class="sr" style="border-bottom:none;"><div style="width:30px;height:30px;border-radius:8px;background:var(--s2);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">ℹ️</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">À propos</div><div class="n" style="font-size:10px;color:var(--ts);">Version 1.0.0</div></div><span style="color:var(--tf);">›</span></div>
+      </div>
+      <button onclick="G('login')" style="width:100%;background:transparent;border:1px solid rgba(248,113,113,.2);border-radius:13px;padding:12px;color:var(--re);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">🚪 Se déconnecter</button>
+    </div>
+  </div>
+
+  <!-- ═══ SETTINGS ═══ -->
+  <div class="sc" id="s-settings">
+    <div class="sk">
+      <button class="bk" onclick="G('profile')">← Profil</button>
+      <h1 style="font-size:19px;font-weight:900;letter-spacing:-.5px;margin-bottom:4px;">Affichage</h1>
+      <p style="font-size:11px;color:var(--ts);margin-bottom:18px;line-height:1.6;">Ces options masquent l'affichage uniquement — les données restent calculées et stockées.</p>
+      <p class="sl" style="margin-bottom:9px;">SUIVI NUTRITIONNEL</p>
+      <div class="cd" style="padding:13px;margin-bottom:13px;">
+        <div class="tr">
+          <div style="flex:1;"><div style="font-size:13px;font-weight:700;">Macronutriments</div><div style="font-size:11px;color:var(--ts);margin-top:2px;">Calories, protéines, glucides, lipides</div></div>
+          <div class="tog on" id="tg-m" onclick="tS('m')"><div class="togk"></div></div>
+        </div>
+        <div class="tr">
+          <div style="flex:1;"><div style="font-size:13px;font-weight:700;">Micronutriments</div><div style="font-size:11px;color:var(--ts);margin-top:2px;">Vitamines, minéraux, score nutritionnel</div></div>
+          <div class="tog on" id="tg-mu" onclick="tS('mu')"><div class="togk"></div></div>
+        </div>
+      </div>
+      <div style="background:var(--s1);border:1px solid var(--b2);border-left:3px solid var(--ye);border-radius:12px;padding:11px 13px;margin-bottom:16px;">
+        <p style="font-size:11px;color:var(--ts);line-height:1.8;">
+          <span style="color:var(--ye);font-weight:700;">ℹ️ Ce que ça change</span><br>
+          <strong style="color:var(--tx);">Macros désactivés</strong> : masque la card calories du journal et les onglets macros des fiches aliment.<br><br>
+          <strong style="color:var(--tx);">Micronutriments désactivés</strong> : masque la card micro du journal et les onglets micro des fiches aliment.<br><br>
+          Le <strong style="color:var(--tx);">meal planning et la liste de courses</strong> sont toujours disponibles.
+        </p>
+      </div>
+      <p class="sl" style="margin-bottom:9px;">APERÇU — JOURNAL</p>
+      <div class="cd" style="padding:13px;">
+        <div id="pv-m" style="padding:9px;border-radius:9px;background:var(--bg);border:1px solid var(--b2);margin-bottom:7px;display:flex;align-items:center;gap:9px;">
+          <div style="width:28px;height:28px;border-radius:50%;border:3px solid var(--or);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="n" style="font-size:8px;font-weight:700;color:var(--or);">54%</span></div>
+          <div style="flex:1;"><div style="font-size:11px;font-weight:700;">Card Macros</div><div style="font-size:9px;color:var(--ts);">Calories · Protéines · Glucides · Lipides</div></div>
+          <span id="pi-m">✅</span>
+        </div>
+        <div id="pv-mu" style="padding:9px;border-radius:9px;background:var(--bg);border:1px solid var(--b2);display:flex;align-items:center;gap:9px;">
+          <div style="width:28px;height:28px;border-radius:50%;border:3px solid var(--pu);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="n" style="font-size:8px;font-weight:700;color:var(--pu);">70</span></div>
+          <div style="flex:1;"><div style="font-size:11px;font-weight:700;">Card Micronutriments</div><div style="font-size:9px;color:var(--ts);">Vitamines · Minéraux · Score</div></div>
+          <span id="pi-mu">✅</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab" id="tabbar">
+    <button class="ti" onclick="G('journal')"><div class="tp" id="tp-j"><span style="font-size:19px;">🏠</span></div><span class="tl" id="tl-j">Journal</span></button>
+    <button class="ti" onclick="G('search')"><div class="tp" id="tp-s"><span style="font-size:19px;">🔍</span></div><span class="tl" id="tl-s">Recherche</span></button>
+    <button class="ti" onclick="G('planner')"><div class="tp" id="tp-p"><span style="font-size:19px;">📅</span></div><span class="tl" id="tl-p">Planning</span></button>
+    <button class="ti" onclick="G('shopping')"><div class="tp" id="tp-sh"><span style="font-size:19px;">🛒</span></div><span class="tl" id="tl-sh">Courses</span></button>
+    <button class="ti" onclick="G('profile')"><div class="tp" id="tp-pr"><span style="font-size:19px;">👤</span></div><span class="tl" id="tl-pr">Profil</span></button>
+  </div>
+
+</div><!-- /phone -->
+
+<span style="font-family:'DM Mono',monospace;font-size:9px;color:#1a1a1a;letter-spacing:3px;">COOKED — STYLE A CARBON — 17 ÉCRANS</span>
+
+<script>
+const AUTH=['login','register','ob1','ob2','ob3'];
+const MAIN=['journal','micro-full','micro-detail','search','scan','food','planner','planday','recipe','shopping','shopping-flat','shopping-add','profile','settings'];
+const ALL=[...AUTH,...MAIN];
+const TMAP={journal:'j','micro-full':'j','micro-detail':'j',search:'s',scan:'s',food:'s',planner:'p',planday:'p',recipe:'p',shopping:'sh','shopping-flat':'sh','shopping-add':'sh',profile:'pr',settings:'pr'};
+const TEAL=['p','sh'];
+
+function G(name){
+  ALL.forEach(s=>{const el=document.getElementById('s-'+s);if(el){el.style.display='none';el.classList.remove('vis');}});
+  const t=document.getElementById('s-'+name);
+  if(t){t.style.display='flex';t.classList.add('vis');}
+  document.getElementById('tabbar').style.display=MAIN.includes(name)?'flex':'none';
+  ['j','s','p','sh','pr'].forEach(id=>{
+    const pill=document.getElementById('tp-'+id);const lbl=document.getElementById('tl-'+id);
+    if(pill){pill.classList.remove('on','on-t');}if(lbl){lbl.classList.remove('on','on-t');}
+  });
+  const at=TMAP[name];
+  if(at){const isTeal=TEAL.includes(at);const pill=document.getElementById('tp-'+at);const lbl=document.getElementById('tl-'+at);
+    if(pill)pill.classList.add(isTeal?'on-t':'on');if(lbl)lbl.classList.add(isTeal?'on-t':'on');}
+  document.querySelectorAll('.nb').forEach(b=>{
+    b.classList.remove('on');const txt=b.textContent.toLowerCase();
+    if((name==='login'&&txt.includes('login'))||(name==='register'&&txt.includes('register'))||
+      (name==='ob1'&&txt.includes('onboarding 1'))||(name==='ob2'&&txt.includes('onboarding 2'))||
+      (name==='ob3'&&txt.includes('onboarding 3'))||(name==='journal'&&txt.includes('journal'))||
+      (name==='micro-full'&&txt.includes('complet'))||(name==='micro-detail'&&txt.includes('nutriment'))||
+      (name==='search'&&txt.includes('recherche'))||(name==='scan'&&txt.includes('scanner'))||
+      (name==='food'&&txt.includes('aliment'))||(name==='planner'&&txt.includes('semaine'))||
+      (name==='planday'&&txt.includes('journée'))||(name==='recipe'&&txt.includes('recette'))||
+      (name==='shopping'&&txt.includes('groupée'))||(name==='shopping-flat'&&txt.includes('plat'))||
+      (name==='shopping-add'&&txt.includes('manuellement'))||
+      (name==='profile'&&txt.includes('profil'))||(name==='settings'&&txt.includes('param')))
+      b.classList.add('on');
+  });
+}
+
+// Portion selector
+let qty=180;
+function aQ(d){qty=Math.max(10,qty+d);uF();}
+function sQ(v){qty=v;uF();}
+function uF(){
+  const b={k:165,p:31,c:0,f:3.6},r=qty/100;
+  document.getElementById('fd-k').textContent=Math.round(b.k*r);
+  document.getElementById('fd-p').textContent=(b.p*r).toFixed(1)+'g';
+  document.getElementById('fd-c').textContent=(b.c*r).toFixed(1)+'g';
+  document.getElementById('fd-f').textContent=(b.f*r).toFixed(1)+'g';
+  document.getElementById('qd').textContent=qty;
+  [50,100,150,200].forEach(v=>{const btn=document.getElementById('p'+v);if(btn)btn.classList.toggle('sel',qty===v);});
+}
+// Food tabs
+function fTab(t){
+  const isMacro=t==='m';
+  document.getElementById('fp-m').style.display=isMacro?'block':'none';
+  document.getElementById('fp-mu').style.display=isMacro?'none':'block';
+  document.getElementById('ft-m').style.background=isMacro?'var(--or)':'transparent';
+  document.getElementById('ft-m').querySelector('span').style.color=isMacro?'#fff':'var(--ts)';
+  document.getElementById('ft-mu').style.background=isMacro?'transparent':'var(--pu)';
+  document.getElementById('ft-mu').querySelector('span').style.color=isMacro?'var(--ts)':'#fff';
+}
+// Shopping checkboxes
+const gdone=new Set(['g1','g2','g4','g5']);
+const gtotal=11;
+function gC(id,el){
+  const row=el.closest('.si');const nameEl=row?row.querySelector('div>div:first-child'):null;
+  if(gdone.has(id)){gdone.delete(id);el.classList.remove('done');el.textContent='';if(nameEl){nameEl.style.textDecoration='none';nameEl.style.color='var(--tx)';}}
+  else{gdone.add(id);el.classList.add('done');el.textContent='✓';if(nameEl){nameEl.style.textDecoration='line-through';nameEl.style.color='var(--ts)';}}
+  const c=gdone.size;
+  document.getElementById('sc1').textContent=c+' / '+gtotal;
+  document.getElementById('sp1').style.width=((c/gtotal)*100)+'%';
+}
+// Settings toggles
+const ts={m:true,mu:true};
+function tS(k){
+  ts[k]=!ts[k];const tog=document.getElementById('tg-'+k);
+  tog.classList.toggle('on',ts[k]);tog.classList.toggle('off',!ts[k]);
+  document.getElementById('pi-'+k).textContent=ts[k]?'✅':'🚫';
+  document.getElementById('pv-'+k).style.opacity=ts[k]?'1':'0.3';
+}
+// Category pills
+document.querySelectorAll('.catpill').forEach(pill=>{
+  pill.addEventListener('click',()=>{
+    document.querySelectorAll('.catpill').forEach(p=>{p.classList.remove('sel');p.classList.add('unsel');});
+    pill.classList.remove('unsel');pill.classList.add('sel');
+  });
+});
+G('login');uF();
+</script>
+</body>
+</html>

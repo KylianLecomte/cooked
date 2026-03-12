@@ -12,6 +12,7 @@ async function bootstrap() {
     // Désactive le logger NestJS par défaut pendant le bootstrap
     // Les logs seront bufferisés jusqu'à ce que Pino soit prêt
     bufferLogs: true,
+    bodyParser: false, // Requis pour @thallesp/nestjs-better-auth
   });
 
   app.useLogger(app.get(PinoLogger));

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COOKED — Propositions de style</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Fraunces:opsz,wght@9..144,300;9..144,700;9..144,900&family=Space+Mono:wght@400;700&family=Unbounded:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0A0B0D;font-family:'DM Sans',sans-serif;color:#F0F2F5;
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding:28px 16px 60px;gap:24px;}
+
+/* ── Page header ── */
+.ph{display:flex;align-items:center;gap:10px;}
+.ph-logo{width:38px;height:38px;background:#FF6B2C;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;}
+.ph-title{font-family:'DM Serif Display',serif;font-size:24px;}
+.ph-badge{font-family:'DM Mono',monospace;font-size:9px;color:#6B7280;
+  background:#111318;border:1px solid #1F242E;padding:3px 10px;border-radius:20px;letter-spacing:2px;}
+
+/* ── Style selector ── */
+.sel-wrap{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:840px;}
+.sel-card{flex:1;min-width:160px;max-width:200px;padding:14px 16px;border-radius:16px;
+  cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative;overflow:hidden;}
+.sel-card.active{transform:translateY(-2px);}
+.sel-letter{font-size:9px;font-weight:700;letter-spacing:3px;opacity:.7;margin-bottom:5px;}
+.sel-name{font-size:14px;font-weight:800;margin-bottom:3px;}
+.sel-desc{font-size:10px;opacity:.6;line-height:1.5;}
+.sel-dot{position:absolute;top:10px;right:10px;width:8px;height:8px;border-radius:50%;}
+
+/* A — CARBON */
+.sel-a{background:#0D0D0D;border-color:#0D0D0D;}
+.sel-a.active{border-color:#FF6B2C;box-shadow:0 0 30px rgba(255,107,44,.2);}
+.sel-a .sel-name{font-family:'DM Serif Display',serif;color:#FF6B2C;}
+.sel-a .sel-dot{background:#FF6B2C;}
+/* B — CHALK */
+.sel-b{background:#F5F0E8;border-color:#F5F0E8;}
+.sel-b.active{border-color:#C45C2A;box-shadow:0 0 30px rgba(196,92,42,.15);}
+.sel-b .sel-letter{color:#8B7355;}
+.sel-b .sel-name{font-family:'Playfair Display',serif;color:#C45C2A;}
+.sel-b .sel-desc{color:#4A3728;}
+.sel-b .sel-dot{background:#C45C2A;}
+/* C — WIRE */
+.sel-c{background:#020202;border-color:#020202;}
+.sel-c.active{border-color:#AAFF00;box-shadow:0 0 30px rgba(170,255,0,.15);}
+.sel-c .sel-name{font-family:'Space Mono',monospace;color:#AAFF00;}
+.sel-c .sel-dot{background:#AAFF00;}
+/* D — AMBER */
+.sel-d{background:#191510;border-color:#191510;}
+.sel-d.active{border-color:#F59E0B;box-shadow:0 0 30px rgba(245,158,11,.15);}
+.sel-d .sel-name{font-family:'Fraunces',serif;color:#F59E0B;}
+.sel-d .sel-dot{background:#F59E0B;}
+
+/* ── Phone shell ── */
+.phone{width:375px;height:812px;border-radius:50px;overflow:hidden;
+  border:10px solid #1A1E26;position:relative;
+  box-shadow:0 0 0 1px #0D1117,0 60px 140px rgba(0,0,0,.95);}
+.phone-inner{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;}
+.sbar{height:44px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;flex-shrink:0;position:relative;}
+.isl{position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  width:120px;height:28px;border-radius:20px;}
+.sk{flex:1;overflow-y:auto;}
+.sk::-webkit-scrollbar{display:none;}
+
+/* ══════════════════════════════════
+   STYLE A — CARBON
+══════════════════════════════════ */
+.a-phone{background:#080808;}
+.a-sbar{background:#080808;}
+.a-isl{background:#0A0A0A;border:1px solid #1a1a1a;}
+.a-stime{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#fff;}
+.a-bat{width:22px;height:11px;border:1.5px solid #fff;border-radius:3px;display:flex;align-items:center;padding:0 1px;}
+.a-batf{width:70%;height:6px;background:#4ADE80;border-radius:1px;}
+
+.a-sk{background:#080808;padding:14px 15px 8px;}
+
+/* Giant number hero */
+.a-hero{margin-bottom:10px;}
+.a-hero-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:-4px;}
+.a-hero-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:#3a3a3a;}
+.a-hero-rem{font-family:'DM Mono',monospace;font-size:11px;color:#4ADE80;font-weight:700;}
+
+/* The giant overflowing number */
+.a-num-wrap{position:relative;overflow:visible;margin-bottom:6px;}
+.a-giant{font-family:'DM Serif Display',serif;font-size:86px;font-weight:900;
+  color:#FF6B2C;line-height:1;letter-spacing:-4px;
+  text-shadow:0 0 60px rgba(255,107,44,.35);
+  position:relative;z-index:1;}
+.a-giant-unit{font-family:'DM Mono',monospace;font-size:11px;color:#FF6B2C;
+  letter-spacing:3px;opacity:.7;margin-left:4px;vertical-align:super;}
+.a-giant-sub{font-size:11px;color:#3a3a3a;font-weight:600;font-family:'DM Sans',sans-serif;
+  letter-spacing:.5px;}
+
+/* Macro bars */
+.a-card{background:#0E0E0E;border:1px solid #1a1a1a;border-radius:16px;
+  padding:13px;margin-bottom:8px;position:relative;overflow:hidden;}
+.a-card::before{content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;opacity:.6;}
+.a-sl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:#333;}
+.a-mrow{display:flex;align-items:center;gap:10px;margin-top:9px;}
+.a-mlabel{font-size:11px;color:#555;font-weight:600;min-width:62px;}
+.a-mval{font-family:'DM Mono',monospace;font-size:11px;color:#999;min-width:52px;text-align:right;}
+.a-mtrack{flex:1;height:4px;background:#1a1a1a;border-radius:2px;overflow:hidden;}
+.a-mfill{height:100%;border-radius:2px;}
+
+/* Micro card */
+.a-mscore{display:flex;align-items:center;gap:5px;margin-bottom:10px;}
+.a-nr{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #151515;}
+.a-nr:last-child{border-bottom:none;}
+.a-nname{font-size:11px;font-weight:700;flex:1;color:#ccc;}
+.a-nbar{flex:1;height:3px;background:#1a1a1a;border-radius:2px;overflow:hidden;max-width:60px;}
+.a-nbf{height:100%;border-radius:2px;}
+.a-npct{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;min-width:30px;text-align:right;}
+
+/* Meal sections */
+.a-meal{background:#0C0C0C;border:1px solid #171717;border-radius:13px;margin-bottom:6px;overflow:hidden;}
+.a-meal-h{padding:11px 13px;display:flex;align-items:center;}
+.a-meal-title{font-size:13px;font-weight:800;flex:1;color:#ddd;}
+.a-meal-kcal{font-family:'DM Mono',monospace;font-size:11px;color:#FF6B2C;margin-right:8px;}
+.a-meal-add{width:22px;height:22px;border-radius:6px;background:rgba(255,107,44,.1);
+  border:1px solid rgba(255,107,44,.3);display:inline-flex;align-items:center;
+  justify-content:center;color:#FF6B2C;font-size:14px;cursor:pointer;margin-right:4px;line-height:1;}
+.a-food-row{padding:8px 13px;display:flex;align-items:center;border-top:1px solid #141414;}
+.a-food-name{font-size:11px;font-weight:600;flex:1;color:#bbb;}
+.a-food-brand{font-size:9px;color:#333;margin-top:1px;}
+
+/* Tab */
+.a-tab{height:76px;background:#0C0C0C;border-top:1px solid #141414;
+  display:flex;align-items:flex-start;padding-top:7px;flex-shrink:0;}
+.a-ti{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.a-tp{padding:3px 10px;border-radius:12px;}
+.a-tl{font-size:9px;font-weight:600;color:#333;}
+.a-tl.on{color:#FF6B2C;font-weight:800;}
+.a-tp.on{background:rgba(255,107,44,.1);}
+
+
+/* ══════════════════════════════════
+   STYLE B — CHALK
+══════════════════════════════════ */
+.b-phone{background:#F2EDE3;}
+.b-sbar{background:#F2EDE3;}
+.b-isl{background:#E8E0D2;}
+.b-stime{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#2C1A0E;}
+.b-bat{width:22px;height:11px;border:1.5px solid #2C1A0E;border-radius:3px;display:flex;align-items:center;padding:0 1px;}
+.b-batf{width:70%;height:6px;background:#5C8A3C;border-radius:1px;}
+
+.b-sk{background:#F2EDE3;padding:14px 15px 8px;}
+
+/* Date header */
+.b-date-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:#A08060;margin-bottom:2px;}
+.b-date-main{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#1C0F06;letter-spacing:-.5px;}
+
+/* Calorie hero — centered, elegant */
+.b-hero{background:#fff;border-radius:18px;padding:18px;margin-bottom:8px;
+  box-shadow:0 2px 12px rgba(80,40,10,.08),0 1px 3px rgba(80,40,10,.05);}
+.b-hero-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.b-hero-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:#A08060;}
+.b-hero-obj{font-family:'DM Mono',monospace;font-size:10px;color:#C45C2A;font-weight:700;}
+.b-kcal-row{display:flex;align-items:flex-end;justify-content:center;gap:4px;margin-bottom:14px;}
+.b-kcal-num{font-family:'Playfair Display',serif;font-size:58px;font-weight:900;
+  color:#C45C2A;line-height:1;letter-spacing:-3px;}
+.b-kcal-unit{font-family:'DM Mono',monospace;font-size:12px;color:#A08060;margin-bottom:10px;}
+.b-kcal-slash{font-family:'DM Mono',monospace;font-size:12px;color:#D0C0A8;margin-bottom:10px;}
+.b-kcal-total{font-family:'DM Mono',monospace;font-size:12px;color:#A08060;margin-bottom:10px;}
+
+/* Macro pills */
+.b-macro-row{display:flex;gap:6px;}
+.b-mpill{flex:1;background:#FAF7F2;border-radius:11px;padding:9px 7px;text-align:center;border:1px solid #EDE5D8;}
+.b-mpill-val{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;margin-bottom:1px;}
+.b-mpill-label{font-family:'DM Mono',monospace;font-size:8px;color:#A08060;letter-spacing:1px;}
+
+/* Micro card — chalk */
+.b-mcard{background:#fff;border-radius:18px;padding:14px;margin-bottom:8px;
+  box-shadow:0 2px 12px rgba(80,40,10,.07),0 1px 3px rgba(80,40,10,.04);}
+.b-mcard-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:#A08060;margin-bottom:10px;}
+.b-nr{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid #F0E8DA;}
+.b-nr:last-child{border-bottom:none;}
+.b-nname{font-size:11px;font-weight:700;flex:1;color:#2C1A0E;}
+.b-nbar{flex:1;height:4px;background:#EDE5D8;border-radius:2px;overflow:hidden;max-width:60px;}
+.b-nbf{height:100%;border-radius:2px;}
+.b-npct{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;min-width:30px;text-align:right;}
+
+/* Meals — chalk */
+.b-meal{background:#fff;border-radius:14px;margin-bottom:6px;overflow:hidden;
+  box-shadow:0 1px 6px rgba(80,40,10,.06);}
+.b-meal-h{padding:12px 13px;display:flex;align-items:center;border-bottom:1px solid #F0E8DA;}
+.b-meal-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;flex:1;color:#1C0F06;}
+.b-meal-kcal{font-family:'DM Mono',monospace;font-size:10px;color:#C45C2A;margin-right:8px;}
+.b-meal-add{width:22px;height:22px;border-radius:6px;background:rgba(196,92,42,.1);
+  border:1px solid rgba(196,92,42,.3);display:inline-flex;align-items:center;
+  justify-content:center;color:#C45C2A;font-size:14px;cursor:pointer;margin-right:4px;line-height:1;}
+.b-food-row{padding:8px 13px;display:flex;align-items:center;}
+.b-food-name{font-size:11px;font-weight:600;flex:1;color:#3D2515;}
+.b-food-brand{font-size:9px;color:#A08060;margin-top:1px;}
+
+/* Tab — chalk */
+.b-tab{height:76px;background:#fff;border-top:1px solid #EDE5D8;
+  display:flex;align-items:flex-start;padding-top:7px;flex-shrink:0;}
+.b-ti{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.b-tp{padding:3px 10px;border-radius:12px;}
+.b-tl{font-size:9px;font-weight:600;color:#C4B4A0;}
+.b-tl.on{color:#C45C2A;font-weight:800;}
+.b-tp.on{background:rgba(196,92,42,.08);}
+
+
+/* ══════════════════════════════════
+   STYLE C — WIRE
+══════════════════════════════════ */
+.c-phone{background:#030303;}
+.c-sbar{background:#030303;}
+.c-isl{background:#050505;}
+.c-stime{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#AAFF00;}
+.c-bat{width:22px;height:11px;border:1.5px solid #AAFF00;border-radius:2px;display:flex;align-items:center;padding:0 1px;}
+.c-batf{width:70%;height:6px;background:#AAFF00;border-radius:1px;}
+
+.c-sk{background:#030303;padding:14px 15px 8px;}
+
+/* Grid overlay */
+.c-grid-bg{position:absolute;inset:0;pointer-events:none;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(170,255,0,.04) 39px,rgba(170,255,0,.04) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(170,255,0,.04) 39px,rgba(170,255,0,.04) 40px);}
+
+.c-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:#1a2a00;}
+
+/* Segmented gauge instead of ring */
+.c-gauge-wrap{display:flex;gap:8px;align-items:center;margin-bottom:10px;}
+.c-segs{display:flex;gap:2px;}
+.c-seg{width:6px;height:22px;border-radius:1px;}
+.c-gauge-info{flex:1;}
+.c-gauge-big{font-family:'Space Mono',monospace;font-size:36px;font-weight:700;
+  color:#AAFF00;letter-spacing:-2px;line-height:1;text-shadow:0 0 20px rgba(170,255,0,.4);}
+.c-gauge-unit{font-family:'Space Mono',monospace;font-size:9px;color:#3a5500;margin-bottom:4px;}
+.c-gauge-sub{font-family:'Space Mono',monospace;font-size:9px;color:#1a2a00;}
+
+/* Wire card — hairline borders, no fill */
+.c-card{border:1px solid #1a2a00;border-radius:8px;padding:12px;margin-bottom:7px;background:transparent;}
+.c-macro-row{display:flex;align-items:center;gap:9px;margin-top:8px;}
+.c-mlabel{font-family:'Space Mono',monospace;font-size:9px;color:#2a4400;min-width:55px;}
+.c-mval{font-family:'Space Mono',monospace;font-size:9px;color:#AAFF00;min-width:45px;text-align:right;}
+.c-mtrack{flex:1;height:2px;background:#0a1500;border-radius:0;}
+.c-mfill{height:100%;}
+
+/* Micro — wire */
+.c-nr{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #0d1a00;}
+.c-nr:last-child{border-bottom:none;}
+.c-nname{font-family:'Space Mono',monospace;font-size:9px;flex:1;color:#3a5500;}
+.c-nbar{flex:1;height:2px;background:#0a1500;max-width:55px;}
+.c-nbf{height:100%;}
+.c-npct{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;min-width:30px;text-align:right;}
+
+/* Meals — wire */
+.c-meal{border:1px solid #0d1a00;border-radius:6px;margin-bottom:5px;overflow:hidden;}
+.c-meal-h{padding:10px 12px;display:flex;align-items:center;border-bottom:1px solid #0d1a00;}
+.c-meal-title{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;flex:1;color:#AAFF00;}
+.c-meal-kcal{font-family:'Space Mono',monospace;font-size:9px;color:#3a5500;margin-right:7px;}
+.c-meal-add{width:20px;height:20px;border:1px solid #1a2a00;display:inline-flex;align-items:center;
+  justify-content:center;color:#AAFF00;font-size:13px;cursor:pointer;margin-right:4px;line-height:1;}
+.c-food-row{padding:7px 12px;display:flex;align-items:center;border-top:1px solid #080f00;}
+.c-food-name{font-family:'Space Mono',monospace;font-size:9px;flex:1;color:#3a5500;}
+.c-food-kcal{font-family:'Space Mono',monospace;font-size:9px;color:#AAFF00;}
+
+/* Tab — wire */
+.c-tab{height:72px;background:#030303;border-top:1px solid #0d1a00;
+  display:flex;align-items:flex-start;padding-top:7px;flex-shrink:0;}
+.c-ti{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.c-tl{font-family:'Space Mono',monospace;font-size:8px;color:#1a2a00;}
+.c-tl.on{color:#AAFF00;}
+
+
+/* ══════════════════════════════════
+   STYLE D — AMBER
+══════════════════════════════════ */
+.d-phone{background:#141210;}
+.d-sbar{background:#141210;}
+.d-isl{background:#1a1612;}
+.d-stime{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:#E8DCC8;}
+.d-bat{width:22px;height:11px;border:1.5px solid #E8DCC8;border-radius:3px;display:flex;align-items:center;padding:0 1px;}
+.d-batf{width:70%;height:6px;background:#86EFAC;border-radius:1px;}
+
+.d-sk{background:#141210;padding:14px 15px 8px;}
+
+.d-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:#3d3328;}
+
+/* Amber hero ring */
+.d-hero{background:linear-gradient(145deg,#1e1a14,#191510);
+  border:1px solid #2e2618;border-radius:20px;padding:16px;margin-bottom:8px;
+  box-shadow:inset 0 1px 0 rgba(255,220,100,.04),0 4px 20px rgba(0,0,0,.6);}
+.d-hero-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;}
+.d-hero-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:#4d4030;}
+.d-hero-obj{font-family:'DM Mono',monospace;font-size:10px;color:#F59E0B;font-weight:700;}
+.d-ring-row{display:flex;align-items:center;gap:13px;}
+.d-macro-list{flex:1;}
+.d-macro-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.d-macro-item:last-child{margin-bottom:0;}
+.d-mi-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.d-mi-name{font-size:10px;color:#6b5e4a;font-weight:600;flex:1;}
+.d-mi-val{font-family:'DM Mono',monospace;font-size:10px;color:#C8A86B;}
+.d-mi-track{flex:1;height:3px;background:#2a2218;border-radius:2px;overflow:hidden;}
+.d-mi-fill{height:100%;border-radius:2px;}
+
+/* Amber micro card */
+.d-card{background:linear-gradient(145deg,#1a1712,#171410);
+  border:1px solid #252018;border-radius:16px;padding:13px;margin-bottom:7px;
+  box-shadow:inset 0 1px 0 rgba(255,200,80,.03),0 2px 10px rgba(0,0,0,.4);}
+.d-nr{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid #211c14;}
+.d-nr:last-child{border-bottom:none;}
+.d-ni{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-size:11px;flex-shrink:0;}
+.d-nname{font-size:11px;font-weight:700;flex:1;color:#B8A88A;}
+.d-nbar{flex:1;height:3px;background:#2a2218;border-radius:2px;overflow:hidden;max-width:55px;}
+.d-nbf{height:100%;border-radius:2px;}
+.d-npct{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;min-width:30px;text-align:right;}
+
+/* Meals — amber */
+.d-meal{background:#1a1712;border:1px solid #221d14;border-radius:13px;margin-bottom:6px;overflow:hidden;
+  box-shadow:0 1px 6px rgba(0,0,0,.5);}
+.d-meal-h{padding:11px 13px;display:flex;align-items:center;}
+.d-meal-title{font-family:'Fraunces',serif;font-size:13px;font-weight:700;flex:1;color:#D4BE96;}
+.d-meal-kcal{font-family:'DM Mono',monospace;font-size:10px;color:#F59E0B;margin-right:7px;}
+.d-meal-add{width:22px;height:22px;border-radius:6px;background:rgba(245,158,11,.08);
+  border:1px solid rgba(245,158,11,.2);display:inline-flex;align-items:center;
+  justify-content:center;color:#F59E0B;font-size:14px;cursor:pointer;margin-right:4px;line-height:1;}
+.d-food-row{padding:8px 13px;display:flex;align-items:center;border-top:1px solid #1e1a12;}
+.d-food-name{font-size:11px;font-weight:600;flex:1;color:#9A8A72;}
+.d-food-brand{font-size:9px;color:#4d4030;margin-top:1px;}
+
+/* Tab — amber */
+.d-tab{height:76px;background:#141210;border-top:1px solid #201c14;
+  display:flex;align-items:flex-start;padding-top:7px;flex-shrink:0;}
+.d-ti{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.d-tp{padding:3px 10px;border-radius:12px;}
+.d-tl{font-size:9px;font-weight:600;color:#3d3328;}
+.d-tl.on{color:#F59E0B;font-weight:800;}
+.d-tp.on{background:rgba(245,158,11,.08);}
+
+
+/* ── Page description labels ── */
+.style-desc-wrap{max-width:840px;width:100%;display:none;}
+.style-desc-wrap.vis{display:block;}
+.style-desc{border-radius:14px;padding:16px 20px;}
+.style-desc h3{font-size:14px;font-weight:800;margin-bottom:5px;}
+.style-desc p{font-size:12px;line-height:1.8;opacity:.7;}
+
+/* Desc A */
+.desc-a{background:#0D0D0D;border:1px solid #1a1a1a;}
+.desc-a h3{font-family:'DM Serif Display',serif;color:#FF6B2C;}
+.desc-a p{color:#999;}
+/* Desc B */
+.desc-b{background:#F2EDE3;border:1px solid #DDD0BC;}
+.desc-b h3{font-family:'Playfair Display',serif;color:#C45C2A;}
+.desc-b p{color:#6B5040;}
+/* Desc C */
+.desc-c{background:#030303;border:1px solid #1a2a00;}
+.desc-c h3{font-family:'Space Mono',monospace;color:#AAFF00;}
+.desc-c p{color:#3a5500;}
+/* Desc D */
+.desc-d{background:#191510;border:1px solid #2e2618;}
+.desc-d h3{font-family:'Fraunces',serif;color:#F59E0B;}
+.desc-d p{color:#8B7A60;}
+</style>
+</head>
+<body>
+
+<div class="ph">
+  <div class="ph-logo">🔥</div>
+  <span style="font-family:'DM Serif Display',serif;font-size:24px;">COOKED</span>
+  <span class="ph-badge">STYLES × 4</span>
+</div>
+
+<!-- Style selector -->
+<div class="sel-wrap">
+  <div class="sel-card sel-a active" onclick="setStyle('a')">
+    <div class="sel-letter" style="color:#FF6B2C;">A</div>
+    <div class="sel-name">CARBON</div>
+    <div class="sel-desc" style="color:#555;">Chiffres géants, grain, orange qui brûle. Poussé à l'extrême.</div>
+    <div class="sel-dot"></div>
+  </div>
+  <div class="sel-card sel-b" onclick="setStyle('b')">
+    <div class="sel-letter" style="color:#8B7355;">B</div>
+    <div class="sel-name">CHALK</div>
+    <div class="sel-desc">Fond crème, typographie dark, accent terracotta. Carnet premium.</div>
+    <div class="sel-dot"></div>
+  </div>
+  <div class="sel-card sel-c" onclick="setStyle('c')">
+    <div class="sel-letter" style="color:#AAFF00;">C</div>
+    <div class="sel-name">WIRE</div>
+    <div class="sel-desc" style="color:#3a5500;">Fond noir, lignes fines, vert acide. Terminal fitness.</div>
+    <div class="sel-dot"></div>
+  </div>
+  <div class="sel-card sel-d" onclick="setStyle('d')">
+    <div class="sel-letter" style="color:#F59E0B;">D</div>
+    <div class="sel-name">AMBER</div>
+    <div class="sel-desc" style="color:#8B7A60;">Anthracite chaud, ambre doré, relief. Fintech sombre.</div>
+    <div class="sel-dot"></div>
+  </div>
+</div>
+
+<!-- Description -->
+<div class="style-desc-wrap vis" id="desc-a"><div class="style-desc desc-a"><h3>A — CARBON : Performance brute</h3><p>Les chiffres sont les stars. La calorie occupe presque toute la largeur — impossible de ne pas la voir. Grain de texture sur les cards (simulé via SVG filter) pour une sensation tactile. L'orange ne se contente pas d'accentuer, il irradie. Direction : app de compétition, athlète, tracking sérieux.</p></div></div>
+<div class="style-desc-wrap" id="desc-b"><div class="style-desc desc-b"><h3>B — CHALK : Carnet de nutrition</h3><p>La seule app dark food n'existe pas encore — voilà l'inverse. Fond ivoire chaud, Playfair Display pour les titres, ombres douces. Ressemble à un bon carnet Moleskine. Direction : utilisateur lifestyle, personnes qui associent nutrition à bien-être et non à performance.</p></div></div>
+<div class="style-desc-wrap" id="desc-c"><div class="style-desc desc-c"><h3>C — WIRE : Terminal / Hacker fitness</h3><p>Zero remplissage. Tout est dessiné à l'aide de lignes hairline. La jauge de calories est segmentée en blocs plutôt qu'un arc. Space Mono omniprésent. Grille de fond subtile. Direction : développeurs, biohackers, profil geek qui veut sentir qu'il contrôle ses données.</p></div></div>
+<div class="style-desc-wrap" id="desc-d"><div class="style-desc desc-d"><h3>D — AMBER : Fintech dark</h3><p>Pas de noir pur — un anthracite profond et chaud (#141210). Cards avec légère élévation et lueur interne très subtile. Fraunces (serif expressif) pour les titres des repas. L'ambre est un accentuateur noble, pas agressif. Direction : adulte, professionnel, utilisation discrète en public.</p></div></div>
+
+<!-- Phone preview -->
+<div class="phone" id="phone-wrap">
+  <div class="phone-inner" id="phone-content">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<span style="font-family:'DM Mono',monospace;font-size:9px;color:#1F242E;letter-spacing:3px;">CLIQUE SUR UN STYLE POUR L'AFFICHER</span>
+
+<script>
+function buildA(){
+  return `
+  <div style="background:#080808;height:100%;display:flex;flex-direction:column;">
+    <!-- Status bar -->
+    <div class="sbar a-sbar">
+      <span class="a-stime">9:41</span>
+      <div class="a-isl isl"></div>
+      <div style="display:flex;gap:5px;align-items:center;">
+        <span style="font-family:'DM Mono',monospace;font-size:10px;color:#444;">▲▲▲</span>
+        <div class="a-bat"><div class="a-batf"></div></div>
+      </div>
+    </div>
+    <!-- Content -->
+    <div class="sk a-sk" style="position:relative;">
+      <!-- Date -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px;">
+        <div>
+          <div class="a-sl" style="margin-bottom:2px;">MERCREDI · 11 MARS</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:#2a2a2a;">SEMAINE 11</div>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <div style="width:28px;height:28px;border:1px solid #1a1a1a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#333;">‹</div>
+          <div style="width:28px;height:28px;border:1px solid #1a1a1a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#333;">›</div>
+        </div>
+      </div>
+
+      <!-- HERO — giant number -->
+      <div class="a-card" style="padding:16px 16px 12px;margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div class="a-sl">CALORIES & MACROS</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:#333;">OBJ 2350</div>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:10px;margin-bottom:2px;">
+          <div style="font-family:'DM Serif Display',serif;font-size:78px;line-height:.9;color:#FF6B2C;letter-spacing:-4px;text-shadow:0 0 40px rgba(255,107,44,.3);">1260</div>
+          <div style="padding-bottom:10px;">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;color:#FF6B2C;opacity:.6;letter-spacing:2px;">KCAL</div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;color:#2a2a2a;margin-top:4px;">−1090 rest.</div>
+          </div>
+        </div>
+        <!-- Thin progress line -->
+        <div style="height:2px;background:#141414;border-radius:1px;overflow:hidden;margin-bottom:12px;">
+          <div style="width:54%;height:100%;background:linear-gradient(90deg,#FF6B2C,#FF9A5C);border-radius:1px;"></div>
+        </div>
+        <!-- Macro rows -->
+        <div class="a-mrow" style="margin-top:0;">
+          <span class="a-mlabel">Protéines</span>
+          <div class="a-mtrack"><div class="a-mfill" style="width:56%;background:#60A5FA;"></div></div>
+          <span class="a-mval" style="color:#60A5FA;">98/176g</span>
+        </div>
+        <div class="a-mrow">
+          <span class="a-mlabel">Glucides</span>
+          <div class="a-mtrack"><div class="a-mfill" style="width:60%;background:#FBBF24;"></div></div>
+          <span class="a-mval" style="color:#FBBF24;">142/235g</span>
+        </div>
+        <div class="a-mrow">
+          <span class="a-mlabel">Lipides</span>
+          <div class="a-mtrack"><div class="a-mfill" style="width:54%;background:#FF6B2C;opacity:.7;"></div></div>
+          <span class="a-mval" style="color:#FF6B2C;">42/78g</span>
+        </div>
+      </div>
+
+      <!-- MICRO CARD -->
+      <div class="a-card" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
+          <div class="a-sl">MICRONUTRIMENTS</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:#A78BFA;font-weight:700;">70/100</div>
+        </div>
+        <div class="a-nr"><div class="a-nname">Vitamine D</div><div class="a-nbar"><div class="a-nbf" style="width:21%;background:#F87171;"></div></div><span class="a-npct" style="color:#F87171;">21%</span></div>
+        <div class="a-nr"><div class="a-nname">Magnésium</div><div class="a-nbar"><div class="a-nbf" style="width:26%;background:#F87171;"></div></div><span class="a-npct" style="color:#F87171;">26%</span></div>
+        <div class="a-nr"><div class="a-nname">Vitamine C</div><div class="a-nbar"><div class="a-nbf" style="width:58%;background:#FBBF24;"></div></div><span class="a-npct" style="color:#FBBF24;">58%</span></div>
+        <div class="a-nr"><div class="a-nname">Calcium</div><div class="a-nbar"><div class="a-nbf" style="width:68%;background:#FBBF24;"></div></div><span class="a-npct" style="color:#FBBF24;">68%</span></div>
+        <div class="a-nr"><div class="a-nname" style="color:#555;">Vitamine B12</div><div class="a-nbar"><div class="a-nbf" style="width:88%;background:#4ADE80;"></div></div><span class="a-npct" style="color:#4ADE80;">88%</span></div>
+        <button style="width:100%;margin-top:9px;padding:7px;border-radius:8px;background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.15);color:#A78BFA;font-size:10px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.5px;">TOUT VOIR →</button>
+      </div>
+
+      <!-- MEALS -->
+      <div class="a-meal">
+        <div class="a-meal-h">
+          <span class="a-meal-title">Petit-déjeuner</span>
+          <span class="a-meal-kcal">420</span>
+          <span class="a-meal-add">+</span>
+          <span style="color:#222;font-size:11px;">↓</span>
+        </div>
+        <div class="a-food-row"><div style="flex:1;"><div class="a-food-name">Flocons d'avoine</div><div class="a-food-brand">Quaker · 60g</div></div><span style="font-family:'DM Mono',monospace;font-size:11px;color:#FF6B2C;">180</span></div>
+        <div class="a-food-row"><div style="flex:1;"><div class="a-food-name">Banane</div><div class="a-food-brand">120g</div></div><span style="font-family:'DM Mono',monospace;font-size:11px;color:#FF6B2C;">95</span></div>
+        <div class="a-food-row"><div style="flex:1;"><div class="a-food-name">Lait demi-écrémé</div><div class="a-food-brand">Lactel · 250ml</div></div><span style="font-family:'DM Mono',monospace;font-size:11px;color:#FF6B2C;">145</span></div>
+      </div>
+      <div class="a-meal"><div class="a-meal-h"><span class="a-meal-title">Déjeuner</span><span class="a-meal-kcal">680</span><span class="a-meal-add">+</span><span style="color:#222;font-size:11px;">›</span></div></div>
+      <div class="a-meal"><div class="a-meal-h"><span class="a-meal-title" style="color:#2a2a2a;">Dîner</span><span class="a-meal-kcal" style="color:#2a2a2a;">—</span><span class="a-meal-add">+</span><span style="color:#222;font-size:11px;">›</span></div></div>
+      <div class="a-meal" style="margin-bottom:0;"><div class="a-meal-h"><span class="a-meal-title">Collations</span><span class="a-meal-kcal">160</span><span class="a-meal-add">+</span><span style="color:#222;font-size:11px;">›</span></div></div>
+    </div>
+    <!-- Tab -->
+    <div class="a-tab">
+      <div class="a-ti"><div class="a-tp on"><span style="font-size:18px;">🏠</span></div><span class="a-tl on">Journal</span></div>
+      <div class="a-ti"><div class="a-tp"><span style="font-size:18px;">🔍</span></div><span class="a-tl">Recherche</span></div>
+      <div class="a-ti"><div class="a-tp"><span style="font-size:18px;">📅</span></div><span class="a-tl">Planning</span></div>
+      <div class="a-ti"><div class="a-tp"><span style="font-size:18px;">🛒</span></div><span class="a-tl">Courses</span></div>
+      <div class="a-ti"><div class="a-tp"><span style="font-size:18px;">👤</span></div><span class="a-tl">Profil</span></div>
+    </div>
+  </div>`;
+}
+
+function buildB(){
+  return `
+  <div style="background:#F2EDE3;height:100%;display:flex;flex-direction:column;">
+    <div class="sbar b-sbar">
+      <span class="b-stime">9:41</span>
+      <div class="b-isl isl" style="background:#E5DDD0;"></div>
+      <div style="display:flex;gap:5px;align-items:center;">
+        <span style="font-family:'DM Mono',monospace;font-size:10px;color:#C4B4A0;">▲▲▲</span>
+        <div class="b-bat"><div class="b-batf"></div></div>
+      </div>
+    </div>
+    <div class="sk b-sk">
+      <!-- Date -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+        <div>
+          <div class="b-date-label" style="margin-bottom:3px;">MERCREDI</div>
+          <div class="b-date-main">11 Mars 2026</div>
+        </div>
+        <div style="display:flex;gap:4px;margin-top:4px;">
+          <div style="width:28px;height:28px;border:1px solid #DDD0BC;border-radius:7px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;color:#8B7355;">‹</div>
+          <div style="width:28px;height:28px;border:1px solid #DDD0BC;border-radius:7px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;color:#8B7355;">›</div>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div class="b-hero">
+        <div class="b-hero-top">
+          <div class="b-hero-label">CALORIES & MACROS</div>
+          <div class="b-hero-obj">2350 kcal obj.</div>
+        </div>
+        <div class="b-kcal-row">
+          <div class="b-kcal-num">1 260</div>
+          <div style="display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:10px;gap:3px;">
+            <div class="b-kcal-unit">kcal</div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:#D0C0A8;">/ 2350</div>
+          </div>
+        </div>
+        <!-- Thin divider line with progress -->
+        <div style="height:3px;background:#F0E8DA;border-radius:2px;overflow:hidden;margin-bottom:14px;">
+          <div style="width:54%;height:100%;background:linear-gradient(90deg,#C45C2A,#E87848);border-radius:2px;"></div>
+        </div>
+        <div class="b-macro-row">
+          <div class="b-mpill"><div class="b-mpill-val" style="color:#60A5FA;">98g</div><div class="b-mpill-label">PROT.</div></div>
+          <div class="b-mpill"><div class="b-mpill-val" style="color:#D97706;">142g</div><div class="b-mpill-label">GLUC.</div></div>
+          <div class="b-mpill"><div class="b-mpill-val" style="color:#C45C2A;">42g</div><div class="b-mpill-label">LIP.</div></div>
+          <div class="b-mpill" style="background:#FDF9F4;"><div class="b-mpill-val" style="color:#4ADE80;font-size:13px;">1090</div><div class="b-mpill-label">REST.</div></div>
+        </div>
+      </div>
+
+      <!-- Micro -->
+      <div class="b-mcard">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div class="b-mcard-label">MICRONUTRIMENTS</div>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <div style="width:22px;height:22px;border-radius:50%;border:2px solid #C45C2A;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:900;color:#C45C2A;font-family:'DM Mono',monospace;">70</div>
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:#A08060;">/100</span>
+          </div>
+        </div>
+        <div class="b-nr"><span style="font-size:13px;margin-right:2px;">☀️</span><div class="b-nname">Vitamine D</div><div class="b-nbar"><div class="b-nbf" style="width:21%;background:#DC6C5C;"></div></div><span class="b-npct" style="color:#DC6C5C;">21%</span></div>
+        <div class="b-nr"><span style="font-size:13px;margin-right:2px;">⚡</span><div class="b-nname">Magnésium</div><div class="b-nbar"><div class="b-nbf" style="width:26%;background:#DC6C5C;"></div></div><span class="b-npct" style="color:#DC6C5C;">26%</span></div>
+        <div class="b-nr"><span style="font-size:13px;margin-right:2px;">🍊</span><div class="b-nname">Vitamine C</div><div class="b-nbar"><div class="b-nbf" style="width:58%;background:#D97706;"></div></div><span class="b-npct" style="color:#D97706;">58%</span></div>
+        <div class="b-nr"><span style="font-size:13px;margin-right:2px;">🦴</span><div class="b-nname">Calcium</div><div class="b-nbar"><div class="b-nbf" style="width:68%;background:#D97706;"></div></div><span class="b-npct" style="color:#D97706;">68%</span></div>
+        <button style="width:100%;margin-top:9px;padding:7px;border-radius:9px;background:#FAF7F2;border:1px solid #DDD0BC;color:#A08060;font-size:10px;font-weight:700;cursor:pointer;font-family:'DM Mono',sans-serif;letter-spacing:.5px;">VOIR TOUS LES MICRONUTRIMENTS →</button>
+      </div>
+
+      <!-- Meals -->
+      <div class="b-meal">
+        <div class="b-meal-h"><span class="b-meal-title">Petit-déjeuner</span><span class="b-meal-kcal">420 kcal</span><span class="b-meal-add">+</span><span style="color:#D0C0A8;font-size:12px;">↓</span></div>
+        <div class="b-food-row"><div style="flex:1;"><div class="b-food-name">Flocons d'avoine</div><div class="b-food-brand">Quaker · 60g</div></div><span style="font-family:'DM Mono',monospace;font-size:10px;color:#C45C2A;">180 kcal</span></div>
+        <div class="b-food-row"><div style="flex:1;"><div class="b-food-name">Banane</div><div class="b-food-brand">120g</div></div><span style="font-family:'DM Mono',monospace;font-size:10px;color:#C45C2A;">95 kcal</span></div>
+        <div class="b-food-row"><div style="flex:1;"><div class="b-food-name">Lait demi-écrémé</div><div class="b-food-brand">Lactel · 250ml</div></div><span style="font-family:'DM Mono',monospace;font-size:10px;color:#C45C2A;">145 kcal</span></div>
+      </div>
+      <div class="b-meal"><div class="b-meal-h"><span class="b-meal-title">Déjeuner</span><span class="b-meal-kcal">680 kcal</span><span class="b-meal-add">+</span><span style="color:#D0C0A8;font-size:12px;">›</span></div></div>
+      <div class="b-meal"><div class="b-meal-h"><span class="b-meal-title" style="color:#C4B4A0;">Dîner</span><span class="b-meal-kcal" style="color:#D0C0A8;">—</span><span class="b-meal-add">+</span><span style="color:#D0C0A8;font-size:12px;">›</span></div></div>
+      <div class="b-meal" style="margin-bottom:0;"><div class="b-meal-h"><span class="b-meal-title">Collations</span><span class="b-meal-kcal">160 kcal</span><span class="b-meal-add">+</span><span style="color:#D0C0A8;font-size:12px;">›</span></div></div>
+    </div>
+    <div class="b-tab">
+      <div class="b-ti"><div class="b-tp on"><span style="font-size:18px;">🏠</span></div><span class="b-tl on">Journal</span></div>
+      <div class="b-ti"><div class="b-tp"><span style="font-size:18px;">🔍</span></div><span class="b-tl">Recherche</span></div>
+      <div class="b-ti"><div class="b-tp"><span style="font-size:18px;">📅</span></div><span class="b-tl">Planning</span></div>
+      <div class="b-ti"><div class="b-tp"><span style="font-size:18px;">🛒</span></div><span class="b-tl">Courses</span></div>
+      <div class="b-ti"><div class="b-tp"><span style="font-size:18px;">👤</span></div><span class="b-tl">Profil</span></div>
+    </div>
+  </div>`;
+}
+
+function buildC(){
+  // Build segmented gauge
+  const total=24, filled=13;
+  let segs='';
+  for(let i=0;i<total;i++){
+    const on=i<filled;
+    const col=on?(i<5?'#FF4444':i<12?'#AAFF00':'#AAFF00'):'#0a1500';
+    segs+=`<div class="c-seg" style="background:${col};${on&&i>=12?'box-shadow:0 0 6px rgba(170,255,0,.4);':''}"></div>`;
+  }
+
+  return `
+  <div style="background:#030303;height:100%;display:flex;flex-direction:column;position:relative;">
+    <!-- grid bg -->
+    <div class="c-grid-bg"></div>
+    <div class="sbar c-sbar" style="position:relative;z-index:1;">
+      <span class="c-stime">09:41</span>
+      <div class="c-isl isl" style="background:#050505;border:1px solid #0a1500;"></div>
+      <div style="display:flex;gap:5px;align-items:center;">
+        <span style="font-family:'Space Mono',monospace;font-size:9px;color:#1a2a00;">SIG OK</span>
+        <div class="c-bat"><div class="c-batf"></div></div>
+      </div>
+    </div>
+    <div class="sk c-sk" style="position:relative;z-index:1;">
+      <!-- Date -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;">
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:8px;color:#1a2a00;letter-spacing:2px;margin-bottom:2px;">// JOURNAL</div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;color:#AAFF00;letter-spacing:-0.5px;">2026-03-11_WED</div>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:#1a2a00;">[ ‹ · › ]</div>
+      </div>
+
+      <!-- Calories + macros card -->
+      <div class="c-card" style="margin-bottom:7px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:9px;">
+          <div class="c-label">ENERGY.LOG</div>
+          <div style="font-family:'Space Mono',monospace;font-size:8px;color:#1a2a00;">TARGET:2350</div>
+        </div>
+        <!-- Segmented gauge -->
+        <div class="c-gauge-wrap">
+          <div>
+            <div class="c-segs">${segs}</div>
+            <div style="font-family:'Space Mono',monospace;font-size:7px;color:#1a2a00;margin-top:4px;">0 ██████████ 2350 kcal</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:10px;">
+          <div class="c-gauge-big">1260</div>
+          <div>
+            <div class="c-gauge-unit">KCAL_IN</div>
+            <div class="c-gauge-sub">REM: +1090</div>
+          </div>
+        </div>
+        <!-- Macro rows -->
+        <div class="c-macro-row"><span class="c-mlabel">PROTEIN</span><div class="c-mtrack"><div class="c-mfill" style="width:56%;background:#60A5FA;"></div></div><span class="c-mval">098/176g</span></div>
+        <div class="c-macro-row"><span class="c-mlabel">CARBS__</span><div class="c-mtrack"><div class="c-mfill" style="width:60%;background:#FBBF24;"></div></div><span class="c-mval">142/235g</span></div>
+        <div class="c-macro-row"><span class="c-mlabel">FAT____</span><div class="c-mtrack"><div class="c-mfill" style="width:54%;background:#AAFF00;opacity:.7;"></div></div><span class="c-mval">042/078g</span></div>
+      </div>
+
+      <!-- Micro -->
+      <div class="c-card" style="margin-bottom:9px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:9px;">
+          <div class="c-label">MICRO.SCAN</div>
+          <div style="font-family:'Space Mono',monospace;font-size:8px;color:#AAFF00;">SCORE:070/100</div>
+        </div>
+        <div class="c-nr"><div class="c-nname">VIT_D___</div><div class="c-nbar"><div class="c-nbf" style="width:21%;background:#FF4444;"></div></div><span class="c-npct" style="color:#FF4444;">021%</span></div>
+        <div class="c-nr"><div class="c-nname">MG______</div><div class="c-nbar"><div class="c-nbf" style="width:26%;background:#FF4444;"></div></div><span class="c-npct" style="color:#FF4444;">026%</span></div>
+        <div class="c-nr"><div class="c-nname">VIT_C___</div><div class="c-nbar"><div class="c-nbf" style="width:58%;background:#FBBF24;"></div></div><span class="c-npct" style="color:#FBBF24;">058%</span></div>
+        <div class="c-nr"><div class="c-nname">CA______</div><div class="c-nbar"><div class="c-nbf" style="width:68%;background:#FBBF24;"></div></div><span class="c-npct" style="color:#FBBF24;">068%</span></div>
+        <div class="c-nr"><div class="c-nname" style="color:#1a2a00;">B12_____</div><div class="c-nbar"><div class="c-nbf" style="width:88%;background:#AAFF00;"></div></div><span class="c-npct" style="color:#AAFF00;">088%</span></div>
+        <button style="width:100%;margin-top:9px;padding:6px;border:1px solid #1a2a00;border-radius:3px;background:transparent;color:#AAFF00;font-size:9px;font-weight:700;cursor:pointer;font-family:'Space Mono',monospace;letter-spacing:1px;">EXPAND_ALL() →</button>
+      </div>
+
+      <!-- Meals -->
+      <div class="c-meal">
+        <div class="c-meal-h"><span class="c-meal-title">[BREAKFAST]</span><span class="c-meal-kcal">420 kcal</span><span class="c-meal-add">+</span><span style="color:#1a2a00;font-size:11px;">↓</span></div>
+        <div class="c-food-row"><div style="flex:1;"><div class="c-food-name">flocons_avoine.json · 60g</div></div><span class="c-food-kcal">180</span></div>
+        <div class="c-food-row"><div style="flex:1;"><div class="c-food-name">banane.json · 120g</div></div><span class="c-food-kcal">95</span></div>
+        <div class="c-food-row"><div style="flex:1;"><div class="c-food-name">lait_demi.json · 250ml</div></div><span class="c-food-kcal">145</span></div>
+      </div>
+      <div class="c-meal"><div class="c-meal-h"><span class="c-meal-title">[LUNCH]</span><span class="c-meal-kcal">680 kcal</span><span class="c-meal-add">+</span><span style="color:#1a2a00;font-size:11px;">›</span></div></div>
+      <div class="c-meal"><div class="c-meal-h"><span class="c-meal-title" style="color:#1a2a00;">[DINNER_NULL]</span><span class="c-meal-kcal" style="color:#1a2a00;">—</span><span class="c-meal-add">+</span><span style="color:#1a2a00;font-size:11px;">›</span></div></div>
+      <div class="c-meal" style="margin-bottom:0;"><div class="c-meal-h"><span class="c-meal-title">[SNACKS]</span><span class="c-meal-kcal">160 kcal</span><span class="c-meal-add">+</span><span style="color:#1a2a00;font-size:11px;">›</span></div></div>
+    </div>
+    <div class="c-tab" style="position:relative;z-index:1;">
+      <div class="c-ti"><div style="padding:3px 8px;border-bottom:1px solid #AAFF00;"><span style="font-size:16px;">🏠</span></div><span class="c-tl on">JOURNAL</span></div>
+      <div class="c-ti"><div style="padding:3px 8px;"><span style="font-size:16px;">🔍</span></div><span class="c-tl">SEARCH</span></div>
+      <div class="c-ti"><div style="padding:3px 8px;"><span style="font-size:16px;">📅</span></div><span class="c-tl">PLAN</span></div>
+      <div class="c-ti"><div style="padding:3px 8px;"><span style="font-size:16px;">🛒</span></div><span class="c-tl">SHOP</span></div>
+      <div class="c-ti"><div style="padding:3px 8px;"><span style="font-size:16px;">👤</span></div><span class="c-tl">PROF</span></div>
+    </div>
+  </div>`;
+}
+
+function buildD(){
+  return `
+  <div style="background:#141210;height:100%;display:flex;flex-direction:column;">
+    <div class="sbar d-sbar">
+      <span class="d-stime">9:41</span>
+      <div class="d-isl isl" style="background:#1c1812;border:1px solid #2a2218;"></div>
+      <div style="display:flex;gap:5px;align-items:center;">
+        <span style="font-family:'DM Mono',monospace;font-size:10px;color:#3d3328;">▲▲▲</span>
+        <div class="d-bat"><div class="d-batf"></div></div>
+      </div>
+    </div>
+    <div class="sk d-sk">
+      <!-- Date -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px;">
+        <div>
+          <div class="d-label" style="margin-bottom:3px;">MERCREDI</div>
+          <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:#D4BE96;letter-spacing:-.5px;">11 Mars 2026</div>
+        </div>
+        <div style="display:flex;gap:4px;margin-top:4px;">
+          <div style="width:28px;height:28px;border:1px solid #2a2218;border-radius:7px;background:#1a1712;display:flex;align-items:center;justify-content:center;font-size:12px;color:#5d5040;">‹</div>
+          <div style="width:28px;height:28px;border:1px solid #2a2218;border-radius:7px;background:#1a1712;display:flex;align-items:center;justify-content:center;font-size:12px;color:#5d5040;">›</div>
+        </div>
+      </div>
+
+      <!-- Hero — amber ring -->
+      <div class="d-hero">
+        <div class="d-hero-top">
+          <div class="d-hero-label">CALORIES & MACROS</div>
+          <div class="d-hero-obj">2350 kcal obj.</div>
+        </div>
+        <div class="d-ring-row">
+          <!-- SVG ring -->
+          <div style="position:relative;flex-shrink:0;">
+            <svg width="84" height="84" style="transform:rotate(-90deg);">
+              <circle cx="42" cy="42" r="34" fill="none" stroke="#221d14" stroke-width="7"/>
+              <circle cx="42" cy="42" r="34" fill="none" stroke="#F59E0B" stroke-width="7"
+                stroke-linecap="round" stroke-dasharray="214" stroke-dashoffset="98"
+                style="filter:drop-shadow(0 0 6px rgba(245,158,11,.4))"/>
+            </svg>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+              <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:#F59E0B;line-height:1;">1260</div>
+              <div style="font-family:'DM Mono',monospace;font-size:8px;color:#5d5040;">kcal</div>
+            </div>
+          </div>
+          <!-- Macro list -->
+          <div class="d-macro-list">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+              <div><div class="d-label">Objectif</div><div style="font-size:14px;font-weight:800;color:#C8A86B;font-family:'Fraunces',serif;">2350</div></div>
+              <div style="text-align:right;"><div class="d-label">Restant</div><div style="font-size:14px;font-weight:800;color:#86EFAC;font-family:'Fraunces',serif;">1090</div></div>
+            </div>
+            <div class="d-macro-item"><div class="d-mi-dot" style="background:#60A5FA;"></div><span class="d-mi-name">Protéines</span><span class="d-mi-val">98/176g</span></div>
+            <div style="margin-left:15px;margin-bottom:6px;"><div class="d-mi-track"><div class="d-mi-fill" style="width:56%;background:#60A5FA;"></div></div></div>
+            <div class="d-macro-item"><div class="d-mi-dot" style="background:#F59E0B;"></div><span class="d-mi-name">Glucides</span><span class="d-mi-val">142/235g</span></div>
+            <div style="margin-left:15px;margin-bottom:6px;"><div class="d-mi-track"><div class="d-mi-fill" style="width:60%;background:#F59E0B;"></div></div></div>
+            <div class="d-macro-item"><div class="d-mi-dot" style="background:#E8722A;"></div><span class="d-mi-name">Lipides</span><span class="d-mi-val">42/78g</span></div>
+            <div style="margin-left:15px;"><div class="d-mi-track"><div class="d-mi-fill" style="width:54%;background:#E8722A;"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Micro -->
+      <div class="d-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;">
+          <div class="d-label">MICRONUTRIMENTS</div>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div style="position:relative;"><svg width="24" height="24" style="transform:rotate(-90deg);"><circle cx="12" cy="12" r="8" fill="none" stroke="#2a2218" stroke-width="3"/><circle cx="12" cy="12" r="8" fill="none" stroke="#A78BFA" stroke-width="3" stroke-dasharray="50" stroke-dashoffset="15" stroke-linecap="round"/></svg><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:7px;font-weight:900;color:#A78BFA;font-family:'DM Mono',monospace;">70</div></div>
+            <span style="font-family:'DM Mono',monospace;font-size:9px;color:#5d5040;">/100</span>
+          </div>
+        </div>
+        <div class="d-nr"><div class="d-ni" style="background:rgba(248,191,36,.08);">☀️</div><div class="d-nname">Vitamine D</div><div class="d-nbar"><div class="d-nbf" style="width:21%;background:#F87171;"></div></div><span class="d-npct" style="color:#F87171;">21%</span></div>
+        <div class="d-nr"><div class="d-ni" style="background:rgba(167,139,250,.08);">⚡</div><div class="d-nname">Magnésium</div><div class="d-nbar"><div class="d-nbf" style="width:26%;background:#F87171;"></div></div><span class="d-npct" style="color:#F87171;">26%</span></div>
+        <div class="d-nr"><div class="d-ni" style="background:rgba(74,222,128,.08);">🍊</div><div class="d-nname">Vitamine C</div><div class="d-nbar"><div class="d-nbf" style="width:58%;background:#F59E0B;"></div></div><span class="d-npct" style="color:#F59E0B;">58%</span></div>
+        <div class="d-nr"><div class="d-ni" style="background:rgba(96,165,250,.08);">🦴</div><div class="d-nname">Calcium</div><div class="d-nbar"><div class="d-nbf" style="width:68%;background:#F59E0B;"></div></div><span class="d-npct" style="color:#F59E0B;">68%</span></div>
+        <div class="d-nr"><div class="d-ni" style="background:rgba(74,222,128,.08);">💊</div><div class="d-nname" style="color:#5d5040;">Vitamine B12</div><div class="d-nbar"><div class="d-nbf" style="width:88%;background:#86EFAC;"></div></div><span class="d-npct" style="color:#86EFAC;">88%</span></div>
+        <button style="width:100%;margin-top:9px;padding:7px;border-radius:9px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.15);color:#A78BFA;font-size:10px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Voir tous les micronutriments →</button>
+      </div>
+
+      <!-- Meals -->
+      <div class="d-meal">
+        <div class="d-meal-h"><span class="d-meal-title">Petit-déjeuner</span><span class="d-meal-kcal">420</span><span class="d-meal-add">+</span><span style="color:#3d3328;font-size:12px;">↓</span></div>
+        <div class="d-food-row"><div style="flex:1;"><div class="d-food-name">Flocons d'avoine</div><div class="d-food-brand">Quaker · 60g</div></div><span style="font-family:'DM Mono',monospace;font-size:10px;color:#F59E0B;">180</span></div>
+        <div class="d-food-row"><div style="flex:1;"><div class="d-food-name">Banane</div><div class="d-food-brand">120g</div></div><span style="font-family:'DM Mono',monospace;font-size:10px;color:#F59E0B;">95</span></div>
+        <div class="d-food-row"><div style="flex:1;"><div class="d-food-name">Lait demi-écrémé</div><div class="d-food-brand">Lactel · 250ml</div></div><span style="font-family:'DM Mono',monospace;font-size:10px;color:#F59E0B;">145</span></div>
+      </div>
+      <div class="d-meal"><div class="d-meal-h"><span class="d-meal-title">Déjeuner</span><span class="d-meal-kcal">680</span><span class="d-meal-add">+</span><span style="color:#3d3328;font-size:12px;">›</span></div></div>
+      <div class="d-meal"><div class="d-meal-h"><span class="d-meal-title" style="color:#5d5040;">Dîner</span><span class="d-meal-kcal" style="color:#3d3328;">—</span><span class="d-meal-add">+</span><span style="color:#3d3328;font-size:12px;">›</span></div></div>
+      <div class="d-meal" style="margin-bottom:0;"><div class="d-meal-h"><span class="d-meal-title">Collations</span><span class="d-meal-kcal">160</span><span class="d-meal-add">+</span><span style="color:#3d3328;font-size:12px;">›</span></div></div>
+    </div>
+    <div class="d-tab">
+      <div class="d-ti"><div class="d-tp on"><span style="font-size:18px;">🏠</span></div><span class="d-tl on">Journal</span></div>
+      <div class="d-ti"><div class="d-tp"><span style="font-size:18px;">🔍</span></div><span class="d-tl">Recherche</span></div>
+      <div class="d-ti"><div class="d-tp"><span style="font-size:18px;">📅</span></div><span class="d-tl">Planning</span></div>
+      <div class="d-ti"><div class="d-tp"><span style="font-size:18px;">🛒</span></div><span class="d-tl">Courses</span></div>
+      <div class="d-ti"><div class="d-tp"><span style="font-size:18px;">👤</span></div><span class="d-tl">Profil</span></div>
+    </div>
+  </div>`;
+}
+
+const builders={a:buildA,b:buildB,c:buildC,d:buildD};
+let cur='a';
+
+function setStyle(s){
+  cur=s;
+  // Update selector
+  document.querySelectorAll('.sel-card').forEach(c=>{
+    c.classList.remove('active');
+    if(c.classList.contains('sel-'+s)) c.classList.add('active');
+  });
+  // Update desc
+  document.querySelectorAll('.style-desc-wrap').forEach(d=>{
+    d.classList.remove('vis');
+    if(d.id==='desc-'+s) d.classList.add('vis');
+  });
+  // Update phone
+  const phone=document.getElementById('phone-wrap');
+  // Phone shell color
+  const bgs={a:'#0D0D0D',b:'#E8E0D2',c:'#020202',d:'#1c1812'};
+  const borders={a:'#1a1a1a',b:'#D0C4B0',c:'#050505',d:'#2a2218'};
+  phone.style.background=bgs[s];
+  phone.style.borderColor=borders[s];
+  document.getElementById('phone-content').innerHTML=builders[s]();
+}
+
+// Init
+setStyle('a');
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { APP_FILTER } from "@nestjs/core";
+import { APP_FILTER, RouterModule } from "@nestjs/core";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { LoggerModule } from "nestjs-pino";
 import { SentryModule } from "@sentry/nestjs/setup";
@@ -9,6 +9,9 @@ import { validateEnv } from "./config/env.validation";
 import type { EnvSchema } from "./config/env.schema";
 import { buildPinoConfig } from "./logger/logger.config";
 import { SentryExceptionFilter } from "./filter/sentry-exception.filter";
+import { PrismaModule } from "./prisma/prisma.module";
+import { auth } from "./auth/auth";
+import { AuthModule } from "@thallesp/nestjs-better-auth";
 
 @Module({
   imports: [
@@ -28,6 +31,9 @@ import { SentryExceptionFilter } from "./filter/sentry-exception.filter";
         });
       },
     }),
+    RouterModule.register([]),
+    PrismaModule,
+    AuthModule.forRoot({ auth }),
   ],
   controllers: [AppController],
   providers: [

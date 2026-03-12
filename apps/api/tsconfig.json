@@ -1,6 +1,7 @@
 {
   "extends": "@cooked/tsconfig/node.json",
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {

@@ -26,6 +26,8 @@ export const envSchema = z.object({
   SENTRY_DSN: z.url("SENTRY_DSN doit être une URL valide").optional().or(z.literal("")),
   AXIOM_DATASET: z.string().min(1).optional(),
   AXIOM_TOKEN: z.string().min(1).optional(),
+  BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET doit faire au minimum 32 caractères"),
+  BETTER_AUTH_URL: z.string().default("http://localhost:3000"),
 });
 
 // Type TypeScript inféré automatiquement depuis le schema Zod
