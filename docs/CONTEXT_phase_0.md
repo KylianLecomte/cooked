@@ -10,6 +10,12 @@
 - La difficulté n'est pas un critère — on fait les choses bien
 - Maximum de détail dans les réponses
 
+## Exigences de développement
+
+- Appliquer au maximum toutes les bonnes partiques de développement
+- Appliquer au maximum toutes les bonnes pratiques d'architecture
+- Appliquer au maximum toutes les bonnes pratiques de cybersécurité
+
 ## Objectif
 
 App nutrition type MyFitnessPal. Projet d'apprentissage A→Z avec bonnes pratiques (Clean Code, sécurité, observabilité...). Potentiellement utilisé en production par d'autres personnes.
@@ -285,13 +291,21 @@ cooked/
 {
   "$schema": "https://turborepo.dev/schema.json",
   "tasks": {
-    "build": { "dependsOn": ["^build"], "outputs": ["dist/**", ".next/**", "!.next/cache/**"] },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
     "dev": { "persistent": true, "cache": false },
     "lint": { "outputs": [], "cache": false },
     "typecheck": { "dependsOn": ["^build"], "outputs": [] },
     "test": {
       "outputs": [],
-      "inputs": ["src/**/*.ts", "test/**/*.ts", "vitest.config.ts", "vitest.e2e.config.ts"]
+      "inputs": [
+        "src/**/*.ts",
+        "test/**/*.ts",
+        "vitest.config.ts",
+        "vitest.e2e.config.ts"
+      ]
     }
   }
 }
@@ -332,6 +346,7 @@ node-linker=hoisted
 Biome 2.4.6 remplace ESLint + Prettier depuis la fin de P0.
 
 Points importants :
+
 - `"recommended": false` — on sélectionne manuellement les règles pour garder le contrôle
 - `"noExplicitAny": "error"` — interdit `any` dans tout le code
 - `"noConsole": "warn"` — rappelle d'utiliser `Logger` NestJS côté API
@@ -493,7 +508,12 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "lcov"],
       include: ["src/**/*.ts"],
-      exclude: ["src/**/*.spec.ts", "src/**/*.module.ts", "src/main.ts", "src/instrument.ts"],
+      exclude: [
+        "src/**/*.spec.ts",
+        "src/**/*.module.ts",
+        "src/main.ts",
+        "src/instrument.ts",
+      ],
     },
   },
 });
@@ -538,7 +558,14 @@ export default defineConfig({
 ```json
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "dist", "test", "**/*.spec.ts", "**/*.e2e-spec.ts", "generated"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "**/*.spec.ts",
+    "**/*.e2e-spec.ts",
+    "generated"
+  ]
 }
 ```
 
@@ -623,6 +650,7 @@ Voir CONTEXT_phase_1.md pour le détail de tous les fichiers source.
 Fichier `.github/workflows/ci.yml` — voir contenu dans la section CI de CONTEXT_phase_1.md.
 
 Points importants :
+
 - `pnpm exec biome ci .` — Biome (pas ESLint)
 - `fetch-depth: 0` — obligatoire pour SonarCloud
 - `sonarqube-scan-action@v7` (pas `sonarcloud-github-action` — archivé oct. 2025)
