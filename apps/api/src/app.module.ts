@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { APP_FILTER, RouterModule } from "@nestjs/core";
+import { APP_FILTER } from "@nestjs/core";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { LoggerModule } from "nestjs-pino";
 import { SentryModule } from "@sentry/nestjs/setup";
@@ -31,9 +31,8 @@ import { AuthModule } from "@thallesp/nestjs-better-auth";
         });
       },
     }),
-    RouterModule.register([]),
     PrismaModule,
-    AuthModule.forRoot({ auth }),
+    AuthModule.forRoot({ auth, disableGlobalAuthGuard: true }),
   ],
   controllers: [AppController],
   providers: [
