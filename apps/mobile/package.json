@@ -8,7 +8,6 @@
     "android": "expo start --android --tunnel",
     "ios": "expo start --ios --tunnel",
     "web": "expo start --web",
-    "lint": "eslint app",
     "typecheck": "tsc --noEmit",
     "eas:build:dev:android": "eas build --profile development --platform android"
   },
@@ -29,7 +28,6 @@
     "react-native-screens": "^4.23.0"
   },
   "devDependencies": {
-    "@cooked/eslint-config": "workspace:*",
     "@cooked/tsconfig": "workspace:*",
     "@types/react": "~19.2.2",
     "prettier-plugin-tailwindcss": "^0.5.11",

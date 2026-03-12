@@ -6,7 +6,6 @@
     "build": "nest build",
     "dev": "nest start --watch",
     "start": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -35,7 +34,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@cooked/eslint-config": "workspace:*",
     "@cooked/tsconfig": "workspace:*",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",

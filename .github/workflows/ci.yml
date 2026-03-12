@@ -56,7 +56,7 @@ jobs:
         # Garantit que le CI utilise exactement les versions lockées, jamais de résolution implicite
 
       - name: Lint
-        run: pnpm turbo lint
+        run: pnpm exec biome ci .
         # Turborepo parallélise le lint sur tous les packages
         # Cache les résultats — si les fichiers n'ont pas changé, le lint n'est pas relancé
 

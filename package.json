@@ -3,14 +3,15 @@
   "private": true,
   "packageManager": "pnpm@10.30.3",
   "scripts": {
+    "dev": "turbo dev",
     "dev:api": "turbo run dev --filter=@cooked/api",
     "dev:mobile": "pnpm --filter @cooked/mobile dev",
-    "dev": "turbo dev",
     "build": "turbo build",
-    "lint": "turbo lint",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check --write .",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
-    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
     "prepare": "husky"
   },
   "engines": {
@@ -21,26 +22,12 @@
     "@biomejs/biome": "2.4.6",
     "@commitlint/cli": "^20.4.3",
     "@commitlint/config-conventional": "^20.4.3",
-    "@cooked/eslint-config": "workspace:*",
     "@cooked/tsconfig": "workspace:*",
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.0.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "globals": "^17.4.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.3.2",
-    "prettier": "^3.8.1",
-    "turbo": "^2.8.13",
-    "typescript-eslint": "^8.56.1"
+    "turbo": "^2.8.13"
   },
   "lint-staged": {
-    "**/*.{ts,tsx}": [
-      "pnpm exec eslint --fix --max-warnings=0",
-      "pnpm exec prettier --write"
-    ],
-    "**/*.{js,mjs,json,md,yml,yaml}": [
-      "pnpm exec prettier --write"
-    ]
+    "**/*.{ts,tsx,js,jsx,mjs,cjs,json}": ["pnpm exec biome check --write --no-errors-on-unmatched"]
   }
 }

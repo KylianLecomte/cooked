@@ -10,7 +10,8 @@
       "cache": false
     },
     "lint": {
-      "outputs": []
+      "outputs": [],
+      "cache": false
     },
     "typecheck": {
       "dependsOn": ["^build"],
