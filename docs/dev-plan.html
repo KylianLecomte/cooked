@@ -123,7 +123,7 @@ const phases = [
       { name:"Monorepo & Tooling", tasks:[
         {id:"p0-1",text:"Créer le monorepo Turborepo",detail:"apps/mobile, apps/api, packages/shared — une seule commande lance tout"},
         {id:"p0-2",text:"Configurer TypeScript strict partagé",detail:"tsconfig dans packages/shared, strict: true — les types Zod partagés front/back/mobile dès maintenant"},
-        {id:"p0-3",text:"ESLint + Prettier + Husky + lint-staged",detail:"Lint + format bloquants sur pre-commit : zéro code sale dans le repo"},
+        {id:"p0-3",text:"Biome + Husky + lint-staged + commitlint",detail:"Biome remplace ESLint + Prettier (lint + format en un seul outil). Husky + lint-staged bloquants sur pre-commit, commitlint pour les Conventional Commits"},
         {id:"p0-4",text:"Initialiser Git + GitHub, stratégie de branches",detail:"main (prod) / develop / feature/* — règle : on ne push jamais sur main directement"},
       ]},
       { name:"CI/CD — Pipeline de base", tasks:[
@@ -139,7 +139,7 @@ const phases = [
       ]},
       { name:"Backend — Squelette + Observabilité initiale", tasks:[
         {id:"p0-12",text:"Créer le projet NestJS",detail:"nest new api, TypeScript strict, structure modulaire : auth/, foods/, diary/, planning/, shopping/, health/"},
-        {id:"p0-13",text:"Configurer Prisma 7 + PostgreSQL (Docker local)",detail:"Docker Compose postgres:18-alpine — prisma init + premier schema User. Import depuis '../generated/prisma' (Prisma 7). Railway = staging/prod uniquement, configuré en P9."},
+        {id:"p0-13",text:"Configurer Prisma 7 + PostgreSQL (Docker local)",detail:"Docker Compose postgres:17-alpine — prisma init + prisma.config.ts. Import depuis '../../generated/prisma/client' (Prisma 7). Railway = staging/prod uniquement, configuré en P9."},
         {id:"p0-14",text:"Docker Compose local (PostgreSQL + Redis)",detail:"Lance la BDD et Redis en local avec une seule commande, sans rien installer sur la machine"},
         {id:"p0-15",text:"Remplacer le logger NestJS par Pino",detail:"nestjs-pino : logs JSON structurés dès le départ — chaque requête loguée avec méthode, route, durée, statusCode"},
         {id:"p0-16",text:"Connecter Pino → Axiom",detail:"pino-axiom transport : logs vers Axiom (50GB/mois gratuit) — dashboard de logs dès le premier démarrage"},
@@ -337,13 +337,27 @@ const phases = [
   },
 ];
 
-// State — P0 complet (18/18)
+// State — P0 complet (18/18) + P1 complet (11/11)
 const checked = {
   "p0-1":true,"p0-2":true,"p0-3":true,"p0-4":true,
   "p0-5":true,"p0-6":true,"p0-7":true,
   "p0-8":true,"p0-9":true,"p0-10":true,"p0-11":true,
   "p0-12":true,"p0-13":true,"p0-14":true,"p0-15":true,
   "p0-16":true,"p0-17":true,"p0-18":true,
+  // P1 — Auth & Profil (11/11) ✅
+  "p1-1":true,  // Better Auth dans NestJS + plugin expo()
+  "p1-2":true,  // Écran Register
+  "p1-3":true,  // Écran Login + @better-auth/expo + expo-secure-store
+  "p1-4":true,  // Guard auth (app)/_layout.tsx + Expo Router groupes
+  "p1-5":false, // Sentry RN — reporté après le premier Dev Build compilé
+  "p1-6":true,  // Schema Prisma User + Profile + enums
+  "p1-6b":true, // EAS Dev Build (expo-dev-client + eas.json)
+  "p1-6c":true, // TanStack Query v5 + QueryClientProvider
+  "p1-7":true,  // Calcul TDEE (Mifflin-St Jeor) — module Profile backend
+  "p1-8":true,  // Onboarding Step 1 (infos physiques)
+  "p1-9":true,  // Onboarding Step 2 (activité + objectif)
+  "p1-10":true, // Onboarding Step 3 (résumé TDEE)
+  "p1-11":true, // Écran Edit Profile
 };
 let openPhaseId = 'P1';
 

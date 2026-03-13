@@ -28,6 +28,9 @@ export const envSchema = z.object({
   AXIOM_TOKEN: z.string().min(1).optional(),
   BETTER_AUTH_SECRET: z.string().min(32, "BETTER_AUTH_SECRET doit faire au minimum 32 caractères"),
   BETTER_AUTH_URL: z.string().default("http://localhost:3000"),
+  // Origines supplémentaires de confiance pour Better Auth (IP LAN, tunnel ngrok/Expo…)
+  // Format : "http://192.168.1.10:3000,https://abcd.ngrok.io"
+  BETTER_AUTH_TRUSTED_ORIGINS: z.string().optional(),
 });
 
 // Type TypeScript inféré automatiquement depuis le schema Zod

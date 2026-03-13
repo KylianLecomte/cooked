@@ -12,6 +12,7 @@ import { validateEnv } from "./config/env.validation";
 import { SentryExceptionFilter } from "./filter/sentry-exception.filter";
 import { buildPinoConfig } from "./logger/logger.config";
 import { PrismaModule } from "./prisma/prisma.module";
+import { ProfileModule } from "./profile/profile.module";
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PrismaModule } from "./prisma/prisma.module";
       },
     }),
     PrismaModule,
+    ProfileModule,
     AuthModule.forRoot({ auth, disableGlobalAuthGuard: true }),
   ],
   controllers: [AppController],

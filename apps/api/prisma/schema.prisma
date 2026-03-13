@@ -123,3 +123,74 @@ enum Goal {
   MAINTAIN
   GAIN_MUSCLE
 }
+
+// ── Phase 2 — Base de données alimentaires ────────────────────────────────────
+
+enum FoodSource {
+  USDA
+  OFF
+  MANUAL
+}
+
+enum FoodCategory {
+  PROTEIN
+  STARCH
+  VEGETABLE
+  FRUIT
+  DAIRY
+  FAT_OIL
+  OTHER
+}
+
+model Food {
+  id       String       @id @default(cuid())
+  source   FoodSource
+  sourceId String
+
+  name     String
+  brand    String?
+  category FoodCategory @default(OTHER)
+
+  // Macros (per 100g)
+  kcalPer100g    Float
+  proteinPer100g Float
+  carbsPer100g   Float
+  fatPer100g     Float
+  fiberPer100g   Float?
+
+  // Vitamines (per 100g, nullable — données souvent partielles)
+  vitA   Float? // µg RAE
+  vitB1  Float? // mg thiamine
+  vitB2  Float? // mg riboflavine
+  vitB3  Float? // mg niacine
+  vitB5  Float? // mg acide pantothénique
+  vitB6  Float? // mg
+  vitB9  Float? // µg folate
+  vitB12 Float? // µg
+  vitC   Float? // mg
+  vitD   Float? // µg
+  vitE   Float? // mg alpha-tocophérol
+  vitK   Float? // µg phylloquinone
+
+  // Minéraux (per 100g, nullable)
+  calcium    Float? // mg
+  iron       Float? // mg
+  magnesium  Float? // mg
+  potassium  Float? // mg
+  zinc       Float? // mg
+  phosphorus Float? // mg
+  selenium   Float? // µg
+  sodium     Float? // mg
+  copper     Float? // mg
+  manganese  Float? // mg
+
+  // true = données micro complètes (fetch full USDA detail effectué)
+  microDataComplete Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([source, sourceId])
+  @@index([name])
+  @@map("food")
+}
