@@ -31,6 +31,11 @@ export const envSchema = z.object({
   // Origines supplémentaires de confiance pour Better Auth (IP LAN, tunnel ngrok/Expo…)
   // Format : "http://192.168.1.10:3000,https://abcd.ngrok.io"
   BETTER_AUTH_TRUSTED_ORIGINS: z.string().optional(),
+
+  // ── APIs alimentaires ──────────────────────────────────────────────────────
+  // Clé API USDA FoodData Central — https://fdc.nal.usda.gov/api-guide.html
+  // Sans clé : DEMO_KEY (30 req/h, 50 req/j) — avec clé : 1000 req/h
+  USDA_API_KEY: z.string().default("DEMO_KEY"),
 });
 
 // Type TypeScript inféré automatiquement depuis le schema Zod

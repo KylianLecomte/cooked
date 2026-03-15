@@ -11,8 +11,10 @@ import type { EnvSchema } from "./config/env.schema";
 import { validateEnv } from "./config/env.validation";
 import { SentryExceptionFilter } from "./filter/sentry-exception.filter";
 import { buildPinoConfig } from "./logger/logger.config";
+import { FoodModule } from "./food/food.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { ProfileModule } from "./profile/profile.module";
+import { RedisModule } from "./redis/redis.module";
 
 @Module({
   imports: [
@@ -33,7 +35,9 @@ import { ProfileModule } from "./profile/profile.module";
       },
     }),
     PrismaModule,
+    RedisModule,
     ProfileModule,
+    FoodModule,
     AuthModule.forRoot({ auth, disableGlobalAuthGuard: true }),
   ],
   controllers: [AppController],

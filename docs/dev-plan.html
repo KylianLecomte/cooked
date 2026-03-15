@@ -358,8 +358,22 @@ const checked = {
   "p1-9":true,  // Onboarding Step 2 (activité + objectif)
   "p1-10":true, // Onboarding Step 3 (résumé TDEE)
   "p1-11":true, // Écran Edit Profile
+  // P2 — Base de données alimentaires (12/13) ✅ (p2-4 Edamam optionnel, reporté)
+  "p2-1":true,  // Module NestJS FoodService (UsdaService + OffService + orchestrateur)
+  "p2-2":true,  // USDA FoodData Central — search + detail complet avec micros
+  "p2-3":true,  // Open Food Facts — search + barcode
+  "p2-4":false, // Edamam (optionnel MVP) — reporté si besoin NLP
+  "p2-5":true,  // Modèle Food Prisma — macros + 22 champs micronutriments + FoodSource
+  "p2-6":true,  // Enum FoodCategory (PROTEIN/STARCH/VEGETABLE/FRUIT/DAIRY/FAT_OIL/OTHER)
+  "p2-7":true,  // Cache Redis ioredis (TTL 7j) — RedisModule global + RedisService
+  "p2-8":true,  // GET /api/foods/search?q= — unified search USDA+OFF avec upsert DB
+  "p2-9":true,  // GET /api/foods/barcode/:code — OFF en priorité, fallback DB
+  "p2-10":true, // GET /api/foods/:id — détail complet, fetch USDA micros si incomplet
+  "p2-11":true, // Écran Recherche — debounce 300ms + FlatList + bouton scan (stub P4)
+  "p2-12":true, // Écran Détail aliment — 2 onglets Macros / Micronutriments
+  "p2-13":true, // Composant PortionSelector — presets 50/100/150/200g + saisie libre
 };
-let openPhaseId = 'P1';
+let openPhaseId = 'P2';
 
 const totalTasks = phases.reduce((a, p) => a + p.categories.reduce((b, c) => b + c.tasks.length, 0), 0);
 

@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useProfile, useUpdateProfile } from "../../../hooks/useProfile";
 
+type LabeledRecord<T> = { value: T; label: string };
+
 type ActivityLevel = "SEDENTARY" | "LIGHTLY_ACTIVE" | "MODERATELY_ACTIVE" | "VERY_ACTIVE" | "EXTRA_ACTIVE";
 type Goal = "LOSE_WEIGHT" | "MAINTAIN" | "GAIN_MUSCLE";
 type Gender = "MALE" | "FEMALE" | "OTHER";
 
-const ACTIVITIES: { value: ActivityLevel; label: string }[] = [
+const ACTIVITIES: LabeledRecord<ActivityLevel>[] = [
   { value: "SEDENTARY", label: "Sédentaire" },
   { value: "LIGHTLY_ACTIVE", label: "Légèrement actif" },
   { value: "MODERATELY_ACTIVE", label: "Modérément actif" },
@@ -15,13 +17,13 @@ const ACTIVITIES: { value: ActivityLevel; label: string }[] = [
   { value: "EXTRA_ACTIVE", label: "Extrêmement actif" },
 ];
 
-const GOALS: { value: Goal; label: string }[] = [
+const GOALS: LabeledRecord<Goal>[] = [
   { value: "LOSE_WEIGHT", label: "Perdre du poids" },
   { value: "MAINTAIN", label: "Maintenir" },
   { value: "GAIN_MUSCLE", label: "Prendre du muscle" },
 ];
 
-const GENDERS: { value: Gender; label: string }[] = [
+const GENDERS: LabeledRecord<Gender>[] = [
   { value: "MALE", label: "Homme" },
   { value: "FEMALE", label: "Femme" },
   { value: "OTHER", label: "Autre" },

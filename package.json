@@ -35,6 +35,14 @@
     "turbo": "^2.8.13"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,mjs,cjs,json}": ["pnpm exec biome check --write --no-errors-on-unmatched"]
+    "**/*.{ts,tsx,js,jsx,mjs,cjs,json}": [
+      "pnpm exec biome check --write --no-errors-on-unmatched"
+    ]
+  },
+  "version": "1.0.0",
+  "dependencies": {
+    "expo": "~55.0.5",
+    "react": "19.2.0",
+    "react-native": "0.83.2"
   }
 }

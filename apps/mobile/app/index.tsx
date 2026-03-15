@@ -1,6 +1,7 @@
 import { Redirect } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
 import { authClient } from "../lib/auth-client";
+import "../global.css";
 
 // Point d'entrée de l'app — redirige selon l'état de la session.
 // Ce composant dispatch vers le bon groupe de routes sans rien afficher de permanent.
