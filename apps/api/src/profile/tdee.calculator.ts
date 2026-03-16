@@ -1,7 +1,6 @@
 import { ActivityLevel, Gender, Goal } from "../../generated/prisma/client";
 
 // ── Paramètres du calculateur ─────────────────────────────────────────────────
-
 export interface TdeeParams {
   birthDate: Date;
   gender: Gender;
@@ -27,7 +26,6 @@ export interface TdeeResult {
 }
 
 // ── Facteurs multiplicateurs par niveau d'activité ────────────────────────────
-
 const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
   SEDENTARY: 1.2, // Bureau, peu ou pas d'exercice
   LIGHTLY_ACTIVE: 1.375, // Exercice léger 1–3 j/sem
@@ -37,7 +35,6 @@ const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
 };
 
 // ── Ajustement calorique selon l'objectif ─────────────────────────────────────
-
 const GOAL_KCAL_DELTA: Record<Goal, number> = {
   LOSE_WEIGHT: -500, // Déficit de 500 kcal ≈ perte de 0.5 kg/semaine
   MAINTAIN: 0,
@@ -45,7 +42,6 @@ const GOAL_KCAL_DELTA: Record<Goal, number> = {
 };
 
 // ── Répartition des macros selon l'objectif (en % des kcal) ──────────────────
-
 const MACRO_SPLITS: Record<Goal, { protein: number; carbs: number; fat: number }> = {
   LOSE_WEIGHT: { protein: 0.35, carbs: 0.35, fat: 0.3 },
   MAINTAIN: { protein: 0.3, carbs: 0.4, fat: 0.3 },
@@ -53,13 +49,11 @@ const MACRO_SPLITS: Record<Goal, { protein: number; carbs: number; fat: number }
 };
 
 // ── Densité calorique par macronutriment (kcal/g) ─────────────────────────────
-
 const KCAL_PER_G_PROTEIN = 4;
 const KCAL_PER_G_CARBS = 4;
 const KCAL_PER_G_FAT = 9;
 
 // ── Calcul de l'âge depuis la date de naissance ───────────────────────────────
-
 function getAgeYears(birthDate: Date): number {
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
@@ -75,7 +69,6 @@ function getAgeYears(birthDate: Date): number {
 // Hommes : BMR = 10 × poids(kg) + 6.25 × taille(cm) - 5 × âge + 5
 // Femmes : BMR = 10 × poids(kg) + 6.25 × taille(cm) - 5 × âge - 161
 // Autre  : Moyenne des deux (estimation neutre)
-
 function calculateBmr(params: TdeeParams): number {
   const { gender, heightCm, weightKg, birthDate } = params;
   const age = getAgeYears(birthDate);
@@ -89,7 +82,6 @@ function calculateBmr(params: TdeeParams): number {
 }
 
 // ── Fonction principale ───────────────────────────────────────────────────────
-
 export function calculateTdee(params: TdeeParams): TdeeResult {
   const bmrKcal = Math.round(calculateBmr(params));
   const tdeeKcal = Math.round(bmrKcal * ACTIVITY_MULTIPLIERS[params.activityLevel]);

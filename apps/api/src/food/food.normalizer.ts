@@ -72,9 +72,7 @@ function getDetailNutrient(
 // ── Normalizers ───────────────────────────────────────────────────────────────
 
 /** Transforme un résultat de recherche USDA en données Food (sans micros complets) */
-export function normalizeUsdaSearch(
-  food: UsdaSearchFood,
-): Prisma.FoodCreateInput {
+export function normalizeUsdaSearch(food: UsdaSearchFood): Prisma.FoodCreateInput {
   const n = food.foodNutrients;
   const kcal = getSearchNutrient(n, USDA_NUTRIENT_IDS.ENERGY) ?? 0;
   const protein = getSearchNutrient(n, USDA_NUTRIENT_IDS.PROTEIN) ?? 0;
@@ -146,9 +144,7 @@ function gToMg(v: number | undefined): number | null {
 }
 
 /** Transforme un produit Open Food Facts en données Food */
-export function normalizeOffProduct(
-  product: OffProduct,
-): Prisma.FoodCreateInput | null {
+export function normalizeOffProduct(product: OffProduct): Prisma.FoodCreateInput | null {
   const nm = product.nutriments;
   const kcal = nm?.["energy-kcal_100g"];
 

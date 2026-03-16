@@ -1,3 +1,4 @@
+import { ActivityLevel, Gender, Goal } from "generated/prisma/client";
 import { z } from "zod";
 
 // ── Schéma Zod de mise à jour du profil ───────────────────────────────────────
@@ -17,7 +18,7 @@ export const updateProfileSchema = z.object({
     .min(new Date("1900-01-01"), "Date de naissance invalide")
     .optional(),
 
-  gender: z.enum(["MALE", "FEMALE", "OTHER"]).optional(),
+  gender: z.enum(Gender).optional(),
 
   heightCm: z
     .number()
@@ -32,10 +33,10 @@ export const updateProfileSchema = z.object({
     .optional(),
 
   activityLevel: z
-    .enum(["SEDENTARY", "LIGHTLY_ACTIVE", "MODERATELY_ACTIVE", "VERY_ACTIVE", "EXTRA_ACTIVE"])
+    .enum(ActivityLevel)
     .optional(),
 
-  goal: z.enum(["LOSE_WEIGHT", "MAINTAIN", "GAIN_MUSCLE"]).optional(),
+  goal: z.enum(Goal).optional(),
 });
 
 export type UpdateProfileDto = z.infer<typeof updateProfileSchema>;

@@ -10,9 +10,7 @@ import {
 } from "./food.normalizer";
 import { OffService } from "./off.service";
 import { UsdaService } from "./usda.service";
-
-// TTL cache Redis : 7 jours
-const CACHE_TTL = 7 * 24 * 60 * 60;
+import { REDIS_CACHE_TTL_1D, REDIS_CACHE_TTL_7D } from "src/util/constant";
 
 // Résumé léger d'un aliment (liste de recherche)
 export type FoodSummary = Pick<
@@ -54,7 +52,6 @@ export class FoodService {
   ) {}
 
   // ── Recherche unifiée ───────────────────────────────────────────────────────
-
   async search(query: string): Promise<FoodSummary[]> {
     const cacheKey = `food:search:${query.toLowerCase().trim()}`;
 
@@ -74,7 +71,7 @@ export class FoodService {
     for (const raw of usdaFoods) {
       const data = normalizeUsdaSearch(raw);
       const food = await this.prisma.client.food.upsert({
-        where: { source_sourceId: { source: FoodSource.USDA, sourceId: data.sourceId as string } },
+        where: { source_sourceId: { source: FoodSource.USDA, sourceId: data.sourceId } },
         create: { ...(data as Parameters<typeof this.prisma.client.food.create>[0]["data"]) },
         update: {
           name: data.name,
@@ -96,7 +93,7 @@ export class FoodService {
       if (!data) continue;
       try {
         const food = await this.prisma.client.food.upsert({
-          where: { source_sourceId: { source: FoodSource.OFF, sourceId: data.sourceId as string } },
+          where: { source_sourceId: { source: FoodSource.OFF, sourceId: data.sourceId } },
           create: { ...(data as Parameters<typeof this.prisma.client.food.create>[0]["data"]) },
           update: {
             name: data.name,
@@ -117,13 +114,12 @@ export class FoodService {
     }
 
     // 4. Mettre en cache (TTL réduit à 1 jour pour les recherches — résultats peuvent évoluer)
-    await this.redis.setJson(cacheKey, results, 24 * 60 * 60);
+    await this.redis.setJson(cacheKey, results, REDIS_CACHE_TTL_1D);
 
     return results;
   }
 
   // ── Recherche par code-barre ────────────────────────────────────────────────
-
   async findByBarcode(barcode: string): Promise<FoodSummary | null> {
     const cacheKey = `food:barcode:${barcode}`;
 
@@ -137,7 +133,7 @@ export class FoodService {
       select: SUMMARY_SELECT,
     });
     if (inDb) {
-      await this.redis.setJson(cacheKey, inDb, CACHE_TTL);
+      await this.redis.setJson(cacheKey, inDb, REDIS_CACHE_TTL_7D);
       return inDb;
     }
 
@@ -163,7 +159,7 @@ export class FoodService {
       select: SUMMARY_SELECT,
     });
 
-    await this.redis.setJson(cacheKey, food, CACHE_TTL);
+    await this.redis.setJson(cacheKey, food, REDIS_CACHE_TTL_7D);
     return food;
   }
 
@@ -213,12 +209,12 @@ export class FoodService {
             microDataComplete: true,
           },
         });
-        await this.redis.setJson(cacheKey, full, CACHE_TTL);
+        await this.redis.setJson(cacheKey, full, REDIS_CACHE_TTL_7D);
         return full;
       }
     }
 
-    await this.redis.setJson(cacheKey, food, CACHE_TTL);
+    await this.redis.setJson(cacheKey, food, REDIS_CACHE_TTL_7D);
     return food;
   }
 }

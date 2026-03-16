@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import type { EnvSchema } from "../config/env.schema";
 import type { UsdaFoodDetail, UsdaSearchFood } from "./food.types";
+import { FETCH_SIGNAL_TIMEOUT } from "src/util/constant";
 
 const USDA_BASE = "https://api.nal.usda.gov/fdc/v1";
 
@@ -29,9 +30,7 @@ export class UsdaService {
     );
 
     try {
-      const res = await fetch(url.toString(), {
-        signal: AbortSignal.timeout(5000),
-      });
+      const res = await fetch(url.toString(), { signal: AbortSignal.timeout(FETCH_SIGNAL_TIMEOUT) });
       if (!res.ok) {
         this.logger.warn(`USDA search error ${res.status} for query "${query}"`);
         return [];
@@ -49,7 +48,7 @@ export class UsdaService {
     const url = `${USDA_BASE}/food/${fdcId}?api_key=${this.apiKey}`;
 
     try {
-      const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      const res = await fetch(url, { signal: AbortSignal.timeout(FETCH_SIGNAL_TIMEOUT) });
       if (!res.ok) {
         this.logger.warn(`USDA detail error ${res.status} for fdcId ${fdcId}`);
         return null;

@@ -1,7 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 import type { OffProduct } from "./food.types";
+import { FETCH_SIGNAL_TIMEOUT, HEADER_USER_AGENT } from "src/util/constant";
 
-const OFF_BASE = "https://world.openfoodfacts.org";
+const OFF_BASE = "https://world.openfoodfacts.net";
 
 // Champs demandés à l'API pour limiter la taille de la réponse
 const OFF_FIELDS =
@@ -18,16 +19,12 @@ export class OffService {
     url.searchParams.set("json", "1");
     url.searchParams.set("page_size", String(limit));
     url.searchParams.set("fields", OFF_FIELDS);
-    // Filtre sur les produits avec des données nutritionnelles
     url.searchParams.set("action", "process");
 
     try {
       const res = await fetch(url.toString(), {
-        signal: AbortSignal.timeout(5000),
-        headers: {
-          // OFF recommande d'identifier le client
-          "User-Agent": "COOKED-App/1.0 (contact@cooked.app)",
-        },
+        signal: AbortSignal.timeout(FETCH_SIGNAL_TIMEOUT),
+        headers: HEADER_USER_AGENT,
       });
       if (!res.ok) {
         this.logger.warn(`OFF search error ${res.status} for "${query}"`);
@@ -47,8 +44,8 @@ export class OffService {
 
     try {
       const res = await fetch(url, {
-        signal: AbortSignal.timeout(5000),
-        headers: { "User-Agent": "COOKED-App/1.0 (contact@cooked.app)" },
+        signal: AbortSignal.timeout(FETCH_SIGNAL_TIMEOUT),
+        headers: HEADER_USER_AGENT,
       });
       if (!res.ok) return null;
 
