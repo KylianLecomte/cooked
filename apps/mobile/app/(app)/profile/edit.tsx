@@ -1,33 +1,18 @@
+import {
+  ACTIVITY_LEVEL_LABELS,
+  ACTIVITY_LEVELS,
+  type ActivityLevel,
+  GENDER_LABELS,
+  GENDERS,
+  type Gender,
+  GOAL_LABELS,
+  GOALS,
+  type Goal,
+} from "@cooked/shared";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useProfile, useUpdateProfile } from "../../../hooks/useProfile";
-
-type LabeledRecord<T> = { value: T; label: string };
-
-type ActivityLevel = "SEDENTARY" | "LIGHTLY_ACTIVE" | "MODERATELY_ACTIVE" | "VERY_ACTIVE" | "EXTRA_ACTIVE";
-type Goal = "LOSE_WEIGHT" | "MAINTAIN" | "GAIN_MUSCLE";
-type Gender = "MALE" | "FEMALE" | "OTHER";
-
-const ACTIVITIES: LabeledRecord<ActivityLevel>[] = [
-  { value: "SEDENTARY", label: "Sédentaire" },
-  { value: "LIGHTLY_ACTIVE", label: "Légèrement actif" },
-  { value: "MODERATELY_ACTIVE", label: "Modérément actif" },
-  { value: "VERY_ACTIVE", label: "Très actif" },
-  { value: "EXTRA_ACTIVE", label: "Extrêmement actif" },
-];
-
-const GOALS: LabeledRecord<Goal>[] = [
-  { value: "LOSE_WEIGHT", label: "Perdre du poids" },
-  { value: "MAINTAIN", label: "Maintenir" },
-  { value: "GAIN_MUSCLE", label: "Prendre du muscle" },
-];
-
-const GENDERS: LabeledRecord<Gender>[] = [
-  { value: "MALE", label: "Homme" },
-  { value: "FEMALE", label: "Femme" },
-  { value: "OTHER", label: "Autre" },
-];
 
 export default function EditProfileScreen() {
   const { data: profile, isLoading } = useProfile();
@@ -46,9 +31,9 @@ export default function EditProfileScreen() {
     if (profile) {
       setWeightKg(profile.weightKg?.toString() ?? "");
       setHeightCm(profile.heightCm?.toString() ?? "");
-      setGender((profile.gender as Gender) ?? null);
-      setActivityLevel((profile.activityLevel as ActivityLevel) ?? null);
-      setGoal((profile.goal as Goal) ?? null);
+      setGender(profile.gender ?? null);
+      setActivityLevel(profile.activityLevel ?? null);
+      setGoal(profile.goal ?? null);
     }
   }, [profile]);
 
@@ -103,20 +88,20 @@ export default function EditProfileScreen() {
         <View className="flex-row gap-2 mb-6">
           {GENDERS.map((g) => (
             <Pressable
-              key={g.value}
+              key={g}
               className={`flex-1 py-3 items-center border ${
-                gender === g.value
+                gender === g
                   ? "border-[#4ADE80] bg-[#4ADE8015]"
                   : "border-[#1E293B] bg-[#0F172A]"
               }`}
-              onPress={() => setGender(g.value)}
+              onPress={() => setGender(g)}
             >
               <Text
                 className={`text-sm font-semibold ${
-                  gender === g.value ? "text-[#4ADE80]" : "text-[#475569]"
+                  gender === g ? "text-[#4ADE80]" : "text-[#475569]"
                 }`}
               >
-                {g.label}
+                {GENDER_LABELS[g]}
               </Text>
             </Pressable>
           ))}
@@ -151,22 +136,22 @@ export default function EditProfileScreen() {
         {/* Niveau d'activité */}
         <Text className="text-[#334155] text-xs tracking-[2px] mb-2">NIVEAU D'ACTIVITÉ</Text>
         <View className="gap-2 mb-6">
-          {ACTIVITIES.map((a) => (
+          {ACTIVITY_LEVELS.map((a) => (
             <Pressable
-              key={a.value}
+              key={a}
               className={`border p-3 ${
-                activityLevel === a.value
+                activityLevel === a
                   ? "border-[#4ADE80] bg-[#4ADE8010]"
                   : "border-[#1E293B] bg-[#0F172A]"
               }`}
-              onPress={() => setActivityLevel(a.value)}
+              onPress={() => setActivityLevel(a)}
             >
               <Text
                 className={`text-sm font-semibold ${
-                  activityLevel === a.value ? "text-[#4ADE80]" : "text-[#CBD5E1]"
+                  activityLevel === a ? "text-[#4ADE80]" : "text-[#CBD5E1]"
                 }`}
               >
-                {a.label}
+                {ACTIVITY_LEVEL_LABELS[a]}
               </Text>
             </Pressable>
           ))}
@@ -177,20 +162,20 @@ export default function EditProfileScreen() {
         <View className="gap-2 mb-8">
           {GOALS.map((g) => (
             <Pressable
-              key={g.value}
+              key={g}
               className={`border p-3 ${
-                goal === g.value
+                goal === g
                   ? "border-[#4ADE80] bg-[#4ADE8010]"
                   : "border-[#1E293B] bg-[#0F172A]"
               }`}
-              onPress={() => setGoal(g.value)}
+              onPress={() => setGoal(g)}
             >
               <Text
                 className={`text-sm font-semibold ${
-                  goal === g.value ? "text-[#4ADE80]" : "text-[#CBD5E1]"
+                  goal === g ? "text-[#4ADE80]" : "text-[#CBD5E1]"
                 }`}
               >
-                {g.label}
+                {GOAL_LABELS[g]}
               </Text>
             </Pressable>
           ))}

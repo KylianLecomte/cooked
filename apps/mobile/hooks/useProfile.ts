@@ -1,20 +1,21 @@
+import type { ActivityLevel, Gender, Goal } from "@cooked/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../lib/api-client";
 import { queryKeys } from "../lib/query-keys";
 
-// ── Types miroir du modèle Prisma Profile ────────────────────────────────────
-// Miroir intentionnel (pas d'import du backend) pour découplage mobile/API.
+// ── Type miroir du modèle Prisma Profile ─────────────────────────────────────
+// Les enums viennent de @cooked/shared (source de vérité unique).
 // Les dates sont des strings ISO car JSON ne connaît pas Date.
 
 export type Profile = {
   id: string;
   userId: string;
   birthDate: string | null;
-  gender: "MALE" | "FEMALE" | "OTHER" | null;
+  gender: Gender | null;
   heightCm: number | null;
   weightKg: number | null;
-  activityLevel: "SEDENTARY" | "LIGHTLY_ACTIVE" | "MODERATELY_ACTIVE" | "VERY_ACTIVE" | "EXTRA_ACTIVE" | null;
-  goal: "LOSE_WEIGHT" | "MAINTAIN" | "GAIN_MUSCLE" | null;
+  activityLevel: ActivityLevel | null;
+  goal: Goal | null;
   tdeeKcal: number | null;
   targetKcal: number | null;
   targetProteinG: number | null;

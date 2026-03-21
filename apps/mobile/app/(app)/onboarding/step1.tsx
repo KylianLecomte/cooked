@@ -1,15 +1,8 @@
+import { GENDER_LABELS, GENDERS, type Gender } from "@cooked/shared";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, Text, TextInput, View } from "react-native";
 import { useUpdateProfile } from "../../../hooks/useProfile";
-
-type Gender = "MALE" | "FEMALE" | "OTHER";
-
-const GENDERS: { value: Gender; label: string }[] = [
-  { value: "MALE", label: "Homme" },
-  { value: "FEMALE", label: "Femme" },
-  { value: "OTHER", label: "Autre" },
-];
 
 export default function OnboardingStep1() {
   const [birthYear, setBirthYear] = useState("");
@@ -121,20 +114,20 @@ export default function OnboardingStep1() {
       <View className="flex-row gap-2 mb-5">
         {GENDERS.map((g) => (
           <Pressable
-            key={g.value}
+            key={g}
             className={`flex-1 py-3 items-center border ${
-              gender === g.value
+              gender === g
                 ? "border-[#4ADE80] bg-[#4ADE8015]"
                 : "border-[#1E293B] bg-[#0F172A]"
             }`}
-            onPress={() => setGender(g.value)}
+            onPress={() => setGender(g)}
           >
             <Text
               className={`text-sm font-semibold ${
-                gender === g.value ? "text-[#4ADE80]" : "text-[#475569]"
+                gender === g ? "text-[#4ADE80]" : "text-[#475569]"
               }`}
             >
-              {g.label}
+              {GENDER_LABELS[g]}
             </Text>
           </Pressable>
         ))}

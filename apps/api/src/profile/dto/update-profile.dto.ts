@@ -1,4 +1,4 @@
-import { ActivityLevel, Gender, Goal } from "generated/prisma/client";
+import { ActivityLevel, Gender, Goal } from "@cooked/shared";
 import { z } from "zod";
 
 // ── Schéma Zod de mise à jour du profil ───────────────────────────────────────

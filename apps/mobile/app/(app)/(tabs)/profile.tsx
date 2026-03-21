@@ -1,21 +1,8 @@
+import { ACTIVITY_LEVEL_LABELS, GOAL_LABELS } from "@cooked/shared";
 import { router } from "expo-router";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { useProfile } from "../../../hooks/useProfile";
 import { authClient } from "../../../lib/auth-client";
-
-const ACTIVITY_LABELS: Record<string, string> = {
-  SEDENTARY: "Sédentaire",
-  LIGHTLY_ACTIVE: "Légèrement actif",
-  MODERATELY_ACTIVE: "Modérément actif",
-  VERY_ACTIVE: "Très actif",
-  EXTRA_ACTIVE: "Extrêmement actif",
-};
-
-const GOAL_LABELS: Record<string, string> = {
-  LOSE_WEIGHT: "Perte de poids",
-  MAINTAIN: "Maintien",
-  GAIN_MUSCLE: "Prise de muscle",
-};
 
 export default function ProfileScreen() {
   const { data: session } = authClient.useSession();
@@ -95,7 +82,7 @@ export default function ProfileScreen() {
           <View className="flex-row justify-between">
             <Text className="text-[#475569] text-sm">Activité</Text>
             <Text className="text-[#CBD5E1] text-sm font-semibold">
-              {profile.activityLevel ? ACTIVITY_LABELS[profile.activityLevel] : "—"}
+              {profile.activityLevel ? ACTIVITY_LEVEL_LABELS[profile.activityLevel] : "—"}
             </Text>
           </View>
         </View>

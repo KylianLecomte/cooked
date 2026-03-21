@@ -1,20 +1,7 @@
+import { ACTIVITY_LEVEL_LABELS, GOAL_LABELS } from "@cooked/shared";
 import { router } from "expo-router";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { useProfile } from "../../../hooks/useProfile";
-
-const GOAL_LABELS: Record<string, string> = {
-  LOSE_WEIGHT: "Perte de poids",
-  MAINTAIN: "Maintien",
-  GAIN_MUSCLE: "Prise de muscle",
-};
-
-const ACTIVITY_LABELS: Record<string, string> = {
-  SEDENTARY: "Sédentaire",
-  LIGHTLY_ACTIVE: "Légèrement actif",
-  MODERATELY_ACTIVE: "Modérément actif",
-  VERY_ACTIVE: "Très actif",
-  EXTRA_ACTIVE: "Extrêmement actif",
-};
 
 export default function OnboardingStep3() {
   const { data: profile, isLoading } = useProfile();
@@ -102,7 +89,7 @@ export default function OnboardingStep3() {
         <View className="flex-row justify-between mb-1">
           <Text className="text-[#475569] text-sm">Niveau d'activité</Text>
           <Text className="text-[#CBD5E1] text-sm font-semibold">
-            {profile.activityLevel ? ACTIVITY_LABELS[profile.activityLevel] : "—"}
+            {profile.activityLevel ? ACTIVITY_LEVEL_LABELS[profile.activityLevel] : "—"}
           </Text>
         </View>
         <View className="flex-row justify-between">

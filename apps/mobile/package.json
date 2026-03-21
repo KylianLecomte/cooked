@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "expo-router/entry.js",
   "scripts": {
-    "dev": "expo start --tunnel",
+    "dev": "expo start --lan",
     "start": "expo start --tunnel",
-    "android:tunnel": "expo start --android --lan",
+    "android:tunnel": "expo start --android --tunnel",
     "ios": "expo start --ios --tunnel",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@better-auth/expo": "^1.5.5",
+    "@cooked/shared": "workspace:*",
     "@tanstack/react-query": "^5.90.21",
     "better-auth": "^1.5.5",
     "expo": "~55.0.5",

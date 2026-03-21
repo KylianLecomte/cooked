@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { ActivityLevel, Gender, Goal } from "../../generated/prisma/client";
+import type { ActivityLevel, Gender, Goal } from "@cooked/shared";
 import { PrismaService } from "../prisma/prisma.service";
 import type { UpdateProfileDto } from "./dto/update-profile.dto";
 import { updateProfileSchema } from "./dto/update-profile.dto";

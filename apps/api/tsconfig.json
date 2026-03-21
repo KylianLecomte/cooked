@@ -1,10 +1,11 @@
 {
   "extends": "@cooked/tsconfig/node.json",
   "compilerOptions": {
+    "outDir": "dist",
     "rootDir": ".",
     "baseUrl": "./",
     "paths": {
-      "@cooked/shared": ["../../packages/shared/src/index.ts"]
+      "@cooked/shared": ["../../packages/shared/dist/index.d.ts"]
     },
     "types": ["vitest/globals", "node"]
   },

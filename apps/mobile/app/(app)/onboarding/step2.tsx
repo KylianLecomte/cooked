@@ -1,24 +1,18 @@
+import {
+  ACTIVITY_LEVEL_DETAILS,
+  ACTIVITY_LEVEL_LABELS,
+  ACTIVITY_LEVELS,
+  ACTIVITY_MULTIPLIERS,
+  type ActivityLevel,
+  GOAL_KCAL_DELTA,
+  GOAL_LABELS,
+  GOALS,
+  type Goal,
+} from "@cooked/shared";
 import { router } from "expo-router";
+import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { useUpdateProfile } from "../../../hooks/useProfile";
-import { useState } from "react";
-
-type ActivityLevel = "SEDENTARY" | "LIGHTLY_ACTIVE" | "MODERATELY_ACTIVE" | "VERY_ACTIVE" | "EXTRA_ACTIVE";
-type Goal = "LOSE_WEIGHT" | "MAINTAIN" | "GAIN_MUSCLE";
-
-const ACTIVITIES: { value: ActivityLevel; label: string; detail: string; multiplier: string }[] = [
-  { value: "SEDENTARY", label: "Sédentaire", detail: "Bureau, peu ou pas d'exercice", multiplier: "×1.2" },
-  { value: "LIGHTLY_ACTIVE", label: "Légèrement actif", detail: "Exercice léger 1–3 j/sem", multiplier: "×1.375" },
-  { value: "MODERATELY_ACTIVE", label: "Modérément actif", detail: "Exercice modéré 3–5 j/sem", multiplier: "×1.55" },
-  { value: "VERY_ACTIVE", label: "Très actif", detail: "Exercice intense 6–7 j/sem", multiplier: "×1.725" },
-  { value: "EXTRA_ACTIVE", label: "Extrêmement actif", detail: "Travail physique + sport quotidien", multiplier: "×1.9" },
-];
-
-const GOALS: { value: Goal; label: string; detail: string; delta: string }[] = [
-  { value: "LOSE_WEIGHT", label: "Perdre du poids", detail: "Déficit de 500 kcal/jour", delta: "−500 kcal" },
-  { value: "MAINTAIN", label: "Maintenir", detail: "Équilibre calorique", delta: "±0 kcal" },
-  { value: "GAIN_MUSCLE", label: "Prendre du muscle", detail: "Surplus de 300 kcal/jour", delta: "+300 kcal" },
-];
 
 export default function OnboardingStep2() {
   const [activityLevel, setActivityLevel] = useState<ActivityLevel | null>(null);
@@ -62,32 +56,32 @@ export default function OnboardingStep2() {
       {/* Niveau d'activité */}
       <Text className="text-[#334155] text-xs tracking-[2px] mb-3">NIVEAU D'ACTIVITÉ</Text>
       <View className="gap-2 mb-7">
-        {ACTIVITIES.map((a) => (
+        {ACTIVITY_LEVELS.map((a) => (
           <Pressable
-            key={a.value}
+            key={a}
             className={`border p-4 flex-row justify-between items-center ${
-              activityLevel === a.value
+              activityLevel === a
                 ? "border-[#4ADE80] bg-[#4ADE8010]"
                 : "border-[#1E293B] bg-[#0F172A]"
             }`}
-            onPress={() => setActivityLevel(a.value)}
+            onPress={() => setActivityLevel(a)}
           >
             <View className="flex-1">
               <Text
                 className={`font-semibold text-sm ${
-                  activityLevel === a.value ? "text-[#4ADE80]" : "text-[#CBD5E1]"
+                  activityLevel === a ? "text-[#4ADE80]" : "text-[#CBD5E1]"
                 }`}
               >
-                {a.label}
+                {ACTIVITY_LEVEL_LABELS[a]}
               </Text>
-              <Text className="text-[#334155] text-xs mt-0.5">{a.detail}</Text>
+              <Text className="text-[#334155] text-xs mt-0.5">{ACTIVITY_LEVEL_DETAILS[a]}</Text>
             </View>
             <Text
               className={`text-sm font-bold ml-4 ${
-                activityLevel === a.value ? "text-[#4ADE80]" : "text-[#334155]"
+                activityLevel === a ? "text-[#4ADE80]" : "text-[#334155]"
               }`}
             >
-              {a.multiplier}
+              ×{ACTIVITY_MULTIPLIERS[a]}
             </Text>
           </Pressable>
         ))}
@@ -98,30 +92,32 @@ export default function OnboardingStep2() {
       <View className="gap-2 mb-7">
         {GOALS.map((g) => (
           <Pressable
-            key={g.value}
+            key={g}
             className={`border p-4 flex-row justify-between items-center ${
-              goal === g.value
+              goal === g
                 ? "border-[#4ADE80] bg-[#4ADE8010]"
                 : "border-[#1E293B] bg-[#0F172A]"
             }`}
-            onPress={() => setGoal(g.value)}
+            onPress={() => setGoal(g)}
           >
             <View className="flex-1">
               <Text
                 className={`font-semibold text-sm ${
-                  goal === g.value ? "text-[#4ADE80]" : "text-[#CBD5E1]"
+                  goal === g ? "text-[#4ADE80]" : "text-[#CBD5E1]"
                 }`}
               >
-                {g.label}
+                {GOAL_LABELS[g]}
               </Text>
-              <Text className="text-[#334155] text-xs mt-0.5">{g.detail}</Text>
+              <Text className="text-[#334155] text-xs mt-0.5">
+                {GOAL_KCAL_DELTA[g] === 0 ? "Équilibre calorique" : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal/jour`}
+              </Text>
             </View>
             <Text
               className={`text-sm font-bold ml-4 ${
-                goal === g.value ? "text-[#4ADE80]" : "text-[#334155]"
+                goal === g ? "text-[#4ADE80]" : "text-[#334155]"
               }`}
             >
-              {g.delta}
+              {GOAL_KCAL_DELTA[g] === 0 ? "±0 kcal" : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal`}
             </Text>
           </Pressable>
         ))}

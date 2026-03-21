@@ -1,4 +1,11 @@
-import { ActivityLevel, Gender, Goal } from "../../generated/prisma/client";
+import {
+  ACTIVITY_MULTIPLIERS,
+  type ActivityLevel,
+  Gender,
+  type Goal,
+  GOAL_KCAL_DELTA,
+  MACRO_SPLITS,
+} from "@cooked/shared";
 
 // ── Paramètres du calculateur ─────────────────────────────────────────────────
 export interface TdeeParams {
@@ -24,29 +31,6 @@ export interface TdeeResult {
   /** Lipides cibles en grammes */
   targetFatG: number;
 }
-
-// ── Facteurs multiplicateurs par niveau d'activité ────────────────────────────
-const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
-  SEDENTARY: 1.2, // Bureau, peu ou pas d'exercice
-  LIGHTLY_ACTIVE: 1.375, // Exercice léger 1–3 j/sem
-  MODERATELY_ACTIVE: 1.55, // Exercice modéré 3–5 j/sem
-  VERY_ACTIVE: 1.725, // Exercice intense 6–7 j/sem
-  EXTRA_ACTIVE: 1.9, // Très intense ou travail physique
-};
-
-// ── Ajustement calorique selon l'objectif ─────────────────────────────────────
-const GOAL_KCAL_DELTA: Record<Goal, number> = {
-  LOSE_WEIGHT: -500, // Déficit de 500 kcal ≈ perte de 0.5 kg/semaine
-  MAINTAIN: 0,
-  GAIN_MUSCLE: +300, // Surplus modéré pour la prise de masse
-};
-
-// ── Répartition des macros selon l'objectif (en % des kcal) ──────────────────
-const MACRO_SPLITS: Record<Goal, { protein: number; carbs: number; fat: number }> = {
-  LOSE_WEIGHT: { protein: 0.35, carbs: 0.35, fat: 0.3 },
-  MAINTAIN: { protein: 0.3, carbs: 0.4, fat: 0.3 },
-  GAIN_MUSCLE: { protein: 0.3, carbs: 0.45, fat: 0.25 },
-};
 
 // ── Densité calorique par macronutriment (kcal/g) ─────────────────────────────
 const KCAL_PER_G_PROTEIN = 4;
