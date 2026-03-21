@@ -3,4 +3,4 @@
 // Aucune dépendance React, Node.js, ou runtime-specific
 export const APP_VERSION = "0.1.0";
 
-export * from "./enums";
+export * from "./type";
