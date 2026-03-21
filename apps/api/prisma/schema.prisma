@@ -1,9 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// ── Conf ─────────────────────────────────────────────────────
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -13,17 +8,20 @@ datasource db {
   provider = "postgresql"
 }
 
+// ── Authentification ─────────────────────────────────────────
+
 model User {
-  id            String    @id
+  id            String       @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean      @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
   sessions      Session[]
   accounts      Account[]
   profiles      Profile?
+  diaryEntries  DiaryEntry[]
 
   @@unique([email])
   @@map("user")
@@ -91,7 +89,6 @@ model Profile {
   activityLevel ActivityLevel?
   goal          Goal?
 
-  // Résultats TDEE — recalculés quand les inputs changent
   tdeeKcal       Int?
   targetKcal     Int?
   targetProteinG Int?
@@ -124,7 +121,7 @@ enum Goal {
   GAIN_MUSCLE
 }
 
-// ── Phase 2 — Base de données alimentaires ────────────────────────────────────
+// ── Données alimentaires ────────────────────────────────────
 
 enum FoodSource {
   USDA
@@ -143,7 +140,7 @@ enum FoodCategory {
 }
 
 model Food {
-  id       String       @id @default(cuid())
+  id       String     @id @default(cuid())
   source   FoodSource
   sourceId String
 
@@ -187,10 +184,49 @@ model Food {
   // true = données micro complètes (fetch full USDA detail effectué)
   microDataComplete Boolean @default(false)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  foodLogs  FoodLog[]
 
   @@unique([source, sourceId])
   @@index([name])
   @@map("food")
+}
+
+// ── Journal alimentaire ──────────────────────────────────────
+
+model DiaryEntry {
+  id     String   @id @default(cuid())
+  userId String
+  date   DateTime @db.Date
+
+  logs FoodLog[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@map("diary_entry")
+}
+
+model FoodLog {
+  id           String @id @default(cuid())
+  diaryEntryId String
+  foodId       String
+  meal         Meal
+  quantityG    Float
+
+  diaryEntry DiaryEntry @relation(fields: [diaryEntryId], references: [id], onDelete: Cascade)
+  food       Food       @relation(fields: [foodId], references: [id])
+
+  @@index([diaryEntryId])
+  @@index([foodId])
+  @@map("food_log")
+}
+
+enum Meal {
+  BREAKFEAST
+  LUNCH
+  DINNER
+  SNACK
 }

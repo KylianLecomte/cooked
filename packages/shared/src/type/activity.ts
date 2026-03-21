@@ -1,6 +1,5 @@
 import { TypesValuesOf } from "./type";
 
-// ── Activity Level ──────────────────────────────────────────────────────────
 export const ActivityLevel = {
   SEDENTARY: "SEDENTARY",
   LIGHTLY_ACTIVE: "LIGHTLY_ACTIVE",
