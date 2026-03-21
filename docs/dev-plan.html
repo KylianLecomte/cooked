@@ -1,416 +1,787 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Plan de Développement — COOKED</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Courier New', monospace; background: #080C10; color: #CBD5E1; min-height: 100vh; padding: 32px 20px; }
-  .container { max-width: 860px; margin: 0 auto; }
-  .header-label { color: #334155; font-size: 11px; letter-spacing: 3px; margin-bottom: 8px; }
-  h1 { font-size: clamp(22px, 5vw, 40px); font-weight: 900; color: #F1F5F9; letter-spacing: -1px; margin-bottom: 4px; }
-  .header-sub { color: #4ADE80; font-size: 13px; letter-spacing: 2px; margin-bottom: 20px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plan de Développement — COOKED</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* Progress */
-  .progress-box { background: #0F172A; padding: 16px 20px; border: 1px solid #1E293B; }
-  .progress-top { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 11px; color: #475569; }
-  .progress-count { color: #94A3B8; }
-  .progress-track { background: #1E293B; height: 4px; border-radius: 2px; }
-  .progress-fill { height: 4px; border-radius: 2px; background: linear-gradient(90deg, #4ADE80, #61DAFB); transition: width 0.4s ease; }
+    body {
+      font-family: 'Courier New', monospace;
+      background: #080C10;
+      color: #CBD5E1;
+      min-height: 100vh;
+      padding: 32px 20px;
+    }
 
-  /* Changelog */
-  .changelog { background: #0F172A; border: 1px solid #1E293B; border-top: none; padding: 12px 20px; }
-  .changelog-title { font-size: 9px; letter-spacing: 3px; color: #334155; margin-bottom: 8px; }
-  .changelog-items { display: flex; flex-wrap: wrap; gap: 6px; }
-  .cl { padding: 2px 8px; font-size: 10px; }
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
 
-  /* Tabs */
-  .tabs { display: flex; gap: 0; margin-top: 24px; overflow-x: auto; padding-bottom: 4px; border-bottom: 1px solid #1E293B; }
-  .tab { flex: 0 0 auto; background: transparent; border: none; border-bottom: 2px solid transparent; color: #334155; padding: 8px 14px; font-size: 11px; cursor: pointer; letter-spacing: 1px; font-family: inherit; transition: all 0.2s; white-space: nowrap; margin-bottom: -1px; }
-  .tab.active { border-bottom-color: var(--c); color: var(--c); background: color-mix(in srgb, var(--c) 8%, transparent); }
+    .header-label {
+      color: #334155;
+      font-size: 11px;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
 
-  /* Phases */
-  .phase { margin-bottom: 12px; border: 1px solid #0F172A; background: #0A0C10; transition: all 0.2s; }
-  .phase.open { background: #0A1017; }
-  .phase-header { width: 100%; background: none; border: none; cursor: pointer; padding: 20px 24px; display: flex; align-items: center; gap: 16px; text-align: left; font-family: inherit; }
-  .phase-id { padding: 4px 10px; font-size: 11px; font-weight: 700; letter-spacing: 2px; flex-shrink: 0; }
-  .phase-info { flex: 1; }
-  .phase-title { color: #F1F5F9; font-weight: 700; font-size: 15px; }
-  .phase-duration { color: #334155; font-size: 11px; letter-spacing: 1px; margin-left: 12px; }
-  .phase-objective-collapsed { color: #334155; font-size: 11px; margin-top: 4px; }
-  .phase-mini-progress { text-align: right; flex-shrink: 0; }
-  .mini-count { font-size: 11px; color: #334155; }
-  .mini-track { background: #1E293B; height: 2px; width: 48px; margin-top: 4px; }
-  .mini-fill { height: 2px; transition: width 0.3s; }
-  .phase-chevron { color: #334155; font-size: 14px; flex-shrink: 0; }
+    h1 {
+      font-size: clamp(22px, 5vw, 40px);
+      font-weight: 900;
+      color: #F1F5F9;
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+    }
 
-  /* Phase content */
-  .phase-content { padding: 0 24px 24px; display: none; }
-  .phase.open .phase-content { display: block; }
-  .phase-objective { border-left: 2px solid; padding: 10px 16px; margin-bottom: 24px; font-size: 12px; color: #94A3B8; letter-spacing: 0.5px; }
+    .header-sub {
+      color: #4ADE80;
+      font-size: 13px;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
 
-  /* Category */
-  .cat-title { font-size: 10px; letter-spacing: 3px; margin-bottom: 12px; opacity: 0.8; }
-  .cat { margin-bottom: 24px; }
-  .tasks { display: flex; flex-direction: column; gap: 8px; }
+    /* Progress */
+    .progress-box {
+      background: #0F172A;
+      padding: 16px 20px;
+      border: 1px solid #1E293B;
+    }
 
-  /* Task */
-  .task { display: grid; grid-template-columns: 20px 1fr; gap: 12px; padding: 12px 14px; background: #0D1117; border: 1px solid #1E293B; cursor: pointer; transition: all 0.15s; align-items: start; }
-  .task.done { border-color: transparent; }
-  .checkbox { width: 16px; height: 16px; border: 1.5px solid #334155; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; transition: all 0.15s; }
-  .checkbox.checked { border-color: inherit; }
-  .checkmark { color: #080C10; font-size: 10px; font-weight: 900; display: none; }
-  .checkbox.checked .checkmark { display: block; }
-  .task-name { font-size: 13px; color: #CBD5E1; font-weight: 600; margin-bottom: 4px; }
-  .task.done .task-name { color: #475569; text-decoration: line-through; }
-  .task-detail { font-size: 11px; color: #334155; line-height: 1.5; }
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: #475569;
+    }
 
-  /* Summary */
-  .summary { margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: #1E293B; border: 1px solid #1E293B; }
-  .summary-cell { background: #0A0C10; padding: 16px 20px; }
-  .summary-label { font-size: 9px; color: #334155; letter-spacing: 2px; margin-bottom: 6px; }
-  .summary-value { font-size: 13px; color: #94A3B8; font-weight: 700; }
-  .summary-sub { font-size: 10px; color: #475569; margin-top: 2px; }
-  .footer { margin-top: 20px; text-align: center; color: #1E293B; font-size: 10px; letter-spacing: 2px; }
-</style>
+    .progress-count {
+      color: #94A3B8;
+    }
+
+    .progress-track {
+      background: #1E293B;
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    .progress-fill {
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #4ADE80, #61DAFB);
+      transition: width 0.4s ease;
+    }
+
+    /* Changelog */
+    .changelog {
+      background: #0F172A;
+      border: 1px solid #1E293B;
+      border-top: none;
+      padding: 12px 20px;
+    }
+
+    .changelog-title {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    .changelog-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .cl {
+      padding: 2px 8px;
+      font-size: 10px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-top: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #1E293B;
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: #334155;
+      padding: 8px 14px;
+      font-size: 11px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      font-family: inherit;
+      transition: all 0.2s;
+      white-space: nowrap;
+      margin-bottom: -1px;
+    }
+
+    .tab.active {
+      border-bottom-color: var(--c);
+      color: var(--c);
+      background: color-mix(in srgb, var(--c) 8%, transparent);
+    }
+
+    /* Phases */
+    .phase {
+      margin-bottom: 12px;
+      border: 1px solid #0F172A;
+      background: #0A0C10;
+      transition: all 0.2s;
+    }
+
+    .phase.open {
+      background: #0A1017;
+    }
+
+    .phase-header {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .phase-id {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      flex-shrink: 0;
+    }
+
+    .phase-info {
+      flex: 1;
+    }
+
+    .phase-title {
+      color: #F1F5F9;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .phase-duration {
+      color: #334155;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-left: 12px;
+    }
+
+    .phase-objective-collapsed {
+      color: #334155;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .phase-mini-progress {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .mini-count {
+      font-size: 11px;
+      color: #334155;
+    }
+
+    .mini-track {
+      background: #1E293B;
+      height: 2px;
+      width: 48px;
+      margin-top: 4px;
+    }
+
+    .mini-fill {
+      height: 2px;
+      transition: width 0.3s;
+    }
+
+    .phase-chevron {
+      color: #334155;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* Phase content */
+    .phase-content {
+      padding: 0 24px 24px;
+      display: none;
+    }
+
+    .phase.open .phase-content {
+      display: block;
+    }
+
+    .phase-objective {
+      border-left: 2px solid;
+      padding: 10px 16px;
+      margin-bottom: 24px;
+      font-size: 12px;
+      color: #94A3B8;
+      letter-spacing: 0.5px;
+    }
+
+    /* Category */
+    .cat-title {
+      font-size: 10px;
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .cat {
+      margin-bottom: 24px;
+    }
+
+    .tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Task */
+    .task {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 12px;
+      padding: 12px 14px;
+      background: #0D1117;
+      border: 1px solid #1E293B;
+      cursor: pointer;
+      transition: all 0.15s;
+      align-items: start;
+    }
+
+    .task.done {
+      border-color: transparent;
+    }
+
+    .checkbox {
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: all 0.15s;
+    }
+
+    .checkbox.checked {
+      border-color: inherit;
+    }
+
+    .checkmark {
+      color: #080C10;
+      font-size: 10px;
+      font-weight: 900;
+      display: none;
+    }
+
+    .checkbox.checked .checkmark {
+      display: block;
+    }
+
+    .task-name {
+      font-size: 13px;
+      color: #CBD5E1;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .task.done .task-name {
+      color: #475569;
+      text-decoration: line-through;
+    }
+
+    .task-detail {
+      font-size: 11px;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    /* Summary */
+    .summary {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1px;
+      background: #1E293B;
+      border: 1px solid #1E293B;
+    }
+
+    .summary-cell {
+      background: #0A0C10;
+      padding: 16px 20px;
+    }
+
+    .summary-label {
+      font-size: 9px;
+      color: #334155;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+
+    .summary-value {
+      font-size: 13px;
+      color: #94A3B8;
+      font-weight: 700;
+    }
+
+    .summary-sub {
+      font-size: 10px;
+      color: #475569;
+      margin-top: 2px;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      color: #1E293B;
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+  </style>
 </head>
+
 <body>
-<div class="container">
-  <p class="header-label">PLAN DE DÉVELOPPEMENT</p>
-  <h1>COOKED</h1>
-  <p class="header-sub">MOBILE-FIRST — REACT NATIVE + EXPO MANAGED</p>
+  <div class="container">
+    <p class="header-label">PLAN DE DÉVELOPPEMENT</p>
+    <h1>COOKED</h1>
+    <p class="header-sub">MOBILE-FIRST — REACT NATIVE + EXPO MANAGED</p>
 
-  <div class="progress-box">
-    <div class="progress-top"><span>PROGRESSION GLOBALE</span><span class="progress-count" id="prog-count">0 / 0 tâches</span></div>
-    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-  </div>
-  <div class="changelog">
-    <div class="changelog-title">CHANGELOG v4 — FEATURES UI</div>
-    <div class="changelog-items">
-      <span class="cl" style="background:#A78BFA15;color:#A78BFA">+ Micronutriments en feature complète (P2 + P3)</span>
-      <span class="cl" style="background:#A78BFA15;color:#A78BFA">+ Écran détail nutriment + graphique 7j</span>
-      <span class="cl" style="background:#A78BFA15;color:#A78BFA">+ Score nutritionnel /100 dans journal</span>
-      <span class="cl" style="background:#FF6B2C15;color:#FF6B2C">+ Paramètres affichage macros/micro</span>
-      <span class="cl" style="background:#4ADE8015;color:#4ADE80">Scan = bouton dans Recherche (pas un tab)</span>
-      <span class="cl" style="background:#61DAFB15;color:#61DAFB">Stats déplacées dans Profil (pas de tab dédiée)</span>
-      <span class="cl" style="background:#2DD4BF15;color:#2DD4BF">+ P5 Meal Planning + Recettes (nouveau)</span>
-      <span class="cl" style="background:#2DD4BF15;color:#2DD4BF">+ P6 Liste de Courses (nouveau)</span>
-      <span class="cl" style="background:#2DD4BF15;color:#2DD4BF">+ Groupage courses par catégorie (FoodCategory)</span>
-      <span class="cl" style="background:#2DD4BF15;color:#2DD4BF">+ Toggle vue groupée / à plat</span>
-      <span class="cl" style="background:#2DD4BF15;color:#2DD4BF">+ Ajout manuel articles avec 9 catégories</span>
-      <span class="cl" style="background:#94A3B815;color:#94A3B8">10 phases (était 8) · P6→P7, P7→P8, P8→P9</span>
+    <div class="progress-box">
+      <div class="progress-top"><span>PROGRESSION GLOBALE</span><span class="progress-count" id="prog-count">0 / 0
+          tâches</span></div>
+      <div class="progress-track">
+        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+      </div>
     </div>
+    <div class="changelog">
+      <div class="changelog-title">CHANGELOG v4 — FEATURES UI</div>
+      <div class="changelog-items">
+        <span class="cl" style="background:#A78BFA15;color:#A78BFA">+ Micronutriments en feature complète (P2 +
+          P3)</span>
+        <span class="cl" style="background:#A78BFA15;color:#A78BFA">+ Écran détail nutriment + graphique 7j</span>
+        <span class="cl" style="background:#A78BFA15;color:#A78BFA">+ Score nutritionnel /100 dans journal</span>
+        <span class="cl" style="background:#FF6B2C15;color:#FF6B2C">+ Paramètres affichage macros/micro</span>
+        <span class="cl" style="background:#4ADE8015;color:#4ADE80">Scan = bouton dans Recherche (pas un tab)</span>
+        <span class="cl" style="background:#61DAFB15;color:#61DAFB">Stats déplacées dans Profil (pas de tab
+          dédiée)</span>
+        <span class="cl" style="background:#2DD4BF15;color:#2DD4BF">+ P5 Meal Planning + Recettes (nouveau)</span>
+        <span class="cl" style="background:#2DD4BF15;color:#2DD4BF">+ P6 Liste de Courses (nouveau)</span>
+        <span class="cl" style="background:#2DD4BF15;color:#2DD4BF">+ Groupage courses par catégorie
+          (FoodCategory)</span>
+        <span class="cl" style="background:#2DD4BF15;color:#2DD4BF">+ Toggle vue groupée / à plat</span>
+        <span class="cl" style="background:#2DD4BF15;color:#2DD4BF">+ Ajout manuel articles avec 9 catégories</span>
+        <span class="cl" style="background:#94A3B815;color:#94A3B8">10 phases (était 8) · P6→P7, P7→P8, P8→P9</span>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+    <div id="phases" style="margin-top:24px"></div>
+
+    <div class="summary">
+      <div class="summary-cell">
+        <div class="summary-label">DURÉE ESTIMÉE</div>
+        <div class="summary-value">~16–20 semaines</div>
+        <div class="summary-sub">Meal planning + courses ajoutent ~3–4 sem.</div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-label">PHASES</div>
+        <div class="summary-value">P0 → P9 (10 phases)</div>
+        <div class="summary-sub">P5 + P6 nouvelles depuis v4</div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-label">QUALITÉ CODE</div>
+        <div class="summary-value">SonarCloud dès P0</div>
+        <div class="summary-sub">Bloque les PRs si régression</div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-label">LIVRABLE CLÉ</div>
+        <div class="summary-value">APK Android</div>
+        <div class="summary-sub">Distribué via EAS Build automatique</div>
+      </div>
+    </div>
+    <div class="footer">COOKED — PLAN v4 — 2026</div>
   </div>
 
-  <div class="tabs" id="tabs"></div>
-  <div id="phases" style="margin-top:24px"></div>
+  <script>
+    const phases = [
+      {
+        id: "P0", title: "Setup & Architecture", duration: "1 semaine", color: "#94A3B8",
+        objective: "Poser des fondations solides — outillage, qualité et observabilité dès le départ",
+        categories: [
+          {
+            name: "Monorepo & Tooling", tasks: [
+              { id: "p0-1", text: "Créer le monorepo Turborepo", detail: "apps/mobile, apps/api, packages/shared — une seule commande lance tout" },
+              { id: "p0-2", text: "Configurer TypeScript strict partagé", detail: "tsconfig dans packages/shared, strict: true — les types Zod partagés front/back/mobile dès maintenant" },
+              { id: "p0-3", text: "Biome + Husky + lint-staged + commitlint", detail: "Biome remplace ESLint + Prettier (lint + format en un seul outil). Husky + lint-staged bloquants sur pre-commit, commitlint pour les Conventional Commits" },
+              { id: "p0-4", text: "Initialiser Git + GitHub, stratégie de branches", detail: "main (prod) / develop / feature/* — règle : on ne push jamais sur main directement" },
+            ]
+          },
+          {
+            name: "CI/CD — Pipeline de base", tasks: [
+              { id: "p0-5", text: "GitHub Actions : workflow lint + tests sur chaque PR", detail: "turborepo run lint test — bloque le merge automatiquement si ça fail" },
+              { id: "p0-6", text: "Intégrer SonarCloud dès le setup", detail: "Analyse qualité + sécurité sur chaque PR : complexité, duplication, vulnérabilités — gratuit repo public" },
+              { id: "p0-7", text: "Configurer les secrets GitHub Actions", detail: "SUPABASE_URL, RAILWAY_TOKEN, EAS_TOKEN, SONAR_TOKEN — jamais en clair dans le code" },
+            ]
+          },
+          {
+            name: "Expo & React Native (Managed Workflow)", tasks: [
+              { id: "p0-8", text: "Créer l'app Expo (SDK 55, Managed Workflow)", detail: "npx create-expo-app — Managed : pas de dossier android/ ios/ à gérer, Expo s'en charge via EAS" },
+              { id: "p0-9", text: "Configurer Expo Router", detail: "File-based routing : app/(tabs)/index, app/auth/login — 5 tabs : journal / recherche / planning / courses / profil" },
+              { id: "p0-10", text: "Installer NativeWind v4 (Tailwind v3)", detail: "NativeWind v4 + tailwindcss v3 uniquement — NativeWind v4 n'est pas compatible avec Tailwind v4" },
+              { id: "p0-11", text: "Tester sur appareil Android via Expo Go", detail: "Expo Go sur l'émulateur, hot reload immédiat — pas besoin de builder un APK pour développer" },
+            ]
+          },
+          {
+            name: "Backend — Squelette + Observabilité initiale", tasks: [
+              { id: "p0-12", text: "Créer le projet NestJS", detail: "nest new api, TypeScript strict, structure modulaire : auth/, foods/, diary/, planning/, shopping/, health/" },
+              { id: "p0-13", text: "Configurer Prisma 7 + PostgreSQL (Docker local)", detail: "Docker Compose postgres:17-alpine — prisma init + prisma.config.ts. Import depuis '../../generated/prisma/client' (Prisma 7). Railway = staging/prod uniquement, configuré en P9." },
+              { id: "p0-14", text: "Docker Compose local (PostgreSQL + Redis)", detail: "Lance la BDD et Redis en local avec une seule commande, sans rien installer sur la machine" },
+              { id: "p0-15", text: "Remplacer le logger NestJS par Pino", detail: "nestjs-pino : logs JSON structurés dès le départ — chaque requête loguée avec méthode, route, durée, statusCode" },
+              { id: "p0-16", text: "Connecter Pino → Axiom", detail: "pino-axiom transport : logs vers Axiom (50GB/mois gratuit) — dashboard de logs dès le premier démarrage" },
+              { id: "p0-17", text: "Initialiser Sentry sur NestJS", detail: "@sentry/nestjs, DSN configuré via variable d'env — capturer les premières exceptions dès le dev" },
+              { id: "p0-18", text: "Variables d'environnement + validation Zod au boot", detail: "ConfigModule NestJS + Zod : l'API refuse de démarrer si une variable est manquante ou mal typée" },
+            ]
+          },
+        ]
+      },
 
-  <div class="summary">
-    <div class="summary-cell"><div class="summary-label">DURÉE ESTIMÉE</div><div class="summary-value">~16–20 semaines</div><div class="summary-sub">Meal planning + courses ajoutent ~3–4 sem.</div></div>
-    <div class="summary-cell"><div class="summary-label">PHASES</div><div class="summary-value">P0 → P9 (10 phases)</div><div class="summary-sub">P5 + P6 nouvelles depuis v4</div></div>
-    <div class="summary-cell"><div class="summary-label">QUALITÉ CODE</div><div class="summary-value">SonarCloud dès P0</div><div class="summary-sub">Bloque les PRs si régression</div></div>
-    <div class="summary-cell"><div class="summary-label">LIVRABLE CLÉ</div><div class="summary-value">APK Android</div><div class="summary-sub">Distribué via EAS Build automatique</div></div>
-  </div>
-  <div class="footer">COOKED — PLAN v4 — 2026</div>
-</div>
+      {
+        id: "P1", title: "Auth & Profil Utilisateur", duration: "1–2 semaines", color: "#FB923C",
+        objective: "L'utilisateur peut créer un compte, se connecter, renseigner son profil nutritionnel et voir ses objectifs calculés",
+        categories: [
+          {
+            name: "Authentification", tasks: [
+              { id: "p1-1", text: "Intégrer Better Auth dans NestJS", detail: "better-auth installé dans apps/api — prisma adapter configuré, schéma User généré, endpoints auth exposés automatiquement (/api/auth/*). BETTER_AUTH_SECRET en variable d'env" },
+              { id: "p1-2", text: "Écran Register", detail: "Formulaire prénom + email + password + validation Zod côté client, feedback erreur clair, note sur onboarding à suivre" },
+              { id: "p1-3", text: "Écran Login", detail: "Session Better Auth gérée par @better-auth/expo — tokens stockés dans expo-secure-store (iOS Keychain / Android Keystore), refresh automatique" },
+              { id: "p1-4", text: "Middleware d'auth Expo Router", detail: "Redirect automatique vers /auth/login si session Better Auth absente ou expirée" },
+              { id: "p1-5", text: "Initialiser Sentry React Native", detail: "@sentry/react-native avec userId taggé — chaque crash associé à l'utilisateur concerné" },
+              { id: "p1-6b", text: "Configurer EAS Dev Build", detail: "Installer expo-dev-client, créer eas.json profil development, builder l'APK Dev Build via EAS — remplace définitivement Expo Go. Requis pour expo-secure-store, @sentry/react-native et tout module natif." },
+              { id: "p1-6c", text: "Installer TanStack Query v5", detail: "@tanstack/react-query — QueryClientProvider en racine de l'app, React Query Devtools en dev. Utilisé dès P1 pour les appels auth et profil." },
+            ]
+          },
+          {
+            name: "Profil & Objectifs (Onboarding 3 étapes)", tasks: [
+              { id: "p1-6", text: "Schema Prisma : User + Profile", detail: "age, poids, taille, sexeBiologique, niveauActivite (×1.2/×1.375/×1.55/×1.725), objectif (PERTE/MAINTIEN/MUSCLE)" },
+              { id: "p1-7", text: "Calcul automatique TDEE", detail: "Formule Mifflin-St Jeor → calories cibles journalières + répartition macros (protéines 30% / glucides 40% / lipides 30% pour MUSCLE — ajustable). Recalcul si profil modifié." },
+              { id: "p1-8", text: "Onboarding Step 1 — Infos physiques", detail: "Date de naissance, taille, poids actuel, sexe biologique. Step dots de progression en haut de l'écran." },
+              { id: "p1-9", text: "Onboarding Step 2 — Activité & Objectif", detail: "Sélecteur niveau d'activité (4 choix avec facteur multiplicateur visible) + objectif (Perdre / Maintenir / Muscle) avec delta kcal affiché." },
+              { id: "p1-10", text: "Onboarding Step 3 — Résumé TDEE", detail: "Affiche TDEE calculé en gros, TDEE de base + ajustement, répartition macros en g et %. Bouton 'Commencer à logger'." },
+              { id: "p1-11", text: "Écran Modifier profil (accessible depuis Profil)", detail: "Mêmes champs que l'onboarding, recalcul TDEE automatique si poids/taille/activité change." },
+            ]
+          },
+        ]
+      },
 
-<script>
-const phases = [
-  { id:"P0", title:"Setup & Architecture", duration:"1 semaine", color:"#94A3B8",
-    objective:"Poser des fondations solides — outillage, qualité et observabilité dès le départ",
-    categories:[
-      { name:"Monorepo & Tooling", tasks:[
-        {id:"p0-1",text:"Créer le monorepo Turborepo",detail:"apps/mobile, apps/api, packages/shared — une seule commande lance tout"},
-        {id:"p0-2",text:"Configurer TypeScript strict partagé",detail:"tsconfig dans packages/shared, strict: true — les types Zod partagés front/back/mobile dès maintenant"},
-        {id:"p0-3",text:"Biome + Husky + lint-staged + commitlint",detail:"Biome remplace ESLint + Prettier (lint + format en un seul outil). Husky + lint-staged bloquants sur pre-commit, commitlint pour les Conventional Commits"},
-        {id:"p0-4",text:"Initialiser Git + GitHub, stratégie de branches",detail:"main (prod) / develop / feature/* — règle : on ne push jamais sur main directement"},
-      ]},
-      { name:"CI/CD — Pipeline de base", tasks:[
-        {id:"p0-5",text:"GitHub Actions : workflow lint + tests sur chaque PR",detail:"turborepo run lint test — bloque le merge automatiquement si ça fail"},
-        {id:"p0-6",text:"Intégrer SonarCloud dès le setup",detail:"Analyse qualité + sécurité sur chaque PR : complexité, duplication, vulnérabilités — gratuit repo public"},
-        {id:"p0-7",text:"Configurer les secrets GitHub Actions",detail:"SUPABASE_URL, RAILWAY_TOKEN, EAS_TOKEN, SONAR_TOKEN — jamais en clair dans le code"},
-      ]},
-      { name:"Expo & React Native (Managed Workflow)", tasks:[
-        {id:"p0-8",text:"Créer l'app Expo (SDK 55, Managed Workflow)",detail:"npx create-expo-app — Managed : pas de dossier android/ ios/ à gérer, Expo s'en charge via EAS"},
-        {id:"p0-9",text:"Configurer Expo Router",detail:"File-based routing : app/(tabs)/index, app/auth/login — 5 tabs : journal / recherche / planning / courses / profil"},
-        {id:"p0-10",text:"Installer NativeWind v4 (Tailwind v3)",detail:"NativeWind v4 + tailwindcss v3 uniquement — NativeWind v4 n'est pas compatible avec Tailwind v4"},
-        {id:"p0-11",text:"Tester sur appareil Android via Expo Go",detail:"Expo Go sur l'émulateur, hot reload immédiat — pas besoin de builder un APK pour développer"},
-      ]},
-      { name:"Backend — Squelette + Observabilité initiale", tasks:[
-        {id:"p0-12",text:"Créer le projet NestJS",detail:"nest new api, TypeScript strict, structure modulaire : auth/, foods/, diary/, planning/, shopping/, health/"},
-        {id:"p0-13",text:"Configurer Prisma 7 + PostgreSQL (Docker local)",detail:"Docker Compose postgres:17-alpine — prisma init + prisma.config.ts. Import depuis '../../generated/prisma/client' (Prisma 7). Railway = staging/prod uniquement, configuré en P9."},
-        {id:"p0-14",text:"Docker Compose local (PostgreSQL + Redis)",detail:"Lance la BDD et Redis en local avec une seule commande, sans rien installer sur la machine"},
-        {id:"p0-15",text:"Remplacer le logger NestJS par Pino",detail:"nestjs-pino : logs JSON structurés dès le départ — chaque requête loguée avec méthode, route, durée, statusCode"},
-        {id:"p0-16",text:"Connecter Pino → Axiom",detail:"pino-axiom transport : logs vers Axiom (50GB/mois gratuit) — dashboard de logs dès le premier démarrage"},
-        {id:"p0-17",text:"Initialiser Sentry sur NestJS",detail:"@sentry/nestjs, DSN configuré via variable d'env — capturer les premières exceptions dès le dev"},
-        {id:"p0-18",text:"Variables d'environnement + validation Zod au boot",detail:"ConfigModule NestJS + Zod : l'API refuse de démarrer si une variable est manquante ou mal typée"},
-      ]},
-    ]
-  },
+      {
+        id: "P2", title: "Base de données alimentaires & Micronutriments", duration: "1–2 semaines", color: "#4ADE80",
+        objective: "Rechercher un aliment, obtenir ses macros ET micronutriments — fondation de tout le tracking nutritionnel",
+        categories: [
+          {
+            name: "Intégration APIs externes", tasks: [
+              { id: "p2-1", text: "Module NestJS : FoodService", detail: "Service dédié orchestrant USDA (aliments de base, micronutriments complets) et Open Food Facts (produits scannables, pnns_groups pour catégorisation)" },
+              { id: "p2-2", text: "Intégrer USDA FoodData Central", detail: "Clé API gratuite — aliments non transformés ultra-complets : macros + vitamines (A/B1/B2/B3/B5/B6/B9/B12/C/D/E/K) + minéraux (Ca/Fe/Mg/K/Zn/P/Se...)" },
+              { id: "p2-3", text: "Intégrer Open Food Facts", detail: "Recherche par code-barre ET par nom, gratuit, 3M+ produits. Expose pnns_groups_1 et pnns_groups_2 pour mapper vers FoodCategory. Données micronutriments souvent incomplètes sur produits transformés — prévoir alerte UI." },
+              { id: "p2-4", text: "Intégrer Edamam (optionnel MVP)", detail: "Recherche NLP : '100g de poulet grillé' — 1000 req/mois gratuit" },
+            ]
+          },
+          {
+            name: "Schema Prisma — Food + Micronutriments + Catégorie", tasks: [
+              { id: "p2-5", text: "Modèle Food — macros + ~30 champs micronutriments", detail: "kcal, protéines, glucides, lipides, fibres + vitamines (vitA/vitB1/vitB2/vitB3/vitB5/vitB6/vitB9/vitB12/vitC/vitD/vitE/vitK) + minéraux (calcium/fer/magnesium/potassium/zinc/phosphore/selenium/sodium/cuivre/manganese). Tous nullable car données souvent partielles." },
+              { id: "p2-6", text: "Enum FoodCategory dans Prisma", detail: "PROTEIN / STARCH / VEGETABLE / FRUIT / DAIRY / FAT / OTHER — utilisé pour le groupage de la liste de courses. Mapper depuis pnns_groups OFF ou type USDA. Fallback = OTHER si donnée absente." },
+              { id: "p2-7", text: "Stratégie cache Redis (TTL 7 jours)", detail: "Clé = source:id (ex: usda:168880 / off:3017620425603), survit aux redémarrages API, partagé si plusieurs instances" },
+              { id: "p2-8", text: "Endpoint recherche unifié GET /foods/search", detail: "Cache Redis → BDD → APIs externes — résultats dédupliqués et normalisés. Retourne macros + catégorie. Micronutriments chargés uniquement sur GET /foods/:id (détail)." },
+              { id: "p2-9", text: "Endpoint code-barre GET /foods/barcode/:code", detail: "Open Food Facts en priorité, fallback cache BDD local, réponse < 200ms si en cache" },
+              { id: "p2-10", text: "Endpoint détail aliment GET /foods/:id", detail: "Retourne macros + tous les micronutriments disponibles. Inclut un booléen microDataComplete pour savoir si les données micro sont fiables." },
+            ]
+          },
+          {
+            name: "UI Mobile — Recherche & Détail aliment", tasks: [
+              { id: "p2-11", text: "Écran Recherche", detail: "SearchBar avec debounce 300ms + bouton scan intégré (▦) dans la barre — le scan n'est pas un tab dédié, c'est une façon de rechercher. Filtres : Récents / Fréquents / Mes aliments / Mes repas." },
+              { id: "p2-12", text: "Écran Détail aliment — 2 onglets", detail: "Onglet Macros : calories, protéines, glucides, lipides avec recalcul en temps réel. Onglet Micronutriments : liste vitamines + minéraux avec valeurs per 100g. Alerte si microDataComplete = false." },
+              { id: "p2-13", text: "Composant PortionSelector", detail: "Sélecteur quantité (g/ml) + presets rapides (50g/100g/150g/200g) avec recalcul macros ET micronutriments en temps réel. Sélecteur repas cible (Petit-déj / Déjeuner / Dîner / Collation)." },
+            ]
+          },
+        ]
+      },
 
-  { id:"P1", title:"Auth & Profil Utilisateur", duration:"1–2 semaines", color:"#FB923C",
-    objective:"L'utilisateur peut créer un compte, se connecter, renseigner son profil nutritionnel et voir ses objectifs calculés",
-    categories:[
-      { name:"Authentification", tasks:[
-        {id:"p1-1",text:"Intégrer Better Auth dans NestJS",detail:"better-auth installé dans apps/api — prisma adapter configuré, schéma User généré, endpoints auth exposés automatiquement (/api/auth/*). BETTER_AUTH_SECRET en variable d'env"},
-        {id:"p1-2",text:"Écran Register",detail:"Formulaire prénom + email + password + validation Zod côté client, feedback erreur clair, note sur onboarding à suivre"},
-        {id:"p1-3",text:"Écran Login",detail:"Session Better Auth gérée par @better-auth/expo — tokens stockés dans expo-secure-store (iOS Keychain / Android Keystore), refresh automatique"},
-        {id:"p1-4",text:"Middleware d'auth Expo Router",detail:"Redirect automatique vers /auth/login si session Better Auth absente ou expirée"},
-        {id:"p1-5",text:"Initialiser Sentry React Native",detail:"@sentry/react-native avec userId taggé — chaque crash associé à l'utilisateur concerné"},
-        {id:"p1-6b",text:"Configurer EAS Dev Build",detail:"Installer expo-dev-client, créer eas.json profil development, builder l'APK Dev Build via EAS — remplace définitivement Expo Go. Requis pour expo-secure-store, @sentry/react-native et tout module natif."},
-        {id:"p1-6c",text:"Installer TanStack Query v5",detail:"@tanstack/react-query — QueryClientProvider en racine de l'app, React Query Devtools en dev. Utilisé dès P1 pour les appels auth et profil."},
-      ]},
-      { name:"Profil & Objectifs (Onboarding 3 étapes)", tasks:[
-        {id:"p1-6",text:"Schema Prisma : User + Profile",detail:"age, poids, taille, sexeBiologique, niveauActivite (×1.2/×1.375/×1.55/×1.725), objectif (PERTE/MAINTIEN/MUSCLE)"},
-        {id:"p1-7",text:"Calcul automatique TDEE",detail:"Formule Mifflin-St Jeor → calories cibles journalières + répartition macros (protéines 30% / glucides 40% / lipides 30% pour MUSCLE — ajustable). Recalcul si profil modifié."},
-        {id:"p1-8",text:"Onboarding Step 1 — Infos physiques",detail:"Date de naissance, taille, poids actuel, sexe biologique. Step dots de progression en haut de l'écran."},
-        {id:"p1-9",text:"Onboarding Step 2 — Activité & Objectif",detail:"Sélecteur niveau d'activité (4 choix avec facteur multiplicateur visible) + objectif (Perdre / Maintenir / Muscle) avec delta kcal affiché."},
-        {id:"p1-10",text:"Onboarding Step 3 — Résumé TDEE",detail:"Affiche TDEE calculé en gros, TDEE de base + ajustement, répartition macros en g et %. Bouton 'Commencer à logger'."},
-        {id:"p1-11",text:"Écran Modifier profil (accessible depuis Profil)",detail:"Mêmes champs que l'onboarding, recalcul TDEE automatique si poids/taille/activité change."},
-      ]},
-    ]
-  },
+      {
+        id: "P3", title: "Journal Alimentaire + Micronutriments + Stats", duration: "2 semaines", color: "#61DAFB",
+        objective: "Logger ses repas, suivre macros ET micronutriments au quotidien, visualiser ses stats dans l'onglet Profil",
+        categories: [
+          {
+            name: "Backend — Journaux & Agrégats nutritionnels", tasks: [
+              { id: "p3-1", text: "Schema Prisma : DiaryEntry + Meal + FoodLog", detail: "DiaryEntry (date, userId) → Meals (BREAKFAST/LUNCH/DINNER/SNACK) → FoodLog (foodId, quantité, macros snapshot, micronutriments snapshot au moment du log)" },
+              { id: "p3-2", text: "CRUD DiaryEntry", detail: "GET /diary/:date, POST /diary/entry, PATCH /diary/entry/:id, DELETE /diary/entry/:id" },
+              { id: "p3-3", text: "Endpoint agrégat macros GET /diary/:date/summary", detail: "Total calories, protéines, glucides, lipides, % objectifs — calculé server-side. Inclut restant par macro." },
+              { id: "p3-4", text: "Endpoint agrégat micronutriments GET /diary/:date/micros", detail: "Somme de chaque micronutriment sur la journée, AJR de référence par nutriment, % AJR atteint. Calcule un score /100 global basé sur les 10 nutriments les plus courants." },
+              { id: "p3-5", text: "Endpoint stats hebdomadaires GET /stats/weekly", detail: "Calories moy/jour, jours dans les objectifs, macros moy, top 5 aliments de la semaine. Affiché dans l'onglet Profil." },
+              { id: "p3-6", text: "Repas récents / fréquents GET /diary/recents", detail: "10 derniers aliments consommés pour ajout rapide" },
+            ]
+          },
+          {
+            name: "UI Mobile — Journal (card Macros + card Micro)", tasks: [
+              { id: "p3-7", text: "Écran Journal — Card Macros", detail: "Anneau SVG calories consommées/objectif + barres Protéines/Glucides/Lipides. Affiche : consommé / objectif + restant. Masquable via paramètres d'affichage." },
+              { id: "p3-8", text: "Écran Journal — Card Micronutriments", detail: "Score nutritionnel /100 sous forme de mini jauge circulaire + top 5 déficits du jour (vitamines/minéraux les plus insuffisants) avec barres de progression colorées (rouge < 30% / jaune 30–70% / vert > 70%). Bouton 'Voir tous'. Masquable via paramètres d'affichage." },
+              { id: "p3-9", text: "Écran Micronutriments complet", detail: "Deux sections : Vitamines et Minéraux. Chaque nutriment = ligne avec icône + nom + valeur absolue (mg/µg) + AJR + barre de progression colorée + %. Cliquable → Écran détail nutriment." },
+              { id: "p3-10", text: "Écran Détail nutriment", detail: "Grande valeur principale (DM Mono), jauge valeur/AJR, rôle physiologique, liste des meilleures sources alimentaires avec gain estimé (+X mg), graphique tendance 7 jours en barres." },
+              { id: "p3-11", text: "4 sections repas expandables", detail: "Petit-déjeuner / Déjeuner / Dîner / Collations. Chaque section affiche total kcal + bouton + + chevron expand/collapse. Items : nom / marque+quantité / kcal (DM Mono)." },
+              { id: "p3-12", text: "Navigation date (swipe + flèches)", detail: "Flèches ‹ › pour changer de jour, swipe gauche/droite avec react-native-gesture-handler" },
+              { id: "p3-13", text: "Section 'Récemment mangé' sur l'ajout", detail: "80% des ajouts en 2 taps — affiche les récents avant de taper dans la search bar" },
+              { id: "p3-14", text: "TanStack Query : cache + optimistic updates", detail: "L'aliment apparaît dans le journal instantanément avant la confirmation serveur — pas de lag perçu" },
+            ]
+          },
+          {
+            name: "Paramètres d'affichage", tasks: [
+              { id: "p3-15", text: "Schema Prisma : UserSettings", detail: "toggleMacros (boolean, défaut true) + toggleMicros (boolean, défaut true) par utilisateur. Stocké en BDD, synchronisé entre devices." },
+              { id: "p3-16", text: "Écran Paramètres affichage", detail: "2 toggles indépendants : 'Macronutriments' et 'Micronutriments'. Aperçu live des cards du journal qui s'activent/désactivent en temps réel. Note explicative : le planning et les courses ne sont pas affectés." },
+            ]
+          },
+          {
+            name: "Stats dans Profil", tasks: [
+              { id: "p3-17", text: "Section Stats dans l'écran Profil", detail: "Mini graphique barres calories 7 jours + chiffres résumés semaine (kcal moy, jours objectif atteint). Bouton 'Voir stats détaillées' → écran stats complet (hors tab bar)." },
+              { id: "p3-18", text: "Écran Stats complet (accès depuis Profil)", detail: "Graphique barres calories 7j (react-native-gifted-charts), breakdown macros hebdo en graphique camembert, streak de jours dans les objectifs. Pas de tab dédiée — accessible via Profil uniquement." },
+            ]
+          },
+        ]
+      },
 
-  { id:"P2", title:"Base de données alimentaires & Micronutriments", duration:"1–2 semaines", color:"#4ADE80",
-    objective:"Rechercher un aliment, obtenir ses macros ET micronutriments — fondation de tout le tracking nutritionnel",
-    categories:[
-      { name:"Intégration APIs externes", tasks:[
-        {id:"p2-1",text:"Module NestJS : FoodService",detail:"Service dédié orchestrant USDA (aliments de base, micronutriments complets) et Open Food Facts (produits scannables, pnns_groups pour catégorisation)"},
-        {id:"p2-2",text:"Intégrer USDA FoodData Central",detail:"Clé API gratuite — aliments non transformés ultra-complets : macros + vitamines (A/B1/B2/B3/B5/B6/B9/B12/C/D/E/K) + minéraux (Ca/Fe/Mg/K/Zn/P/Se...)"},
-        {id:"p2-3",text:"Intégrer Open Food Facts",detail:"Recherche par code-barre ET par nom, gratuit, 3M+ produits. Expose pnns_groups_1 et pnns_groups_2 pour mapper vers FoodCategory. Données micronutriments souvent incomplètes sur produits transformés — prévoir alerte UI."},
-        {id:"p2-4",text:"Intégrer Edamam (optionnel MVP)",detail:"Recherche NLP : '100g de poulet grillé' — 1000 req/mois gratuit"},
-      ]},
-      { name:"Schema Prisma — Food + Micronutriments + Catégorie", tasks:[
-        {id:"p2-5",text:"Modèle Food — macros + ~30 champs micronutriments",detail:"kcal, protéines, glucides, lipides, fibres + vitamines (vitA/vitB1/vitB2/vitB3/vitB5/vitB6/vitB9/vitB12/vitC/vitD/vitE/vitK) + minéraux (calcium/fer/magnesium/potassium/zinc/phosphore/selenium/sodium/cuivre/manganese). Tous nullable car données souvent partielles."},
-        {id:"p2-6",text:"Enum FoodCategory dans Prisma",detail:"PROTEIN / STARCH / VEGETABLE / FRUIT / DAIRY / FAT / OTHER — utilisé pour le groupage de la liste de courses. Mapper depuis pnns_groups OFF ou type USDA. Fallback = OTHER si donnée absente."},
-        {id:"p2-7",text:"Stratégie cache Redis (TTL 7 jours)",detail:"Clé = source:id (ex: usda:168880 / off:3017620425603), survit aux redémarrages API, partagé si plusieurs instances"},
-        {id:"p2-8",text:"Endpoint recherche unifié GET /foods/search",detail:"Cache Redis → BDD → APIs externes — résultats dédupliqués et normalisés. Retourne macros + catégorie. Micronutriments chargés uniquement sur GET /foods/:id (détail)."},
-        {id:"p2-9",text:"Endpoint code-barre GET /foods/barcode/:code",detail:"Open Food Facts en priorité, fallback cache BDD local, réponse < 200ms si en cache"},
-        {id:"p2-10",text:"Endpoint détail aliment GET /foods/:id",detail:"Retourne macros + tous les micronutriments disponibles. Inclut un booléen microDataComplete pour savoir si les données micro sont fiables."},
-      ]},
-      { name:"UI Mobile — Recherche & Détail aliment", tasks:[
-        {id:"p2-11",text:"Écran Recherche",detail:"SearchBar avec debounce 300ms + bouton scan intégré (▦) dans la barre — le scan n'est pas un tab dédié, c'est une façon de rechercher. Filtres : Récents / Fréquents / Mes aliments / Mes repas."},
-        {id:"p2-12",text:"Écran Détail aliment — 2 onglets",detail:"Onglet Macros : calories, protéines, glucides, lipides avec recalcul en temps réel. Onglet Micronutriments : liste vitamines + minéraux avec valeurs per 100g. Alerte si microDataComplete = false."},
-        {id:"p2-13",text:"Composant PortionSelector",detail:"Sélecteur quantité (g/ml) + presets rapides (50g/100g/150g/200g) avec recalcul macros ET micronutriments en temps réel. Sélecteur repas cible (Petit-déj / Déjeuner / Dîner / Collation)."},
-      ]},
-    ]
-  },
+      {
+        id: "P4", title: "Scan Code-barre", duration: "3–5 jours", color: "#9B6EFF",
+        objective: "Scanner un produit du commerce depuis l'écran Recherche et l'ajouter instantanément — killer feature mobile",
+        categories: [
+          {
+            name: "Implémentation", tasks: [
+              { id: "p4-1", text: "Installer expo-barcode-scanner (Managed Workflow)", detail: "Ajout dans app.json plugins — Expo gère les permissions caméra Android/iOS automatiquement, pas de code natif à écrire. expo install pour gérer la compatibilité SDK 55." },
+              { id: "p4-2", text: "Bouton scan intégré dans l'écran Recherche", detail: "Icône ▦ dans la barre de recherche (côté droit) — ouvre la caméra en modal. Pas un tab dédié : le scan est une façon de rechercher, pas une destination." },
+              { id: "p4-3", text: "Écran Scanner (modal)", detail: "Overlay caméra dark, cadre de visée avec coins orange animés, barre de scan animée (CSS keyframes haut/bas), bouton 'Saisie manuelle' en bas, bouton fermer en haut. Animation scan = CSS only, pas de lib." },
+              { id: "p4-4", text: "Flow complet : scan → fiche → journal", detail: "Scan → GET /foods/barcode/:code → Écran Détail aliment (onglet Macros par défaut) → PortionSelector → POST /diary/entry — tout en < 3 secondes si produit en cache." },
+              { id: "p4-5", text: "Gestion produit inconnu", detail: "Code-barre introuvable : formulaire saisie manuelle (nom + kcal/100g + macros) ou lien vers Open Food Facts pour contribuer. Le produit créé manuellement est sauvegardé en BDD pour les prochaines fois." },
+            ]
+          },
+        ]
+      },
 
-  { id:"P3", title:"Journal Alimentaire + Micronutriments + Stats", duration:"2 semaines", color:"#61DAFB",
-    objective:"Logger ses repas, suivre macros ET micronutriments au quotidien, visualiser ses stats dans l'onglet Profil",
-    categories:[
-      { name:"Backend — Journaux & Agrégats nutritionnels", tasks:[
-        {id:"p3-1",text:"Schema Prisma : DiaryEntry + Meal + FoodLog",detail:"DiaryEntry (date, userId) → Meals (BREAKFAST/LUNCH/DINNER/SNACK) → FoodLog (foodId, quantité, macros snapshot, micronutriments snapshot au moment du log)"},
-        {id:"p3-2",text:"CRUD DiaryEntry",detail:"GET /diary/:date, POST /diary/entry, PATCH /diary/entry/:id, DELETE /diary/entry/:id"},
-        {id:"p3-3",text:"Endpoint agrégat macros GET /diary/:date/summary",detail:"Total calories, protéines, glucides, lipides, % objectifs — calculé server-side. Inclut restant par macro."},
-        {id:"p3-4",text:"Endpoint agrégat micronutriments GET /diary/:date/micros",detail:"Somme de chaque micronutriment sur la journée, AJR de référence par nutriment, % AJR atteint. Calcule un score /100 global basé sur les 10 nutriments les plus courants."},
-        {id:"p3-5",text:"Endpoint stats hebdomadaires GET /stats/weekly",detail:"Calories moy/jour, jours dans les objectifs, macros moy, top 5 aliments de la semaine. Affiché dans l'onglet Profil."},
-        {id:"p3-6",text:"Repas récents / fréquents GET /diary/recents",detail:"10 derniers aliments consommés pour ajout rapide"},
-      ]},
-      { name:"UI Mobile — Journal (card Macros + card Micro)", tasks:[
-        {id:"p3-7",text:"Écran Journal — Card Macros",detail:"Anneau SVG calories consommées/objectif + barres Protéines/Glucides/Lipides. Affiche : consommé / objectif + restant. Masquable via paramètres d'affichage."},
-        {id:"p3-8",text:"Écran Journal — Card Micronutriments",detail:"Score nutritionnel /100 sous forme de mini jauge circulaire + top 5 déficits du jour (vitamines/minéraux les plus insuffisants) avec barres de progression colorées (rouge < 30% / jaune 30–70% / vert > 70%). Bouton 'Voir tous'. Masquable via paramètres d'affichage."},
-        {id:"p3-9",text:"Écran Micronutriments complet",detail:"Deux sections : Vitamines et Minéraux. Chaque nutriment = ligne avec icône + nom + valeur absolue (mg/µg) + AJR + barre de progression colorée + %. Cliquable → Écran détail nutriment."},
-        {id:"p3-10",text:"Écran Détail nutriment",detail:"Grande valeur principale (DM Mono), jauge valeur/AJR, rôle physiologique, liste des meilleures sources alimentaires avec gain estimé (+X mg), graphique tendance 7 jours en barres."},
-        {id:"p3-11",text:"4 sections repas expandables",detail:"Petit-déjeuner / Déjeuner / Dîner / Collations. Chaque section affiche total kcal + bouton + + chevron expand/collapse. Items : nom / marque+quantité / kcal (DM Mono)."},
-        {id:"p3-12",text:"Navigation date (swipe + flèches)",detail:"Flèches ‹ › pour changer de jour, swipe gauche/droite avec react-native-gesture-handler"},
-        {id:"p3-13",text:"Section 'Récemment mangé' sur l'ajout",detail:"80% des ajouts en 2 taps — affiche les récents avant de taper dans la search bar"},
-        {id:"p3-14",text:"TanStack Query : cache + optimistic updates",detail:"L'aliment apparaît dans le journal instantanément avant la confirmation serveur — pas de lag perçu"},
-      ]},
-      { name:"Paramètres d'affichage", tasks:[
-        {id:"p3-15",text:"Schema Prisma : UserSettings",detail:"toggleMacros (boolean, défaut true) + toggleMicros (boolean, défaut true) par utilisateur. Stocké en BDD, synchronisé entre devices."},
-        {id:"p3-16",text:"Écran Paramètres affichage",detail:"2 toggles indépendants : 'Macronutriments' et 'Micronutriments'. Aperçu live des cards du journal qui s'activent/désactivent en temps réel. Note explicative : le planning et les courses ne sont pas affectés."},
-      ]},
-      { name:"Stats dans Profil", tasks:[
-        {id:"p3-17",text:"Section Stats dans l'écran Profil",detail:"Mini graphique barres calories 7 jours + chiffres résumés semaine (kcal moy, jours objectif atteint). Bouton 'Voir stats détaillées' → écran stats complet (hors tab bar)."},
-        {id:"p3-18",text:"Écran Stats complet (accès depuis Profil)",detail:"Graphique barres calories 7j (react-native-gifted-charts), breakdown macros hebdo en graphique camembert, streak de jours dans les objectifs. Pas de tab dédiée — accessible via Profil uniquement."},
-      ]},
-    ]
-  },
+      {
+        id: "P5", title: "Meal Planning & Recettes", duration: "2–3 semaines", color: "#2DD4BF",
+        objective: "Planifier ses repas à la semaine, gérer ses recettes perso, préparer le terrain pour la liste de courses",
+        categories: [
+          {
+            name: "Schema Prisma — Planning & Recettes", tasks: [
+              { id: "p5-1", text: "Modèle MealPlan + PlannedMeal", detail: "MealPlan (semaine, userId) → PlannedMeal (dayOfWeek LUNDI..DIMANCHE, slot BREAKFAST/LUNCH/DINNER/SNACK, recipeId?, foodLogIds[]). Un slot peut contenir une recette ou des aliments individuels." },
+              { id: "p5-2", text: "Modèle Recipe + RecipeIngredient", detail: "Recipe (nom, portions, tempsPréparation, étapes[], userId, isPublic). RecipeIngredient (recipeId, foodId, quantité, unité). Macros/micronutriments calculés dynamiquement à partir des ingrédients." },
+            ]
+          },
+          {
+            name: "Backend — Planning", tasks: [
+              { id: "p5-3", text: "CRUD MealPlan", detail: "GET /planning/week/:weekStart, POST /planning/slot (assigne recette ou aliment à un slot), DELETE /planning/slot/:id" },
+              { id: "p5-4", text: "Endpoint copier une journée", detail: "POST /planning/copy-day : duplique tous les slots d'un jour vers un autre jour de la même semaine — 'Répéter mercredi'" },
+              { id: "p5-5", text: "CRUD Recipe", detail: "GET /recipes, GET /recipes/:id, POST /recipes, PATCH /recipes/:id, DELETE /recipes/:id. Calcul automatique des macros totaux par portion." },
+              { id: "p5-6", text: "Endpoint agrégat planning GET /planning/week/:weekStart/summary", detail: "Total kcal planifiées par jour, slots vides vs remplis — affiché dans le calendrier strip." },
+            ]
+          },
+          {
+            name: "UI Mobile — Planning semaine", tasks: [
+              { id: "p5-7", text: "Écran Planning semaine (tab 📅)", detail: "Calendrier strip 7 jours avec dot indicateur (teal = planifié, gris = vide). Card expandable par jour avec liste des repas planifiés. Boutons 'Générer plan auto' et 'Répéter une journée'. Accent teal (#2DD4BF) pour différencier du journal." },
+              { id: "p5-8", text: "Écran Journée planifiée", detail: "3 slots (🌅 Petit-déj / ☀️ Déjeuner / 🌙 Dîner) + Collations optionnelles. Total kcal planifiées affiché en haut. Boutons '+ Aliment' et '+ Recette' par slot. Slots vides affichés en pointillés." },
+              { id: "p5-9", text: "Écran Recette", detail: "Résumé macros (4 pills kcal/prot/gluc/lip), ingrédients avec cases à cocher, étapes numérotées. Badge 'Ma recette' si recipe.userId = currentUser. Durée de préparation." },
+              { id: "p5-10", text: "Écran Créer/Modifier recette", detail: "Formulaire nom + nb portions + durée. Ajout d'ingrédients via SearchBar (réutilise le composant de P2). Ajout des étapes une par une. Aperçu macros calculé en temps réel au fur et à mesure des ingrédients." },
+              { id: "p5-11", text: "Génération plan automatique (optionnel MVP)", detail: "Bouton 'Générer plan semaine' : suggère des recettes/aliments en fonction des objectifs macros. Implémentation simple : sélection aléatoire dans les recettes perso + aliments fréquents." },
+            ]
+          },
+        ]
+      },
 
-  { id:"P4", title:"Scan Code-barre", duration:"3–5 jours", color:"#9B6EFF",
-    objective:"Scanner un produit du commerce depuis l'écran Recherche et l'ajouter instantanément — killer feature mobile",
-    categories:[
-      { name:"Implémentation", tasks:[
-        {id:"p4-1",text:"Installer expo-barcode-scanner (Managed Workflow)",detail:"Ajout dans app.json plugins — Expo gère les permissions caméra Android/iOS automatiquement, pas de code natif à écrire. expo install pour gérer la compatibilité SDK 55."},
-        {id:"p4-2",text:"Bouton scan intégré dans l'écran Recherche",detail:"Icône ▦ dans la barre de recherche (côté droit) — ouvre la caméra en modal. Pas un tab dédié : le scan est une façon de rechercher, pas une destination."},
-        {id:"p4-3",text:"Écran Scanner (modal)",detail:"Overlay caméra dark, cadre de visée avec coins orange animés, barre de scan animée (CSS keyframes haut/bas), bouton 'Saisie manuelle' en bas, bouton fermer en haut. Animation scan = CSS only, pas de lib."},
-        {id:"p4-4",text:"Flow complet : scan → fiche → journal",detail:"Scan → GET /foods/barcode/:code → Écran Détail aliment (onglet Macros par défaut) → PortionSelector → POST /diary/entry — tout en < 3 secondes si produit en cache."},
-        {id:"p4-5",text:"Gestion produit inconnu",detail:"Code-barre introuvable : formulaire saisie manuelle (nom + kcal/100g + macros) ou lien vers Open Food Facts pour contribuer. Le produit créé manuellement est sauvegardé en BDD pour les prochaines fois."},
-      ]},
-    ]
-  },
+      {
+        id: "P6", title: "Liste de Courses", duration: "1 semaine", color: "#34D399",
+        objective: "Générer automatiquement la liste de courses depuis le meal plan, la gérer et la partager",
+        categories: [
+          {
+            name: "Schema Prisma — Courses", tasks: [
+              { id: "p6-1", text: "Modèle ShoppingList + ShoppingItem", detail: "ShoppingList (semaine, userId, mealPlanId?). ShoppingItem (nom, quantité?, unité?, catégorie FoodCategory, isChecked, isManual, foodId?). Un item manual n'a pas de foodId." },
+            ]
+          },
+          {
+            name: "Backend — Courses", tasks: [
+              { id: "p6-2", text: "Endpoint génération liste POST /shopping/generate", detail: "Agrège tous les ingrédients du MealPlan de la semaine. Regroupe par foodId (additionne les quantités). Mappe chaque aliment vers FoodCategory via food.category. Items sans food → OTHER." },
+              { id: "p6-3", text: "CRUD ShoppingList + items", detail: "GET /shopping/:weekStart, PATCH /shopping/item/:id (cocher/décocher, changer catégorie), POST /shopping/item (ajout manuel), DELETE /shopping/item/:id" },
+              { id: "p6-4", text: "Endpoint export liste GET /shopping/:id/export", detail: "Retourne la liste en texte plat par catégorie — pour le partage via l'OS (Share API React Native)" },
+            ]
+          },
+          {
+            name: "UI Mobile — Courses", tasks: [
+              { id: "p6-5", text: "Écran Courses — Vue groupée par catégorie (tab 🛒)", detail: "Toggle en haut : 'Par catégorie' | 'Liste à plat'. Vue groupée par défaut. Sections : 🥩 Protéines / 🍚 Féculents / 🥦 Légumes / 🍎 Fruits / 🥛 Laitiers / 🧴 Hygiène / 🧹 Entretien / 🥫 Épicerie / 📦 Autre. Barre de progression cochés/total." },
+              { id: "p6-6", text: "Écran Courses — Vue à plat", detail: "Même liste sans sections. Badge catégorie coloré sur chaque ligne. Articles cochés barrés et grisés." },
+              { id: "p6-7", text: "Écran Ajouter manuellement", detail: "Formulaire : nom (obligatoire) + quantité (optionnel, texte libre). Sélecteur catégorie parmi les 9 catégories. Note : les articles manuels sont distingués visuellement dans la liste (icône ✏️ + couleur teal). Press long sur un article → modifier la catégorie." },
+              { id: "p6-8", text: "Cases à cocher interactives", detail: "Tap sur un article = coche/décoche. Item coché = texte barré + grisé. La barre de progression en haut se met à jour. État persisté en BDD (pas perdu si on ferme l'app)." },
+              { id: "p6-9", text: "Partage de la liste", detail: "Bouton 'Partager ↗' → Share API React Native → export texte plat par catégorie (SMS, WhatsApp, copier...)." },
+              { id: "p6-10", text: "Bouton 'Générer depuis le planning'", detail: "Dans l'écran Planning semaine → bouton 🛒 qui déclenche POST /shopping/generate et redirige vers la liste. Si liste existante pour la semaine : demande de confirmation avant écrasement." },
+            ]
+          },
+        ]
+      },
 
-  { id:"P5", title:"Meal Planning & Recettes", duration:"2–3 semaines", color:"#2DD4BF",
-    objective:"Planifier ses repas à la semaine, gérer ses recettes perso, préparer le terrain pour la liste de courses",
-    categories:[
-      { name:"Schema Prisma — Planning & Recettes", tasks:[
-        {id:"p5-1",text:"Modèle MealPlan + PlannedMeal",detail:"MealPlan (semaine, userId) → PlannedMeal (dayOfWeek LUNDI..DIMANCHE, slot BREAKFAST/LUNCH/DINNER/SNACK, recipeId?, foodLogIds[]). Un slot peut contenir une recette ou des aliments individuels."},
-        {id:"p5-2",text:"Modèle Recipe + RecipeIngredient",detail:"Recipe (nom, portions, tempsPréparation, étapes[], userId, isPublic). RecipeIngredient (recipeId, foodId, quantité, unité). Macros/micronutriments calculés dynamiquement à partir des ingrédients."},
-      ]},
-      { name:"Backend — Planning", tasks:[
-        {id:"p5-3",text:"CRUD MealPlan",detail:"GET /planning/week/:weekStart, POST /planning/slot (assigne recette ou aliment à un slot), DELETE /planning/slot/:id"},
-        {id:"p5-4",text:"Endpoint copier une journée",detail:"POST /planning/copy-day : duplique tous les slots d'un jour vers un autre jour de la même semaine — 'Répéter mercredi'"},
-        {id:"p5-5",text:"CRUD Recipe",detail:"GET /recipes, GET /recipes/:id, POST /recipes, PATCH /recipes/:id, DELETE /recipes/:id. Calcul automatique des macros totaux par portion."},
-        {id:"p5-6",text:"Endpoint agrégat planning GET /planning/week/:weekStart/summary",detail:"Total kcal planifiées par jour, slots vides vs remplis — affiché dans le calendrier strip."},
-      ]},
-      { name:"UI Mobile — Planning semaine", tasks:[
-        {id:"p5-7",text:"Écran Planning semaine (tab 📅)",detail:"Calendrier strip 7 jours avec dot indicateur (teal = planifié, gris = vide). Card expandable par jour avec liste des repas planifiés. Boutons 'Générer plan auto' et 'Répéter une journée'. Accent teal (#2DD4BF) pour différencier du journal."},
-        {id:"p5-8",text:"Écran Journée planifiée",detail:"3 slots (🌅 Petit-déj / ☀️ Déjeuner / 🌙 Dîner) + Collations optionnelles. Total kcal planifiées affiché en haut. Boutons '+ Aliment' et '+ Recette' par slot. Slots vides affichés en pointillés."},
-        {id:"p5-9",text:"Écran Recette",detail:"Résumé macros (4 pills kcal/prot/gluc/lip), ingrédients avec cases à cocher, étapes numérotées. Badge 'Ma recette' si recipe.userId = currentUser. Durée de préparation."},
-        {id:"p5-10",text:"Écran Créer/Modifier recette",detail:"Formulaire nom + nb portions + durée. Ajout d'ingrédients via SearchBar (réutilise le composant de P2). Ajout des étapes une par une. Aperçu macros calculé en temps réel au fur et à mesure des ingrédients."},
-        {id:"p5-11",text:"Génération plan automatique (optionnel MVP)",detail:"Bouton 'Générer plan semaine' : suggère des recettes/aliments en fonction des objectifs macros. Implémentation simple : sélection aléatoire dans les recettes perso + aliments fréquents."},
-      ]},
-    ]
-  },
+      {
+        id: "P7", title: "Observabilité complète", duration: "3–5 jours", color: "#34D399",
+        objective: "Avoir une visibilité totale sur ce qui se passe en production — anciennement P6",
+        categories: [
+          {
+            name: "Monitoring & Logs", tasks: [
+              { id: "p7-1", text: "Vérifier Sentry sur les 3 couches", detail: "NestJS + Web React + React Native — source maps configurées, userId taggé, alertes email activées" },
+              { id: "p7-2", text: "Vérifier Pino + Axiom en prod", detail: "Logs structurés visibles dans Axiom, requêtes lentes identifiables (responseTime > 1000ms)" },
+              { id: "p7-3", text: "Enrichir GET /health", detail: "Retourne : status API + latence PostgreSQL + statut Redis + version + uptime" },
+              { id: "p7-4", text: "Intégrer Prometheus dans NestJS", detail: "@willsoto/nestjs-prometheus — expose /metrics : http_requests_total, latence, connexions BDD" },
+              { id: "p7-5", text: "Déployer Grafana + connecter Prometheus", detail: "Dashboard pré-configuré : latence API, taux d'erreurs, connexions BDD/Redis — alertes sur seuils" },
+            ]
+          },
+        ]
+      },
 
-  { id:"P6", title:"Liste de Courses", duration:"1 semaine", color:"#34D399",
-    objective:"Générer automatiquement la liste de courses depuis le meal plan, la gérer et la partager",
-    categories:[
-      { name:"Schema Prisma — Courses", tasks:[
-        {id:"p6-1",text:"Modèle ShoppingList + ShoppingItem",detail:"ShoppingList (semaine, userId, mealPlanId?). ShoppingItem (nom, quantité?, unité?, catégorie FoodCategory, isChecked, isManual, foodId?). Un item manual n'a pas de foodId."},
-      ]},
-      { name:"Backend — Courses", tasks:[
-        {id:"p6-2",text:"Endpoint génération liste POST /shopping/generate",detail:"Agrège tous les ingrédients du MealPlan de la semaine. Regroupe par foodId (additionne les quantités). Mappe chaque aliment vers FoodCategory via food.category. Items sans food → OTHER."},
-        {id:"p6-3",text:"CRUD ShoppingList + items",detail:"GET /shopping/:weekStart, PATCH /shopping/item/:id (cocher/décocher, changer catégorie), POST /shopping/item (ajout manuel), DELETE /shopping/item/:id"},
-        {id:"p6-4",text:"Endpoint export liste GET /shopping/:id/export",detail:"Retourne la liste en texte plat par catégorie — pour le partage via l'OS (Share API React Native)"},
-      ]},
-      { name:"UI Mobile — Courses", tasks:[
-        {id:"p6-5",text:"Écran Courses — Vue groupée par catégorie (tab 🛒)",detail:"Toggle en haut : 'Par catégorie' | 'Liste à plat'. Vue groupée par défaut. Sections : 🥩 Protéines / 🍚 Féculents / 🥦 Légumes / 🍎 Fruits / 🥛 Laitiers / 🧴 Hygiène / 🧹 Entretien / 🥫 Épicerie / 📦 Autre. Barre de progression cochés/total."},
-        {id:"p6-6",text:"Écran Courses — Vue à plat",detail:"Même liste sans sections. Badge catégorie coloré sur chaque ligne. Articles cochés barrés et grisés."},
-        {id:"p6-7",text:"Écran Ajouter manuellement",detail:"Formulaire : nom (obligatoire) + quantité (optionnel, texte libre). Sélecteur catégorie parmi les 9 catégories. Note : les articles manuels sont distingués visuellement dans la liste (icône ✏️ + couleur teal). Press long sur un article → modifier la catégorie."},
-        {id:"p6-8",text:"Cases à cocher interactives",detail:"Tap sur un article = coche/décoche. Item coché = texte barré + grisé. La barre de progression en haut se met à jour. État persisté en BDD (pas perdu si on ferme l'app)."},
-        {id:"p6-9",text:"Partage de la liste",detail:"Bouton 'Partager ↗' → Share API React Native → export texte plat par catégorie (SMS, WhatsApp, copier...)."},
-        {id:"p6-10",text:"Bouton 'Générer depuis le planning'",detail:"Dans l'écran Planning semaine → bouton 🛒 qui déclenche POST /shopping/generate et redirige vers la liste. Si liste existante pour la semaine : demande de confirmation avant écrasement."},
-      ]},
-    ]
-  },
+      {
+        id: "P8", title: "Polish & Tests", duration: "1–2 semaines", color: "#FACC15",
+        objective: "Rendre l'app stable, testée et agréable à utiliser au quotidien — anciennement P7",
+        categories: [
+          {
+            name: "Tests", tasks: [
+              { id: "p8-1", text: "Tests unitaires NestJS (Vitest)", detail: "FoodService (calcul micros), DiaryService (agrégats), ShoppingService (groupage par catégorie), calcul TDEE/macros — logique métier critique à 80%+ coverage" },
+              { id: "p8-2", text: "Tests intégration API (Supertest)", detail: "Endpoints principaux avec BDD de test en mémoire (Prisma 7 + SQLite en test)" },
+              { id: "p8-3", text: "Tests composants React Native (Testing Library)", detail: "Journal screen (cards macros + micro), PortionSelector (recalcul), SearchBar, ShoppingList (cases à cocher)" },
+              { id: "p8-4", text: "Configurer seuil coverage SonarCloud", detail: "Bloquer le merge si coverage descend sous 70% — la CI devient gardien de la qualité" },
+            ]
+          },
+          {
+            name: "UX & Performance", tasks: [
+              { id: "p8-5", text: "Skeleton loaders partout", detail: "Remplacer les spinners par des skeletons sur liste aliments, journal, stats, planning semaine, liste de courses" },
+              { id: "p8-6", text: "Gestion erreurs globale", detail: "Error boundaries React Native, toast notifications (react-native-toast-message) — notamment pour les erreurs APIs alimentaires (OFF timeout, USDA quota)" },
+              { id: "p8-7", text: "Mode offline basique", detail: "TanStack Query persistCache (AsyncStorage) : journal + liste de courses lisibles et éditables sans réseau, sync au retour. Le cochage des articles de courses doit fonctionner offline." },
+              { id: "p8-8", text: "Optimisation FlatList", detail: "keyExtractor, getItemLayout, windowSize sur les longues listes d'aliments et de courses — scroll fluide 60fps" },
+            ]
+          },
+        ]
+      },
 
-  { id:"P7", title:"Observabilité complète", duration:"3–5 jours", color:"#34D399",
-    objective:"Avoir une visibilité totale sur ce qui se passe en production — anciennement P6",
-    categories:[
-      { name:"Monitoring & Logs", tasks:[
-        {id:"p7-1",text:"Vérifier Sentry sur les 3 couches",detail:"NestJS + Web React + React Native — source maps configurées, userId taggé, alertes email activées"},
-        {id:"p7-2",text:"Vérifier Pino + Axiom en prod",detail:"Logs structurés visibles dans Axiom, requêtes lentes identifiables (responseTime > 1000ms)"},
-        {id:"p7-3",text:"Enrichir GET /health",detail:"Retourne : status API + latence PostgreSQL + statut Redis + version + uptime"},
-        {id:"p7-4",text:"Intégrer Prometheus dans NestJS",detail:"@willsoto/nestjs-prometheus — expose /metrics : http_requests_total, latence, connexions BDD"},
-        {id:"p7-5",text:"Déployer Grafana + connecter Prometheus",detail:"Dashboard pré-configuré : latence API, taux d'erreurs, connexions BDD/Redis — alertes sur seuils"},
-      ]},
-    ]
-  },
+      {
+        id: "P9", title: "CI/CD & Mise en production", duration: "1 semaine", color: "#61DAFB",
+        objective: "Déploiement automatisé, APK Android distribué, infra prod solide — anciennement P8",
+        categories: [
+          {
+            name: "GitHub Actions — Workflows complets", tasks: [
+              { id: "p9-1", text: "Workflow PR : lint → SonarCloud → tests", detail: "Obligatoire sur toutes les branches, status check requis avant merge" },
+              { id: "p9-2", text: "Workflow deploy API : merge main → Railway", detail: "Build Docker → push image → Railway déploie → migration Prisma 7 → health check" },
+              { id: "p9-3", text: "Workflow EAS Build Android : sur git tag", detail: "git tag v1.0.0 → déclenche EAS Build cloud → APK disponible dans GitHub Releases" },
+              { id: "p9-4", text: "Expo EAS Update (OTA) : sur merge main", detail: "Mises à jour JS sans republier l'APK — correctifs en production en quelques minutes" },
+            ]
+          },
+          {
+            name: "Infra Production", tasks: [
+              { id: "p9-5", text: "Déployer NestJS sur Railway", detail: "Dockerfile multi-stage optimisé, railway.toml, variables d'env depuis Railway dashboard" },
+              { id: "p9-6", text: "Redis managé sur Railway", detail: "Redis add-on Railway, URL injectée via variable d'env — zéro config supplémentaire" },
+              { id: "p9-7", text: "Migrations Prisma automatiques en prod", detail: "prisma migrate deploy dans le workflow deploy — jamais de migration manuelle en prod" },
+              { id: "p9-8", text: "Distribution APK via EAS", detail: "EAS Submit ou distribution directe APK depuis GitHub Releases pour les beta testeurs" },
+            ]
+          },
+        ]
+      },
+    ];
 
-  { id:"P8", title:"Polish & Tests", duration:"1–2 semaines", color:"#FACC15",
-    objective:"Rendre l'app stable, testée et agréable à utiliser au quotidien — anciennement P7",
-    categories:[
-      { name:"Tests", tasks:[
-        {id:"p8-1",text:"Tests unitaires NestJS (Vitest)",detail:"FoodService (calcul micros), DiaryService (agrégats), ShoppingService (groupage par catégorie), calcul TDEE/macros — logique métier critique à 80%+ coverage"},
-        {id:"p8-2",text:"Tests intégration API (Supertest)",detail:"Endpoints principaux avec BDD de test en mémoire (Prisma 7 + SQLite en test)"},
-        {id:"p8-3",text:"Tests composants React Native (Testing Library)",detail:"Journal screen (cards macros + micro), PortionSelector (recalcul), SearchBar, ShoppingList (cases à cocher)"},
-        {id:"p8-4",text:"Configurer seuil coverage SonarCloud",detail:"Bloquer le merge si coverage descend sous 70% — la CI devient gardien de la qualité"},
-      ]},
-      { name:"UX & Performance", tasks:[
-        {id:"p8-5",text:"Skeleton loaders partout",detail:"Remplacer les spinners par des skeletons sur liste aliments, journal, stats, planning semaine, liste de courses"},
-        {id:"p8-6",text:"Gestion erreurs globale",detail:"Error boundaries React Native, toast notifications (react-native-toast-message) — notamment pour les erreurs APIs alimentaires (OFF timeout, USDA quota)"},
-        {id:"p8-7",text:"Mode offline basique",detail:"TanStack Query persistCache (AsyncStorage) : journal + liste de courses lisibles et éditables sans réseau, sync au retour. Le cochage des articles de courses doit fonctionner offline."},
-        {id:"p8-8",text:"Optimisation FlatList",detail:"keyExtractor, getItemLayout, windowSize sur les longues listes d'aliments et de courses — scroll fluide 60fps"},
-      ]},
-    ]
-  },
+    // State — P0 complet (18/18) + P1 complet (11/11)
+    const checked = {
+      "p0-1": true, "p0-2": true, "p0-3": true, "p0-4": true,
+      "p0-5": true, "p0-6": true, "p0-7": true,
+      "p0-8": true, "p0-9": true, "p0-10": true, "p0-11": true,
+      "p0-12": true, "p0-13": true, "p0-14": true, "p0-15": true,
+      "p0-16": true, "p0-17": true, "p0-18": true,
+      // P1 — Auth & Profil (11/11) ✅
+      "p1-1": true,  // Better Auth dans NestJS + plugin expo()
+      "p1-2": true,  // Écran Register
+      "p1-3": true,  // Écran Login + @better-auth/expo + expo-secure-store
+      "p1-4": true,  // Guard auth (app)/_layout.tsx + Expo Router groupes
+      "p1-5": true, // Sentry RN — reporté après le premier Dev Build compilé
+      "p1-6": true,  // Schema Prisma User + Profile + enums
+      "p1-6b": true, // EAS Dev Build (expo-dev-client + eas.json)
+      "p1-6c": true, // TanStack Query v5 + QueryClientProvider
+      "p1-7": true,  // Calcul TDEE (Mifflin-St Jeor) — module Profile backend
+      "p1-8": true,  // Onboarding Step 1 (infos physiques)
+      "p1-9": true,  // Onboarding Step 2 (activité + objectif)
+      "p1-10": true, // Onboarding Step 3 (résumé TDEE)
+      "p1-11": true, // Écran Edit Profile
+      // P2 — Base de données alimentaires (12/13) ✅ (p2-4 Edamam optionnel, reporté)
+      "p2-1": true,  // Module NestJS FoodService (UsdaService + OffService + orchestrateur)
+      "p2-2": true,  // USDA FoodData Central — search + detail complet avec micros
+      "p2-3": true,  // Open Food Facts — search + barcode
+      "p2-4": false, // Edamam (optionnel MVP) — reporté si besoin NLP
+      "p2-5": true,  // Modèle Food Prisma — macros + 22 champs micronutriments + FoodSource
+      "p2-6": true,  // Enum FoodCategory (PROTEIN/STARCH/VEGETABLE/FRUIT/DAIRY/FAT_OIL/OTHER)
+      "p2-7": true,  // Cache Redis ioredis (TTL 7j) — RedisModule global + RedisService
+      "p2-8": true,  // GET /api/foods/search?q= — unified search USDA+OFF avec upsert DB
+      "p2-9": true,  // GET /api/foods/barcode/:code — OFF en priorité, fallback DB
+      "p2-10": true, // GET /api/foods/:id — détail complet, fetch USDA micros si incomplet
+      "p2-11": true, // Écran Recherche — debounce 300ms + FlatList + bouton scan (stub P4)
+      "p2-12": true, // Écran Détail aliment — 2 onglets Macros / Micronutriments
+      "p2-13": true, // Composant PortionSelector — presets 50/100/150/200g + saisie libre
+    };
+    let openPhaseId = 'P2';
 
-  { id:"P9", title:"CI/CD & Mise en production", duration:"1 semaine", color:"#61DAFB",
-    objective:"Déploiement automatisé, APK Android distribué, infra prod solide — anciennement P8",
-    categories:[
-      { name:"GitHub Actions — Workflows complets", tasks:[
-        {id:"p9-1",text:"Workflow PR : lint → SonarCloud → tests",detail:"Obligatoire sur toutes les branches, status check requis avant merge"},
-        {id:"p9-2",text:"Workflow deploy API : merge main → Railway",detail:"Build Docker → push image → Railway déploie → migration Prisma 7 → health check"},
-        {id:"p9-3",text:"Workflow EAS Build Android : sur git tag",detail:"git tag v1.0.0 → déclenche EAS Build cloud → APK disponible dans GitHub Releases"},
-        {id:"p9-4",text:"Expo EAS Update (OTA) : sur merge main",detail:"Mises à jour JS sans republier l'APK — correctifs en production en quelques minutes"},
-      ]},
-      { name:"Infra Production", tasks:[
-        {id:"p9-5",text:"Déployer NestJS sur Railway",detail:"Dockerfile multi-stage optimisé, railway.toml, variables d'env depuis Railway dashboard"},
-        {id:"p9-6",text:"Redis managé sur Railway",detail:"Redis add-on Railway, URL injectée via variable d'env — zéro config supplémentaire"},
-        {id:"p9-7",text:"Migrations Prisma automatiques en prod",detail:"prisma migrate deploy dans le workflow deploy — jamais de migration manuelle en prod"},
-        {id:"p9-8",text:"Distribution APK via EAS",detail:"EAS Submit ou distribution directe APK depuis GitHub Releases pour les beta testeurs"},
-      ]},
-    ]
-  },
-];
+    const totalTasks = phases.reduce((a, p) => a + p.categories.reduce((b, c) => b + c.tasks.length, 0), 0);
 
-// State — P0 complet (18/18) + P1 complet (11/11)
-const checked = {
-  "p0-1":true,"p0-2":true,"p0-3":true,"p0-4":true,
-  "p0-5":true,"p0-6":true,"p0-7":true,
-  "p0-8":true,"p0-9":true,"p0-10":true,"p0-11":true,
-  "p0-12":true,"p0-13":true,"p0-14":true,"p0-15":true,
-  "p0-16":true,"p0-17":true,"p0-18":true,
-  // P1 — Auth & Profil (11/11) ✅
-  "p1-1":true,  // Better Auth dans NestJS + plugin expo()
-  "p1-2":true,  // Écran Register
-  "p1-3":true,  // Écran Login + @better-auth/expo + expo-secure-store
-  "p1-4":true,  // Guard auth (app)/_layout.tsx + Expo Router groupes
-  "p1-5":false, // Sentry RN — reporté après le premier Dev Build compilé
-  "p1-6":true,  // Schema Prisma User + Profile + enums
-  "p1-6b":true, // EAS Dev Build (expo-dev-client + eas.json)
-  "p1-6c":true, // TanStack Query v5 + QueryClientProvider
-  "p1-7":true,  // Calcul TDEE (Mifflin-St Jeor) — module Profile backend
-  "p1-8":true,  // Onboarding Step 1 (infos physiques)
-  "p1-9":true,  // Onboarding Step 2 (activité + objectif)
-  "p1-10":true, // Onboarding Step 3 (résumé TDEE)
-  "p1-11":true, // Écran Edit Profile
-  // P2 — Base de données alimentaires (12/13) ✅ (p2-4 Edamam optionnel, reporté)
-  "p2-1":true,  // Module NestJS FoodService (UsdaService + OffService + orchestrateur)
-  "p2-2":true,  // USDA FoodData Central — search + detail complet avec micros
-  "p2-3":true,  // Open Food Facts — search + barcode
-  "p2-4":false, // Edamam (optionnel MVP) — reporté si besoin NLP
-  "p2-5":true,  // Modèle Food Prisma — macros + 22 champs micronutriments + FoodSource
-  "p2-6":true,  // Enum FoodCategory (PROTEIN/STARCH/VEGETABLE/FRUIT/DAIRY/FAT_OIL/OTHER)
-  "p2-7":true,  // Cache Redis ioredis (TTL 7j) — RedisModule global + RedisService
-  "p2-8":true,  // GET /api/foods/search?q= — unified search USDA+OFF avec upsert DB
-  "p2-9":true,  // GET /api/foods/barcode/:code — OFF en priorité, fallback DB
-  "p2-10":true, // GET /api/foods/:id — détail complet, fetch USDA micros si incomplet
-  "p2-11":true, // Écran Recherche — debounce 300ms + FlatList + bouton scan (stub P4)
-  "p2-12":true, // Écran Détail aliment — 2 onglets Macros / Micronutriments
-  "p2-13":true, // Composant PortionSelector — presets 50/100/150/200g + saisie libre
-};
-let openPhaseId = 'P2';
+    function getDone() { return Object.values(checked).filter(Boolean).length; }
 
-const totalTasks = phases.reduce((a, p) => a + p.categories.reduce((b, c) => b + c.tasks.length, 0), 0);
+    function updateProgress() {
+      const done = getDone();
+      document.getElementById('prog-count').textContent = `${done} / ${totalTasks} tâches`;
+      document.getElementById('prog-fill').style.width = `${(done / totalTasks) * 100}%`;
+    }
 
-function getDone() { return Object.values(checked).filter(Boolean).length; }
-
-function updateProgress() {
-  const done = getDone();
-  document.getElementById('prog-count').textContent = `${done} / ${totalTasks} tâches`;
-  document.getElementById('prog-fill').style.width = `${(done / totalTasks) * 100}%`;
-}
-
-function renderTabs() {
-  const tabs = document.getElementById('tabs');
-  tabs.innerHTML = phases.map(p => `
+    function renderTabs() {
+      const tabs = document.getElementById('tabs');
+      tabs.innerHTML = phases.map(p => `
     <button class="tab ${p.id === openPhaseId ? 'active' : ''}" style="--c:${p.color}" data-id="${p.id}">${p.id}</button>
   `).join('');
-  tabs.querySelectorAll('.tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      openPhaseId = btn.dataset.id;
-      render();
-    });
-  });
-}
+      tabs.querySelectorAll('.tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          openPhaseId = btn.dataset.id;
+          render();
+        });
+      });
+    }
 
-function renderPhases() {
-  const container = document.getElementById('phases');
-  container.innerHTML = '';
-  phases.forEach(p => {
-    const isOpen = p.id === openPhaseId;
-    const allTasks = p.categories.flatMap(c => c.tasks);
-    const doneTasks = allTasks.filter(t => checked[t.id]).length;
+    function renderPhases() {
+      const container = document.getElementById('phases');
+      container.innerHTML = '';
+      phases.forEach(p => {
+        const isOpen = p.id === openPhaseId;
+        const allTasks = p.categories.flatMap(c => c.tasks);
+        const doneTasks = allTasks.filter(t => checked[t.id]).length;
 
-    const div = document.createElement('div');
-    div.className = `phase ${isOpen ? 'open' : ''}`;
-    div.style.borderColor = isOpen ? p.color + '44' : '#0F172A';
+        const div = document.createElement('div');
+        div.className = `phase ${isOpen ? 'open' : ''}`;
+        div.style.borderColor = isOpen ? p.color + '44' : '#0F172A';
 
-    div.innerHTML = `
+        div.innerHTML = `
       <button class="phase-header" data-id="${p.id}">
         <span class="phase-id" style="background:${p.color}22;color:${p.color}">${p.id}</span>
         <div class="phase-info">
@@ -419,7 +790,7 @@ function renderPhases() {
         </div>
         <div class="phase-mini-progress">
           <div class="mini-count" style="color:${doneTasks === allTasks.length && doneTasks > 0 ? p.color : '#334155'}">${doneTasks}/${allTasks.length}</div>
-          <div class="mini-track"><div class="mini-fill" style="background:${p.color};width:${(doneTasks/allTasks.length)*100}%"></div></div>
+          <div class="mini-track"><div class="mini-fill" style="background:${p.color};width:${(doneTasks / allTasks.length) * 100}%"></div></div>
         </div>
         <span class="phase-chevron">${isOpen ? '▲' : '▼'}</span>
       </button>
@@ -448,33 +819,34 @@ function renderPhases() {
       ` : ''}
     `;
 
-    div.querySelector('.phase-header').addEventListener('click', () => {
-      openPhaseId = openPhaseId === p.id ? null : p.id;
-      render();
-    });
-
-    if (isOpen) {
-      div.querySelectorAll('.task').forEach(taskEl => {
-        taskEl.addEventListener('click', () => {
-          const id = taskEl.dataset.task;
-          checked[id] = !checked[id];
-          updateProgress();
+        div.querySelector('.phase-header').addEventListener('click', () => {
+          openPhaseId = openPhaseId === p.id ? null : p.id;
           render();
         });
+
+        if (isOpen) {
+          div.querySelectorAll('.task').forEach(taskEl => {
+            taskEl.addEventListener('click', () => {
+              const id = taskEl.dataset.task;
+              checked[id] = !checked[id];
+              updateProgress();
+              render();
+            });
+          });
+        }
+
+        container.appendChild(div);
       });
     }
 
-    container.appendChild(div);
-  });
-}
+    function render() {
+      renderTabs();
+      renderPhases();
+    }
 
-function render() {
-  renderTabs();
-  renderPhases();
-}
-
-render();
-updateProgress();
-</script>
+    render();
+    updateProgress();
+  </script>
 </body>
+
 </html>

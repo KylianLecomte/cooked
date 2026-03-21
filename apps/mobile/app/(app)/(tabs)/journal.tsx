@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 
 // Stub P1 — implémentation complète en P3 (Journal Alimentaire)
 export default function JournalScreen() {

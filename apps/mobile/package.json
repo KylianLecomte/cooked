@@ -14,6 +14,7 @@
   "dependencies": {
     "@better-auth/expo": "^1.5.5",
     "@cooked/shared": "workspace:*",
+    "@sentry/react-native": "^8.5.0",
     "@tanstack/react-query": "^5.90.21",
     "better-auth": "^1.5.5",
     "expo": "~55.0.5",

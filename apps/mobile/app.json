@@ -29,7 +29,18 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-router", "expo-dev-client"],
+    "plugins": [
+      "expo-router",
+      "expo-dev-client",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "cooked-mobile",
+          "organization": "cooked-3o"
+        }
+      ]
+    ],
     "experiments": {
       "typedRoutes": true
     },
