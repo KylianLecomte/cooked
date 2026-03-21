@@ -5,7 +5,7 @@ import {
   type OffProduct,
   type UsdaFoodDetail,
   type UsdaSearchFood,
-} from "./food.types";
+} from "./food.type";
 
 // ── USDA category → FoodCategory ─────────────────────────────────────────────
 

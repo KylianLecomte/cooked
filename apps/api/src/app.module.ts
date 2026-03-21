@@ -15,6 +15,7 @@ import { FoodModule } from "./food/food.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { ProfileModule } from "./profile/profile.module";
 import { RedisModule } from "./redis/redis.module";
+import { DiaryModule } from './diary/diary.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { RedisModule } from "./redis/redis.module";
     ProfileModule,
     FoodModule,
     AuthModule.forRoot({ auth, disableGlobalAuthGuard: true }),
+    DiaryModule,
   ],
   controllers: [AppController],
   providers: [

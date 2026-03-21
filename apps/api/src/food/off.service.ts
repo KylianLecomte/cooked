@@ -1,5 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
-import type { OffProduct } from "./food.types";
+import type { OffProduct } from "./food.type";
 import { FETCH_SIGNAL_TIMEOUT, HEADER_USER_AGENT } from "src/util/constant";
 
 const OFF_BASE = "https://world.openfoodfacts.net";

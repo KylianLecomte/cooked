@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import type { EnvSchema } from "../config/env.schema";
-import type { UsdaFoodDetail, UsdaSearchFood } from "./food.types";
+import type { UsdaFoodDetail, UsdaSearchFood } from "./food.type";
 import { FETCH_SIGNAL_TIMEOUT } from "src/util/constant";
 
 const USDA_BASE = "https://api.nal.usda.gov/fdc/v1";
