@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import type { Food } from "../../../generated/prisma/client";
 import { FoodSource } from "../../../generated/prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
-import { RedisService } from "../../redis/redis.service";
+import { RedisService } from "../../redis/service/redis.service";
 import {
   normalizeOffProduct,
   normalizeUsdaDetail,
