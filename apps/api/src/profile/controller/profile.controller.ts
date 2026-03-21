@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
 import { AuthGuard, Session } from "@thallesp/nestjs-better-auth";
-import type { User } from "../auth/auth";
-import { ProfileService } from "./profile.service";
+import type { User } from "../../auth/auth";
+import { ProfileService } from "../service/profile.service";
 
 // La session injectée par Better Auth contient { session: {...}, user: User }
 type BetterAuthSession = { user: User };

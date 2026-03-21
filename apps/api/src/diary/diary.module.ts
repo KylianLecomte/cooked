@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { DiaryController } from './diary.controller';
-import { DiaryService } from './diary.service';
+import { DiaryController } from './controller/diary.controller';
+import { DiaryService } from './service/diary.service';
 
 @Module({
   controllers: [DiaryController],

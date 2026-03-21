@@ -7,7 +7,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "@thallesp/nestjs-better-auth";
-import { FoodService } from "./food.service";
+import { FoodService } from "../service/food.service";
 
 @Controller("api/foods")
 @UseGuards(AuthGuard)

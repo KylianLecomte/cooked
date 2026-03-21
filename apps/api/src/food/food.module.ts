@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { FoodController } from "./food.controller";
-import { FoodService } from "./food.service";
+import { FoodController } from "./controller/food.controller";
+import { FoodService } from "./service/food.service";
 import { OffService } from "./off.service";
 import { UsdaService } from "./usda.service";
 
