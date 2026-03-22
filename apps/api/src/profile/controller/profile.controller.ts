@@ -1,10 +1,9 @@
 import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
-import { AuthGuard, Session } from "@thallesp/nestjs-better-auth";
-import type { User } from "../../auth/auth";
+import { AuthGuard, Session, UserSession } from "@thallesp/nestjs-better-auth";
+import { BetterAuthSession } from "../../type/auth.type";
 import { ProfileService } from "../service/profile.service";
 
 // La session injectée par Better Auth contient { session: {...}, user: User }
-type BetterAuthSession = { user: User };
 
 @Controller("api/profile")
 @UseGuards(AuthGuard)
@@ -15,7 +14,7 @@ export class ProfileController {
   // Retourne le profil de l'utilisateur courant, ou null s'il n'a pas encore
   // complété son onboarding.
   @Get()
-  getProfile(@Session() session: BetterAuthSession) {
+  getProfile(@Session() session: UserSession) {
     return this.profileService.findByUserId(session.user.id);
   }
 

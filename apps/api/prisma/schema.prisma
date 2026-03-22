@@ -214,7 +214,7 @@ model FoodLog {
   diaryEntryId String
   foodId       String
   meal         Meal
-  quantityG    Float
+  quantity     Float
 
   diaryEntry DiaryEntry @relation(fields: [diaryEntryId], references: [id], onDelete: Cascade)
   food       Food       @relation(fields: [foodId], references: [id])
