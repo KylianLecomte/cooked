@@ -1,7 +1,7 @@
-import { TypesValuesOf } from "./type";
+import { TypesValuesOf } from "../../type";
 
 export const Meal = {
-  BREAKFEAST: "BREAKFEAST",
+  BREAKFAST: "BREAKFAST",
   LUNCH: "LUNCH",
   DINNER: "DINNER",
   SNACK: "SNACK",

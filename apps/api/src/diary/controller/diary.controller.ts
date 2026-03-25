@@ -1,16 +1,8 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  UseGuards,
-  UsePipes,
-} from "@nestjs/common";
+import { DiaryEntryResponse, FoodLog, FoodLogWithoutFood } from "@cooked/shared";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard, Session } from "@thallesp/nestjs-better-auth";
 import { ZodValidationPipe } from "src/zod/pipe/zod-validation.pipe";
+import { dateSchema } from "src/zod/schema/date.schema";
 import { BetterAuthSession } from "../../type/auth.type";
 import { CreateFoodLogDto, createFoodLogSchema } from "../dto/create-food-log.dto";
 import { UpdateFoodLogDto, updateFoodLogSchema } from "../dto/update-food-log.dto";
@@ -22,48 +14,52 @@ export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
 
   /**
-   * GET /api/diary/:date
+   * GET /v1/api/diary/:date
    * Retourne le journal alimentaire pour une date donnée.
    */
   @Get(":date")
-  async findByDate(@Session() session: BetterAuthSession, @Param("date") date: string) {
+  async findByDate(
+    @Session() session: BetterAuthSession,
+    @Param("date", new ZodValidationPipe(dateSchema)) date: string,
+  ): Promise<DiaryEntryResponse> {
     return this.diaryService.findByDate(session.user.id, date);
   }
 
   /**
-   * POST /api/diary/:date/log
+   * POST /v1/api/diary/:date/log
    * Crée un nouveau journal alimentaire pour une date donnée.
    */
   @Post(":date/log")
-  @UsePipes(new ZodValidationPipe(createFoodLogSchema))
   async createFoodLog(
     @Session() session: BetterAuthSession,
-    @Param("date") date: string,
-    @Body() foodLogDto: CreateFoodLogDto,
-  ) {
+    @Param("date", new ZodValidationPipe(dateSchema)) date: string,
+    @Body(new ZodValidationPipe(createFoodLogSchema)) foodLogDto: CreateFoodLogDto,
+  ): Promise<FoodLog> {
     return this.diaryService.createFoodLog(session.user.id, date, foodLogDto);
   }
 
   /**
-   * PATCH /api/diary/:logId
+   * PATCH /v1/api/diary/:logId
    * Met à jour un journal alimentaire existant.
    */
   @Patch(":logId")
-  @UsePipes(new ZodValidationPipe(updateFoodLogSchema))
   async updateFoodLog(
     @Session() session: BetterAuthSession,
     @Param("logId") logId: string,
-    @Body() foodLogDto: UpdateFoodLogDto,
-  ) {
+    @Body(new ZodValidationPipe(updateFoodLogSchema)) foodLogDto: UpdateFoodLogDto,
+  ): Promise<FoodLog> {
     return this.diaryService.updateFoodLog(session.user.id, logId, foodLogDto);
   }
 
   /**
-   * DELETE /api/diary/:logId
+   * DELETE /v1/api/diary/:logId
    * Supprime un journal alimentaire existant.
    */
   @Delete(":logId")
-  async deleteFoodLog(@Session() session: BetterAuthSession, @Param("logId") logId: string) {
+  async deleteFoodLog(
+    @Session() session: BetterAuthSession,
+    @Param("logId") logId: string,
+  ): Promise<FoodLogWithoutFood> {
     return this.diaryService.deleteFoodLog(session.user.id, logId);
   }
 }

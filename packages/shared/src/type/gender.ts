@@ -1,4 +1,4 @@
-import { TypesValuesOf } from "./type";
+import { TypesValuesOf } from "./generics.type";
 
 export const Gender = { MALE: "MALE", FEMALE: "FEMALE", OTHER: "OTHER" } as const;
 export type Gender = TypesValuesOf<typeof Gender>;
@@ -9,5 +9,3 @@ export const GENDER_LABELS: Record<Gender, string> = {
   FEMALE: "Femme",
   OTHER: "Autre",
 };
-
-

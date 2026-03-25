@@ -1,5 +1,4 @@
-import { TypesValuesOf } from "./type";
-
+import { TypesValuesOf } from "../../type/generics.type";
 
 // ── Food Source ─────────────────────────────────────────────────────────────
 export const FoodSource = { USDA: "USDA", OFF: "OFF", MANUAL: "MANUAL" } as const;
@@ -8,7 +7,7 @@ export const FOOD_SOURCES = Object.values(FoodSource);
 
 // ── Food Category ───────────────────────────────────────────────────────────
 export const FoodCategory = {
-  PROTEIN: "PROTEINa",
+  PROTEIN: "PROTEIN",
   STARCH: "STARCH",
   VEGETABLE: "VEGETABLE",
   FRUIT: "FRUIT",
@@ -18,3 +17,12 @@ export const FoodCategory = {
 } as const;
 export type FoodCategory = TypesValuesOf<typeof FoodCategory>;
 export const FOOD_CATEGORIES = Object.values(FoodCategory);
+
+export interface Food {
+  id: string;
+  name: string;
+  kcalPer100g: number;
+  proteinPer100g: number;
+  carbsPer100g: number;
+  fatPer100g: number;
+}

@@ -2,8 +2,8 @@ import {
   ACTIVITY_MULTIPLIERS,
   type ActivityLevel,
   Gender,
-  type Goal,
   GOAL_KCAL_DELTA,
+  Goal,
   MACRO_SPLITS,
 } from "@cooked/shared";
 

@@ -4,7 +4,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "../prisma/prisma.instance";
 
 export const auth = betterAuth({
-  basePath: "/api/auth",
+  basePath: "/v1/api/auth",
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),

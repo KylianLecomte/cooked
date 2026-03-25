@@ -78,7 +78,7 @@ model Verification {
 // ── Modèles métier COOKED ─────────────────────────────────────────────────────
 
 model Profile {
-  id     String @id @default(cuid())
+  id     String @id @default(uuid())
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -140,7 +140,7 @@ enum FoodCategory {
 }
 
 model Food {
-  id       String     @id @default(cuid())
+  id       String     @id @default(uuid())
   source   FoodSource
   sourceId String
 
@@ -196,7 +196,7 @@ model Food {
 // ── Journal alimentaire ──────────────────────────────────────
 
 model DiaryEntry {
-  id     String   @id @default(cuid())
+  id     String   @id @default(uuid())
   userId String
   date   DateTime @db.Date
 
@@ -210,7 +210,7 @@ model DiaryEntry {
 }
 
 model FoodLog {
-  id           String @id @default(cuid())
+  id           String @id @default(uuid())
   diaryEntryId String
   foodId       String
   meal         Meal
@@ -225,7 +225,7 @@ model FoodLog {
 }
 
 enum Meal {
-  BREAKFEAST
+  BREAKFAST
   LUNCH
   DINNER
   SNACK

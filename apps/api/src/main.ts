@@ -3,12 +3,13 @@ import "reflect-metadata";
 import { Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
+import type { NestExpressApplication } from "@nestjs/platform-express";
 import { Logger as PinoLogger } from "nestjs-pino";
 import { AppModule } from "./app.module";
 import type { EnvSchema } from "./config/env.schema";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     // Désactive le logger NestJS par défaut pendant le bootstrap
     // Les logs seront bufferisés jusqu'à ce que Pino soit prêt
     bufferLogs: true,
@@ -16,7 +17,7 @@ async function bootstrap() {
   });
 
   app.useLogger(app.get(PinoLogger));
-
+  app.setGlobalPrefix("v1/api");
   const configService = app.get(ConfigService<EnvSchema>);
   const port = configService.get("PORT", { infer: true });
 
@@ -28,6 +29,5 @@ async function bootstrap() {
 }
 
 bootstrap().catch((error: unknown) => {
-  console.error("Bootstrap failed:", error);
   process.exit(1);
 });

@@ -6,6 +6,7 @@
     "dev": "turbo dev",
     "dev:api": "turbo run dev --filter=@cooked/api",
     "dev:mobile": "pnpm --filter @cooked/mobile dev",
+    "build:shared": "pnpm --filter @cooked/shared build",
     "build": "turbo build",
     "lint": "biome lint .",
     "format": "biome format --write .",
@@ -35,9 +36,7 @@
     "turbo": "^2.8.13"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,mjs,cjs,json}": [
-      "pnpm exec biome check --write --no-errors-on-unmatched"
-    ]
+    "**/*.{ts,tsx,js,jsx,mjs,cjs,json}": ["pnpm exec biome check --write --no-errors-on-unmatched"]
   },
   "version": "1.0.0",
   "dependencies": {

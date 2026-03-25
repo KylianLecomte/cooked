@@ -11,7 +11,7 @@ export type FoodCategory =
   | "FAT_OIL"
   | "OTHER";
 
-/** Résumé léger — retourné par GET /api/foods/search et /api/foods/barcode/:code */
+/** Résumé léger — retourné par GET /v1/api/foods/search et /v1/api/foods/barcode/:code */
 export interface FoodSummary {
   id: string;
   source: FoodSource;
@@ -26,7 +26,7 @@ export interface FoodSummary {
   fiberPer100g: number | null;
 }
 
-/** Détail complet — retourné par GET /api/foods/:id */
+/** Détail complet — retourné par GET /v1/api/foods/:id */
 export interface FoodDetail extends FoodSummary {
   // Vitamines (per 100g)
   vitA: number | null; // µg RAE

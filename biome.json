@@ -3,7 +3,7 @@
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["!**/docs", "!**/maquettes"]
+    "includes": ["**", "!**/docs", "!**/maquettes"]
   },
   "formatter": {
     "enabled": true,
@@ -40,6 +40,7 @@
         "noUselessTypeConstraint": "error"
       },
       "correctness": {
+        "noUnusedImports": "error",
         "noConstAssign": "error",
         "noConstantCondition": "error",
         "noEmptyCharacterClassInRegex": "error",
@@ -123,6 +124,9 @@
     ]
   },
   "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    },
     "formatter": {
       "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",

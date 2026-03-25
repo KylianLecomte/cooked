@@ -5,7 +5,7 @@ import { ProfileService } from "../service/profile.service";
 
 // La session injectée par Better Auth contient { session: {...}, user: User }
 
-@Controller("api/profile")
+@Controller("profile")
 @UseGuards(AuthGuard)
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
@@ -18,7 +18,7 @@ export class ProfileController {
     return this.profileService.findByUserId(session.user.id);
   }
 
-  // PATCH /api/profile
+  // PATCH /v1/api/profile
   // Mise à jour partielle (upsert) du profil.
   // Déclenche le recalcul TDEE si tous les champs nécessaires sont présents.
   // Retourne le profil mis à jour avec les valeurs TDEE calculées.

@@ -1,4 +1,4 @@
-import { TypesValuesOf } from "./type";
+import { TypesValuesOf } from "./generics.type";
 
 export const ActivityLevel = {
   SEDENTARY: "SEDENTARY",

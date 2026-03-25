@@ -2,13 +2,13 @@ import { BadRequestException, Controller, Get, Param, Query, UseGuards } from "@
 import { AuthGuard } from "@thallesp/nestjs-better-auth";
 import { FoodService } from "../service/food.service";
 
-@Controller("api/foods")
+@Controller("foods")
 @UseGuards(AuthGuard)
 export class FoodController {
   constructor(private readonly foodService: FoodService) {}
 
   /**
-   * GET /api/foods/search?q=poulet
+   * GET /v1/api/foods/search?q=poulet
    * Recherche unifiée USDA + Open Food Facts.
    * Retourne un tableau de FoodSummary (sans micronutriments détaillés).
    */
@@ -19,7 +19,7 @@ export class FoodController {
   }
 
   /**
-   * GET /api/foods/barcode/:code
+   * GET /v1/api/foods/barcode/:code
    * Recherche par code-barre EAN/UPC via Open Food Facts.
    * Retourne un FoodSummary ou 404.
    */
@@ -31,7 +31,7 @@ export class FoodController {
   }
 
   /**
-   * GET /api/foods/:id
+   * GET /v1/api/foods/:id
    * Détail complet d'un aliment (macros + tous les micronutriments).
    * Si USDA et micros incomplets, fetche le détail complet en temps réel.
    */
