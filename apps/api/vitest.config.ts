@@ -1,7 +1,13 @@
+import path from "node:path";
 import swc from "unplugin-swc";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      src: path.resolve(__dirname, "src"),
+    },
+  },
   plugins: [
     // Remplace esbuild par SWC pour le support des décorateurs TypeScript
     // et de emitDecoratorMetadata requis par NestJS

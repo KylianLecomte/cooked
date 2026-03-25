@@ -1,4 +1,5 @@
 import { Test } from "@nestjs/testing";
+import { AuthGuard } from "@thallesp/nestjs-better-auth";
 import { BetterAuthSession } from "../../type/auth.type";
 import { DiaryService } from "../service/diary.service";
 import { DiaryController } from "./diary.controller";
@@ -35,7 +36,10 @@ describe("DiaryController", () => {
     const module = await Test.createTestingModule({
       controllers: [DiaryController],
       providers: [{ provide: DiaryService, useValue: mockDiaryService }],
-    }).compile();
+    })
+      .overrideGuard(AuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get(DiaryController);
   });
