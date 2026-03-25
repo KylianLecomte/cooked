@@ -36,7 +36,9 @@ export default function OnboardingStep3() {
 
       {/* TDEE principal */}
       <View className="bg-[#0F172A] border border-[#4ADE8044] p-6 mb-4 items-center">
-        <Text className="text-[#334155] text-xs tracking-[2px] mb-2">DÉPENSE ÉNERGÉTIQUE TOTALE</Text>
+        <Text className="text-[#334155] text-xs tracking-[2px] mb-2">
+          DÉPENSE ÉNERGÉTIQUE TOTALE
+        </Text>
         <Text className="text-[#4ADE80] text-6xl font-black">{profile.tdeeKcal}</Text>
         <Text className="text-[#475569] text-base mt-1">kcal / jour</Text>
         <View className="border-t border-[#1E293B] mt-4 pt-4 w-full items-center">

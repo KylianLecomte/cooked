@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
 import type { ActivityLevel, Gender, Goal } from "@cooked/shared";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import type { UpdateProfileDto } from "../dto/update-profile.dto";
 import { updateProfileSchema } from "../dto/update-profile.dto";
-import { type TdeeResult, calculateTdee } from "../tdee.calculator";
+import { calculateTdee, type TdeeResult } from "../tdee.calculator";
 
 @Injectable()
 export class ProfileService {

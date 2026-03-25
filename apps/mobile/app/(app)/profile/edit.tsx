@@ -90,9 +90,7 @@ export default function EditProfileScreen() {
             <Pressable
               key={g}
               className={`flex-1 py-3 items-center border ${
-                gender === g
-                  ? "border-[#4ADE80] bg-[#4ADE8015]"
-                  : "border-[#1E293B] bg-[#0F172A]"
+                gender === g ? "border-[#4ADE80] bg-[#4ADE8015]" : "border-[#1E293B] bg-[#0F172A]"
               }`}
               onPress={() => setGender(g)}
             >
@@ -164,9 +162,7 @@ export default function EditProfileScreen() {
             <Pressable
               key={g}
               className={`border p-3 ${
-                goal === g
-                  ? "border-[#4ADE80] bg-[#4ADE8010]"
-                  : "border-[#1E293B] bg-[#0F172A]"
+                goal === g ? "border-[#4ADE80] bg-[#4ADE8010]" : "border-[#1E293B] bg-[#0F172A]"
               }`}
               onPress={() => setGoal(g)}
             >
@@ -194,9 +190,7 @@ export default function EditProfileScreen() {
           {updateProfile.isPending ? (
             <ActivityIndicator size="small" color="#080C10" />
           ) : (
-            <Text className="text-[#080C10] font-bold text-base tracking-wider">
-              ENREGISTRER
-            </Text>
+            <Text className="text-[#080C10] font-bold text-base tracking-wider">ENREGISTRER</Text>
           )}
         </Pressable>
       </View>

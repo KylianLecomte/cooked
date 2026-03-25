@@ -82,9 +82,7 @@ export default function LoginScreen() {
         {loading ? (
           <ActivityIndicator size="small" color="#080C10" />
         ) : (
-          <Text className="text-cooked-bg font-bold text-base tracking-wider">
-            SE CONNECTER
-          </Text>
+          <Text className="text-cooked-bg font-bold text-base tracking-wider">SE CONNECTER</Text>
         )}
       </Pressable>
 

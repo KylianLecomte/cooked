@@ -94,9 +94,7 @@ export default function OnboardingStep2() {
           <Pressable
             key={g}
             className={`border p-4 flex-row justify-between items-center ${
-              goal === g
-                ? "border-[#4ADE80] bg-[#4ADE8010]"
-                : "border-[#1E293B] bg-[#0F172A]"
+              goal === g ? "border-[#4ADE80] bg-[#4ADE8010]" : "border-[#1E293B] bg-[#0F172A]"
             }`}
             onPress={() => setGoal(g)}
           >
@@ -109,7 +107,9 @@ export default function OnboardingStep2() {
                 {GOAL_LABELS[g]}
               </Text>
               <Text className="text-[#334155] text-xs mt-0.5">
-                {GOAL_KCAL_DELTA[g] === 0 ? "Équilibre calorique" : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal/jour`}
+                {GOAL_KCAL_DELTA[g] === 0
+                  ? "Équilibre calorique"
+                  : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal/jour`}
               </Text>
             </View>
             <Text
@@ -117,7 +117,9 @@ export default function OnboardingStep2() {
                 goal === g ? "text-[#4ADE80]" : "text-[#334155]"
               }`}
             >
-              {GOAL_KCAL_DELTA[g] === 0 ? "±0 kcal" : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal`}
+              {GOAL_KCAL_DELTA[g] === 0
+                ? "±0 kcal"
+                : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal`}
             </Text>
           </Pressable>
         ))}

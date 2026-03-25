@@ -116,9 +116,7 @@ export default function OnboardingStep1() {
           <Pressable
             key={g}
             className={`flex-1 py-3 items-center border ${
-              gender === g
-                ? "border-[#4ADE80] bg-[#4ADE8015]"
-                : "border-[#1E293B] bg-[#0F172A]"
+              gender === g ? "border-[#4ADE80] bg-[#4ADE8015]" : "border-[#1E293B] bg-[#0F172A]"
             }`}
             onPress={() => setGender(g)}
           >

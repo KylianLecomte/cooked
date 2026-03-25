@@ -1,8 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { FETCH_SIGNAL_TIMEOUT } from "src/util/constant";
 import type { EnvSchema } from "../config/env.schema";
 import type { UsdaFoodDetail, UsdaSearchFood } from "./food.type";
-import { FETCH_SIGNAL_TIMEOUT } from "src/util/constant";
 
 const USDA_BASE = "https://api.nal.usda.gov/fdc/v1";
 
@@ -24,13 +24,12 @@ export class UsdaService {
     url.searchParams.set("pageSize", String(limit));
     // Foundation + SR Legacy = aliments de base avec micros complets
     // Branded = produits de marque avec données OFF-like
-    url.searchParams.set(
-      "dataType",
-      "Foundation,SR Legacy,Survey (FNDDS),Branded",
-    );
+    url.searchParams.set("dataType", "Foundation,SR Legacy,Survey (FNDDS),Branded");
 
     try {
-      const res = await fetch(url.toString(), { signal: AbortSignal.timeout(FETCH_SIGNAL_TIMEOUT) });
+      const res = await fetch(url.toString(), {
+        signal: AbortSignal.timeout(FETCH_SIGNAL_TIMEOUT),
+      });
       if (!res.ok) {
         this.logger.warn(`USDA search error ${res.status} for query "${query}"`);
         return [];

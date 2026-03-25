@@ -122,8 +122,7 @@ export default function RegisterScreen() {
       {/* Lien connexion */}
       <Pressable onPress={() => router.back()}>
         <Text className="text-[#475569] text-sm text-center">
-          Déjà un compte ?{" "}
-          <Text className="text-[#4ADE80] font-semibold">Se connecter</Text>
+          Déjà un compte ? <Text className="text-[#4ADE80] font-semibold">Se connecter</Text>
         </Text>
       </Pressable>
     </View>

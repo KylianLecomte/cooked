@@ -28,9 +28,7 @@ export default function PortionSelector({ value, onChange }: Props) {
           <Pressable
             key={preset}
             className={`flex-1 py-2 items-center border ${
-              value === preset
-                ? "border-[#4ADE80] bg-[#4ADE8015]"
-                : "border-[#1E293B] bg-[#0F172A]"
+              value === preset ? "border-[#4ADE80] bg-[#4ADE8015]" : "border-[#1E293B] bg-[#0F172A]"
             }`}
             onPress={() => handlePreset(preset)}
           >

@@ -1,16 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { REDIS_CACHE_TTL_1D, REDIS_CACHE_TTL_7D } from "src/util/constant";
 import type { Food } from "../../../generated/prisma/client";
 import { FoodSource } from "../../../generated/prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 import { RedisService } from "../../redis/service/redis.service";
-import {
-  normalizeOffProduct,
-  normalizeUsdaDetail,
-  normalizeUsdaSearch,
-} from "../food.normalizer";
+import { normalizeOffProduct, normalizeUsdaDetail, normalizeUsdaSearch } from "../food.normalizer";
 import { OffService } from "../off.service";
 import { UsdaService } from "../usda.service";
-import { REDIS_CACHE_TTL_1D, REDIS_CACHE_TTL_7D } from "src/util/constant";
 
 // Résumé léger d'un aliment (liste de recherche)
 export type FoodSummary = Pick<

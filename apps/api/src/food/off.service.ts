@@ -1,12 +1,11 @@
 import { Injectable, Logger } from "@nestjs/common";
-import type { OffProduct } from "./food.type";
 import { FETCH_SIGNAL_TIMEOUT, HEADER_USER_AGENT } from "src/util/constant";
+import type { OffProduct } from "./food.type";
 
 const OFF_BASE = "https://world.openfoodfacts.net";
 
 // Champs demandés à l'API pour limiter la taille de la réponse
-const OFF_FIELDS =
-  "code,product_name,brands,pnns_groups_1,nutriments";
+const OFF_FIELDS = "code,product_name,brands,pnns_groups_1,nutriments";
 
 @Injectable()
 export class OffService {

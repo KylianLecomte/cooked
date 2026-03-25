@@ -1,8 +1,8 @@
 import type { Prisma } from "../../generated/prisma/client";
 import { FoodCategory, FoodSource } from "../../generated/prisma/client";
 import {
-  USDA_NUTRIENT_IDS,
   type OffProduct,
+  USDA_NUTRIENT_IDS,
   type UsdaFoodDetail,
   type UsdaSearchFood,
 } from "./food.type";
@@ -55,17 +55,11 @@ function mapOffCategory(pnns?: string): FoodCategory {
 
 // ── Helpers nutrient extraction ───────────────────────────────────────────────
 
-function getSearchNutrient(
-  nutrients: UsdaSearchFood["foodNutrients"],
-  id: number,
-): number | null {
+function getSearchNutrient(nutrients: UsdaSearchFood["foodNutrients"], id: number): number | null {
   return nutrients.find((n) => n.nutrientId === id)?.value ?? null;
 }
 
-function getDetailNutrient(
-  nutrients: UsdaFoodDetail["foodNutrients"],
-  id: number,
-): number | null {
+function getDetailNutrient(nutrients: UsdaFoodDetail["foodNutrients"], id: number): number | null {
   return nutrients.find((n) => n.nutrient.id === id)?.amount ?? null;
 }
 
@@ -95,9 +89,7 @@ export function normalizeUsdaSearch(food: UsdaSearchFood): Prisma.FoodCreateInpu
 }
 
 /** Transforme un détail USDA complet en données Food (avec tous les micros) */
-export function normalizeUsdaDetail(
-  food: UsdaFoodDetail,
-): Prisma.FoodCreateInput {
+export function normalizeUsdaDetail(food: UsdaFoodDetail): Prisma.FoodCreateInput {
   const n = food.foodNutrients;
   const get = (id: number) => getDetailNutrient(n, id);
 

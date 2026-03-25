@@ -97,10 +97,7 @@ export default function ProfileScreen() {
         <Text className="text-[#334155]">›</Text>
       </Pressable>
 
-      <Pressable
-        className="border border-red-900 p-4 items-center mt-4"
-        onPress={handleLogout}
-      >
+      <Pressable className="border border-red-900 p-4 items-center mt-4" onPress={handleLogout}>
         <Text className="text-red-500 font-semibold text-sm tracking-wider">SE DÉCONNECTER</Text>
       </Pressable>
     </ScrollView>

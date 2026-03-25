@@ -1,13 +1,6 @@
 import { router } from "expo-router";
 import { useCallback, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { useFoodSearch } from "../../../hooks/useFoodSearch";
 import type { FoodSummary } from "../../../types/food";
 
@@ -171,12 +164,7 @@ export default function SearchScreen() {
         </View>
       </View>
 
-      <SearchContent
-        debounced={debounced}
-        data={data}
-        isFetching={isFetching}
-        isError={isError}
-      />
+      <SearchContent debounced={debounced} data={data} isFetching={isFetching} isError={isError} />
     </View>
   );
 }

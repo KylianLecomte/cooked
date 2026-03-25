@@ -1,26 +1,14 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
-import { useFoodDetail } from "../../../hooks/useFoodDetail";
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import PortionSelector from "../../../components/PortionSelector";
+import { useFoodDetail } from "../../../hooks/useFoodDetail";
 import type { FoodDetail } from "../../../types/food";
 import { CATEGORY_LABELS } from "../../../types/food";
 
 // ── Onglet Macros ─────────────────────────────────────────────────────────────
 
-function MacrosTab({
-  food,
-  quantityG,
-}: {
-  readonly food: FoodDetail;
-  readonly quantityG: number;
-}) {
+function MacrosTab({ food, quantityG }: { readonly food: FoodDetail; readonly quantityG: number }) {
   const factor = quantityG / 100;
   const kcal = Math.round(food.kcalPer100g * factor);
   const protein = (food.proteinPer100g * factor).toFixed(1);
@@ -88,7 +76,15 @@ function MacrosTab({
 
 // ── Ligne micro ───────────────────────────────────────────────────────────────
 
-function MicroRow({ label, value, unit }: { readonly label: string; readonly value: number | null; readonly unit: string }) {
+function MicroRow({
+  label,
+  value,
+  unit,
+}: {
+  readonly label: string;
+  readonly value: number | null;
+  readonly unit: string;
+}) {
   if (value == null) return null;
   return (
     <View className="flex-row justify-between mb-2">
@@ -108,7 +104,8 @@ function MicrosTab({ food }: { readonly food: FoodDetail }) {
       {!food.microDataComplete && (
         <View className="bg-[#FACC1510] border border-[#FACC1530] p-3 mb-4">
           <Text className="text-[#FACC15] text-xs">
-            ⚠ Données micronutriments partielles — Open Food Facts ne fournit pas toujours les micros complets pour les produits transformés.
+            ⚠ Données micronutriments partielles — Open Food Facts ne fournit pas toujours les
+            micros complets pour les produits transformés.
           </Text>
         </View>
       )}
@@ -169,9 +166,7 @@ export default function FoodDetailScreen() {
   if (isError || !food) {
     return (
       <View className="flex-1 bg-[#080C10] items-center justify-center px-6">
-        <Text className="text-red-400 text-sm text-center mb-4">
-          Aliment introuvable.
-        </Text>
+        <Text className="text-red-400 text-sm text-center mb-4">Aliment introuvable.</Text>
         <Pressable onPress={() => router.back()}>
           <Text className="text-[#4ADE80] text-sm">← Retour</Text>
         </Pressable>
@@ -190,9 +185,7 @@ export default function FoodDetailScreen() {
       <Text className="text-[#F1F5F9] text-2xl font-black mb-1" numberOfLines={3}>
         {food.name}
       </Text>
-      {food.brand && (
-        <Text className="text-[#475569] text-sm mb-1">{food.brand}</Text>
-      )}
+      {food.brand && <Text className="text-[#475569] text-sm mb-1">{food.brand}</Text>}
       <Text className="text-[#334155] text-xs mb-6">
         {CATEGORY_LABELS[food.category]} · {food.source}
       </Text>

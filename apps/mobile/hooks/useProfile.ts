@@ -47,8 +47,7 @@ export function useUpdateProfile() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: UpdateProfilePayload) =>
-      api.patch<Profile>("/api/profile", payload),
+    mutationFn: (payload: UpdateProfilePayload) => api.patch<Profile>("/api/profile", payload),
     onSuccess: (updatedProfile) => {
       // Mise à jour du cache sans refetch pour éviter un aller-retour réseau
       queryClient.setQueryData(queryKeys.profile, updatedProfile);

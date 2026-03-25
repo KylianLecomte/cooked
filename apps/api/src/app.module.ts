@@ -9,13 +9,13 @@ import { AppService } from "./app.service";
 import { auth } from "./auth/auth";
 import type { EnvSchema } from "./config/env.schema";
 import { validateEnv } from "./config/env.validation";
+import { DiaryModule } from "./diary/diary.module";
 import { SentryExceptionFilter } from "./filter/sentry-exception.filter";
-import { buildPinoConfig } from "./logger/logger.config";
 import { FoodModule } from "./food/food.module";
+import { buildPinoConfig } from "./logger/logger.config";
 import { PrismaModule } from "./prisma/prisma.module";
 import { ProfileModule } from "./profile/profile.module";
 import { RedisModule } from "./redis/redis.module";
-import { DiaryModule } from './diary/diary.module';
 
 @Module({
   imports: [
