@@ -18,16 +18,33 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    services:
+      postgres:
+        image: postgres:18-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: cooked_e2e
+          POSTGRES_PASSWORD: cooked_dev_e2e
+          POSTGRES_DB: cooked_db_e2e
+        options: >-
+          --health-cmd "pg_isready -U cooked_e2e"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     # Variables d'environnement disponibles pour tous les steps du job
     env:
       # DATABASE_URL fictive pour que prisma generate puisse charger prisma.config.ts
       # prisma generate ne se connecte pas à la BDD — il lit uniquement schema.prisma
       # Sans cette variable, env() de Prisma 7 throw pendant postinstall
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/cooked_ci
+      DATABASE_URL: postgresql://cooked_e2e:cooked_dev_e2e@localhost:5432/cooked_db_e2e
       # Les autres variables sont optionnelles pour CI (pas de Redis, pas de Sentry)
       REDIS_HOST: localhost
       REDIS_PORT: "6379"
       REDIS_PASSWORD: placeholder
+      BETTER_AUTH_SECRET: ci-test-secret-that-is-at-least-32-chars
+      BETTER_AUTH_URL: http://localhost:3000
 
     steps:
       - name: Checkout
@@ -63,8 +80,14 @@ jobs:
       - name: Typecheck
         run: pnpm turbo typecheck
 
-      - name: Test
+      - name: Units tests
         run: pnpm turbo test
+
+      - name: Migrate test DB
+        run: pnpm --filter @cooked/api exec prisma migrate deploy --schema=./packages/api/prisma/schema.prisma
+
+      - name: E2E tests
+        run: pnpm --filter @cooked/api test:e2e
 
       - name: Coverage LCOV (pour SonarCloud)
         # On génère le rapport LCOV séparément — passer --coverage à turbo n'est pas fiable
