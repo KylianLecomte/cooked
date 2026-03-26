@@ -51,11 +51,7 @@ export class DiaryService {
       { ...createEmptySummary() },
     );
 
-    return {
-      ..._diaryEntry,
-      macrosTotals: _summary.macrosTotals,
-      macrosByMeal: _summary.macrosByMeal,
-    };
+    return { ..._diaryEntry, ..._summary };
   }
 
   async createFoodLog(
