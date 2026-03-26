@@ -84,7 +84,7 @@ jobs:
         run: pnpm turbo test
 
       - name: Migrate test DB
-        run: pnpm --filter @cooked/api exec prisma migrate deploy --schema=./packages/api/prisma/schema.prisma
+        run: pwd && pnpm --filter @cooked/api exec prisma migrate deploy --schema=./apps/api/prisma/schema.prisma
 
       - name: E2E tests
         run: pnpm --filter @cooked/api test:e2e
