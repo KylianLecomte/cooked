@@ -1,7 +1,6 @@
 import { FoodWithSource } from "@cooked/shared";
 
-export const mockFoodSummary: FoodWithSource = {
-  id: "food_1",
+export const mockFoodSummary: Omit<FoodWithSource, "id"> = {
   source: "OFF",
   sourceId: "off_123",
   name: "Chicken",

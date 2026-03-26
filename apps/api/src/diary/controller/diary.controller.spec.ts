@@ -1,6 +1,5 @@
 import { Test } from "@nestjs/testing";
 import { AuthGuard } from "@thallesp/nestjs-better-auth";
-import { BetterAuthSession } from "../../type/auth.type";
 import { DiaryService } from "../service/diary.service";
 import { DiaryController } from "./diary.controller";
 
@@ -23,7 +22,7 @@ const SESSION = {
     name: "Test User",
     image: null,
   },
-} satisfies BetterAuthSession;
+};
 
 // ── Tests ───────────────────────────────────────────────────────────────────
 
@@ -46,7 +45,6 @@ describe("DiaryController", () => {
 
   it("findByDate délègue au service avec userId et date", async () => {
     mockDiaryService.findByDate.mockResolvedValue({ id: "entry_1" });
-
     const result = await controller.findByDate(SESSION, "2026-03-25");
 
     expect(mockDiaryService.findByDate).toHaveBeenCalledWith("user_1", "2026-03-25");

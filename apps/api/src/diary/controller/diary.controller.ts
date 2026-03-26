@@ -2,7 +2,7 @@ import { DiaryEntryResponse, FoodLog, FoodLogWithoutFood } from "@cooked/shared"
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard, Session } from "@thallesp/nestjs-better-auth";
 import { ZodValidationPipe } from "src/zod/pipe/zod-validation.pipe";
-import { dateSchema } from "src/zod/schema/date.schema";
+import { dateSchema, uuidSchema } from "src/zod/schema/date.schema";
 import { BetterAuthSession } from "../../type/auth.type";
 import { CreateFoodLogDto, createFoodLogSchema } from "../dto/create-food-log.dto";
 import { UpdateFoodLogDto, updateFoodLogSchema } from "../dto/update-food-log.dto";
@@ -29,7 +29,7 @@ export class DiaryController {
    * POST /v1/api/diary/:date/log
    * Crée un nouveau journal alimentaire pour une date donnée.
    */
-  @Post(":date/log")
+  @Post(":date/food-log")
   async createFoodLog(
     @Session() session: BetterAuthSession,
     @Param("date", new ZodValidationPipe(dateSchema)) date: string,
@@ -58,7 +58,7 @@ export class DiaryController {
   @Delete(":logId")
   async deleteFoodLog(
     @Session() session: BetterAuthSession,
-    @Param("logId") logId: string,
+    @Param("logId", new ZodValidationPipe(uuidSchema)) logId: string,
   ): Promise<FoodLogWithoutFood> {
     return this.diaryService.deleteFoodLog(session.user.id, logId);
   }
