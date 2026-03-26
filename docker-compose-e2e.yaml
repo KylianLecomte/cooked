@@ -1,0 +1,40 @@
+services:
+
+  postgres_e2e:
+    image: postgres:18-alpine
+    container_name: cooked_postgres_e2e
+    environment:
+      POSTGRES_USER: cooked_e2e
+      POSTGRES_PASSWORD: cooked_dev_e2e
+      POSTGRES_DB: cooked_db_e2e
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data_e2e:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cooked_e2e -d cooked_db_e2e"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis_e2e:
+    image: redis:8-alpine
+    container_name: cooked_redis_e2e
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data_e2e:/data
+    command: redis-server --appendonly yes --requirepass cooked_dev_e2e
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "cooked_dev_e2e", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data_e2e:
+    name: cooked_postgres_data_e2e
+  redis_data_e2e:
+    name: cooked_redis_data_e2e

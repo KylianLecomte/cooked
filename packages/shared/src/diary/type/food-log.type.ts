@@ -1,4 +1,4 @@
-import { Food } from "../../food/type/food.type";
+import { FoodWithSource } from "../../food/type/food.type";
 import { Meal } from "./meal.type";
 
 export interface FoodLog {
@@ -6,7 +6,7 @@ export interface FoodLog {
   foodId: string;
   quantity: number;
   meal: Meal;
-  food: Food;
+  food: FoodWithSource;
 }
 
 export interface FoodLogWithoutFood extends Omit<FoodLog, "food"> {}

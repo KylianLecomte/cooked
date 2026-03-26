@@ -1,3 +1,3 @@
 import z from "zod";
 
-export const dateSchema = z.iso.date("Date invalide");
+export const dateSchema = z.iso.date("Invalid date format");

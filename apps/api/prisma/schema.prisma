@@ -200,7 +200,7 @@ model DiaryEntry {
   userId String
   date   DateTime @db.Date
 
-  logs FoodLog[]
+  foodLogs FoodLog[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

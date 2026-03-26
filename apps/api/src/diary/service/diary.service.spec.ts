@@ -29,11 +29,11 @@ const makeFoodLog = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
-const makeDiaryEntry = (logs = [makeFoodLog()]) => ({
+const makeDiaryEntry = (foodLogs = [makeFoodLog()]) => ({
   id: "entry_1",
   userId: USER_ID,
   date: DATE_OBJ,
-  logs,
+  foodLogs,
 });
 
 // ── Mock Prisma ─────────────────────────────────────────────────────────────
@@ -79,17 +79,17 @@ describe("DiaryService", () => {
       expect(result).toEqual({
         id: null,
         date: DATE_OBJ,
-        logs: [],
+        foodLogs: [],
         ...createEmptySummary(),
       });
 
       expect(mockPrismaClient.diaryEntry.findUnique).toHaveBeenCalledWith({
         where: { userId_date: { userId: USER_ID, date: DATE_OBJ } },
-        include: { logs: { include: { food: true } } },
+        include: { foodLogs: { include: { food: true } } },
       });
     });
 
-    it("retourne les logs avec les macros calculées", async () => {
+    it("retourne les foodLogs avec les macros calculées", async () => {
       mockPrismaClient.diaryEntry.findUnique.mockResolvedValue(makeDiaryEntry());
 
       const result = await service.findByDate(USER_ID, DATE_STR);
@@ -102,11 +102,11 @@ describe("DiaryService", () => {
     });
 
     it("répartit les macros par repas", async () => {
-      const logs = [
+      const foodLogs = [
         makeFoodLog({ id: "log_1", meal: "BREAKFAST", quantity: 100 }),
         makeFoodLog({ id: "log_2", meal: "LUNCH", quantity: 200 }),
       ];
-      mockPrismaClient.diaryEntry.findUnique.mockResolvedValue(makeDiaryEntry(logs));
+      mockPrismaClient.diaryEntry.findUnique.mockResolvedValue(makeDiaryEntry(foodLogs));
 
       const result = await service.findByDate(USER_ID, DATE_STR);
 

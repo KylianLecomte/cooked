@@ -17,19 +17,19 @@ export class DiaryService {
   async findByDate(userId: string, date: string): Promise<DiaryEntryResponse> {
     const _diaryEntry = await this._prisma.client.diaryEntry.findUnique({
       where: { userId_date: { userId, date: new Date(date) } },
-      include: { logs: { include: { food: true } } },
+      include: { foodLogs: { include: { food: true } } },
     });
 
     if (!_diaryEntry) {
       return {
         id: null,
         date: new Date(date),
-        logs: [],
+        foodLogs: [],
         ...createEmptySummary(),
       };
     }
 
-    const _summary = _diaryEntry.logs.reduce(
+    const _summary = _diaryEntry.foodLogs.reduce(
       (acc, log) => {
         const logKcal = Math.round(log.food.kcalPer100g * (log.quantity / 100));
         const logProtein = Math.round(log.food.proteinPer100g * (log.quantity / 100));

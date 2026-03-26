@@ -7,6 +7,7 @@ import type { NestExpressApplication } from "@nestjs/platform-express";
 import { Logger as PinoLogger } from "nestjs-pino";
 import { AppModule } from "./app.module";
 import type { EnvSchema } from "./config/env.schema";
+import { API_PREFIX } from "./util/constant";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -17,7 +18,7 @@ async function bootstrap() {
   });
 
   app.useLogger(app.get(PinoLogger));
-  app.setGlobalPrefix("v1/api");
+  app.setGlobalPrefix(API_PREFIX);
   const configService = app.get(ConfigService<EnvSchema>);
   const port = configService.get("PORT", { infer: true });
 

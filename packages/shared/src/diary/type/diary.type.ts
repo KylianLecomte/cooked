@@ -11,7 +11,7 @@ export interface MacrosSummary {
 export interface DiaryEntryResponse {
   id: string | null;
   date: Date;
-  logs: FoodLog[];
+  foodLogs: FoodLog[];
   macrosTotals: MacrosSummary;
   macrosByMeal: Record<Meal, MacrosSummary>;
 }

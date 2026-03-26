@@ -18,11 +18,18 @@ export const FoodCategory = {
 export type FoodCategory = TypesValuesOf<typeof FoodCategory>;
 export const FOOD_CATEGORIES = Object.values(FoodCategory);
 
-export interface Food {
+export interface FoodWithSource {
   id: string;
+  source: FoodSource;
+  sourceId: string;
   name: string;
+  brand: string;
+  category: FoodCategory;
   kcalPer100g: number;
   proteinPer100g: number;
   carbsPer100g: number;
   fatPer100g: number;
+  fiberPer100g: number;
 }
+
+export interface Food extends Omit<FoodWithSource, "source" | "sourceId"> {}
