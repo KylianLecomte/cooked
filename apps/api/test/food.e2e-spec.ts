@@ -4,23 +4,15 @@ import { seedFood, seedMultipleFoods, seedUsdaFood } from "src/food/mock/food.se
 import { PrismaService } from "src/prisma/prisma.service";
 import { API_PREFIX } from "src/util/constant";
 import request from "supertest";
-import { cleanDatabase, createTestApp } from "./helper/setup";
+import { cleanDatabase, createTestAppWithMockedApis } from "./helper/setup";
 
-/**
- * Food Controller E2E Tests
- *
- * Tests the three main endpoints:
- * - GET /foods/search?q=query - Search across USDA and OFF
- * - GET /foods/barcode/:barcode - Lookup by EAN/UPC barcode
- * - GET /foods/:id - Get complete food details with micronutrients
- */
 describe("FoodController (e2e)", () => {
   const BASE_PATH_FOOD = `/${API_PREFIX}/foods`;
   let app: INestApplication;
   let prisma: PrismaService;
 
   beforeAll(async () => {
-    app = await createTestApp();
+    app = await createTestAppWithMockedApis();
     prisma = app.get(PrismaService);
   });
 
@@ -119,6 +111,7 @@ describe("FoodController (e2e)", () => {
 
     it("[Success case] - should include all macro data", async () => {
       const food = await seedFood(prisma, {
+        name: "Food with macros",
         kcalPer100g: 200,
         proteinPer100g: 25,
         carbsPer100g: 15,

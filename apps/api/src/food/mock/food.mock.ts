@@ -146,6 +146,16 @@ export interface MockServices {
   };
 }
 
+export const createMockUsdaService = (defaultSearchResults?: UsdaSearchFood[]) => ({
+  search: vi.fn().mockResolvedValue(defaultSearchResults ?? [createMockUsdaFood()]),
+  getDetail: vi.fn().mockResolvedValue(createMockUsdaFood()),
+});
+
+export const createMockOffService = (defaultProduct?: OffProduct) => ({
+  search: vi.fn().mockResolvedValue([defaultProduct ?? createMockOffProduct()]),
+  getByBarcode: vi.fn().mockResolvedValue(defaultProduct ?? createMockOffProduct()),
+});
+
 export const createMockServices = (): MockServices => ({
   prisma: {
     client: {
@@ -160,14 +170,8 @@ export const createMockServices = (): MockServices => ({
     getJson: vi.fn(),
     setJson: vi.fn(),
   },
-  usda: {
-    search: vi.fn(),
-    getDetail: vi.fn(),
-  },
-  off: {
-    search: vi.fn(),
-    getByBarcode: vi.fn(),
-  },
+  usda: createMockUsdaService(),
+  off: createMockOffService(),
 });
 
 export const mockNormalizeUsdaSearch = (data?: Record<string, unknown>) => {
