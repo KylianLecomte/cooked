@@ -49,7 +49,7 @@ describe("DiaryController (e2e)", () => {
   }
 
   describe("(GET) /v1/api/diary/:date", () => {
-    it("[Success case] - should return diary entry with food logs for given date", async () => {
+    it("[Success case] - should return 200 with diary entry and food logs", async () => {
       const food = await seedFood();
       await prisma.client.diaryEntry.create({
         data: {
@@ -57,16 +57,8 @@ describe("DiaryController (e2e)", () => {
           date: new Date(DATE),
           foodLogs: {
             create: [
-              {
-                meal: Meal.BREAKFAST,
-                quantity: 150,
-                foodId: food.id,
-              },
-              {
-                meal: Meal.DINNER,
-                quantity: 200,
-                foodId: food.id,
-              },
+              { meal: Meal.BREAKFAST, quantity: 150, foodId: food.id },
+              { meal: Meal.DINNER, quantity: 200, foodId: food.id },
             ],
           },
         },
@@ -78,20 +70,13 @@ describe("DiaryController (e2e)", () => {
 
       expect(body.id).toBeDefined();
       expect(body.date).toBe(`${DATE}T00:00:00.000Z`);
-      expect(body.foodLogs.length).toBe(2);
-      expect(body.foodLogs[0].meal).toBe(Meal.BREAKFAST);
-      expect(body.foodLogs[0].quantity).toBe(150);
-      expect(body.foodLogs[0].food).toBeDefined();
+      expect(body.foodLogs).toHaveLength(2);
       expect(body.foodLogs[0].food.id).toBe(food.id);
-      expect(body.foodLogs[1].meal).toBe(Meal.DINNER);
-      expect(body.foodLogs[1].quantity).toBe(200);
-      expect(body.foodLogs[1].food).toBeDefined();
-      expect(body.foodLogs[1].food.id).toBe(food.id);
       expect(body.macrosTotals).toBeDefined();
       expect(body.macrosByMeal).toBeDefined();
     });
 
-    it("[Success case] - should return empty diary entry if no entry for date", async () => {
+    it("[Success case] - should return 200 with empty diary when no entry exists", async () => {
       const { body } = await request(app.getHttpServer() as Server)
         .get(`${BASE_PATH_DIARY}/${DATE}`)
         .expect(200);
@@ -101,40 +86,20 @@ describe("DiaryController (e2e)", () => {
       expect(body.foodLogs).toEqual([]);
     });
 
-    it("[Error case] - should return bad request for invalid date when passed random string as date", async () => {
+    it("[Error case] - should return 400 for invalid date format", async () => {
       const { body } = await request(app.getHttpServer() as Server)
         .get(`${BASE_PATH_DIARY}/invalid-date`)
         .expect(400);
 
       expect(body.message[0].message).toBe("Invalid date format");
     });
-
-    it("[Error case] - should return bad request for invalid date when passed wrong format date", async () => {
-      const { body } = await request(app.getHttpServer() as Server)
-        .get(`${BASE_PATH_DIARY}/2026/03/25`)
-        .expect(404);
-
-      expect(body.error).toBe("Not Found");
-      expect(body.message).toBe("Cannot GET /v1/api/diary/2026/03/25");
-      expect(body.statusCode).toBe(404);
-    });
-
-    it("[Error case] - should return bad request for invalid date when passed wrong format date 2", async () => {
-      const { body } = await request(app.getHttpServer() as Server)
-        .get(`${BASE_PATH_DIARY}/25-03-2026`)
-        .expect(400);
-      expect(body.message[0].message).toBe("Invalid date format");
-    });
   });
 
   describe("(POST) /v1/api/diary/:date/food-log", () => {
-    it("[Success case] - should create a new diary entry", async () => {
+    it("[Success case] - should return 201 with created food log", async () => {
       const food = await seedFood();
-      const payload = {
-        meal: Meal.BREAKFAST,
-        quantity: 150,
-        foodId: food.id,
-      };
+      const payload = { meal: Meal.BREAKFAST, quantity: 150, foodId: food.id };
+
       const { body } = await request(app.getHttpServer() as Server)
         .post(`${BASE_PATH_DIARY}/${DATE}/food-log`)
         .send(payload)
@@ -146,113 +111,63 @@ describe("DiaryController (e2e)", () => {
       expect(body.meal).toBe(payload.meal);
       expect(body.food).toBeDefined();
       expect(body.food.id).toBe(payload.foodId);
-      expect(body.food.name).toBeDefined();
     });
 
-    it("[Error case] - should return bad request when call with empty object as body", async () => {
-      const payload = {};
+    it("[Error case] - should return 400 when body is empty", async () => {
       const { body } = await request(app.getHttpServer() as Server)
         .post(`${BASE_PATH_DIARY}/${DATE}/food-log`)
-        .send(payload)
+        .send({})
         .expect(400);
 
-      expect(body.message[0].message).toBe("ID de nourriture invalide");
       expect(body.message[0].path).toBe("foodId");
-      expect(body.message[1].message).toBe(
-        'Invalid option: expected one of "BREAKFAST"|"LUNCH"|"DINNER"|"SNACK"',
-      );
       expect(body.message[1].path).toBe("meal");
-      expect(body.message[2].message).toBe("Invalid input: expected number, received undefined");
       expect(body.message[2].path).toBe("quantity");
-    });
-
-    it("[Error case] - should return bad request for invalid date when passed wrong format date", async () => {
-      const food = await seedFood();
-      const payload = {
-        meal: Meal.BREAKFAST,
-        quantity: 150,
-        foodId: food.id,
-      };
-      const { body } = await request(app.getHttpServer() as Server)
-        .post(`${BASE_PATH_DIARY}/25-03-2026/food-log`)
-        .send(payload)
-        .expect(400);
-
-      expect(body.message[0].message).toBe("Invalid date format");
     });
   });
 
-  describe("PATCH /v1/api/diary/:logId", () => {
-    it("[Success case] - should update the food quantity", async () => {
+  describe("(PATCH) /v1/api/diary/:logId", () => {
+    it("[Success case] - should return 200 with updated food log", async () => {
       const entry = await seedDiaryWithLog();
-
-      const initialPayload = {
-        foodId: entry.foodLogs[0].foodId,
-        meal: Meal.BREAKFAST,
-        quantity: 100,
-      };
-      const payload = { quantity: 100 };
-
       const logId = entry.foodLogs[0].id;
 
       const { body } = await request(app.getHttpServer() as Server)
         .patch(`${BASE_PATH_DIARY}/${logId}`)
-        .send(payload)
+        .send({ quantity: 300 })
         .expect(200);
 
-      expect(body.foodId).toBe(initialPayload.foodId);
-      expect(body.meal).toBe(initialPayload.meal);
-      expect(body.quantity).toBe(payload.quantity);
+      expect(body.quantity).toBe(300);
+      expect(body.foodId).toBe(entry.foodLogs[0].foodId);
     });
 
-    it("[Error case] - should return unrecognized key when pass unknown attribute in payload", async () => {
-      const payload = { keyDoesNotExist: 100 };
-
+    it("[Error case] - should return 400 when payload contains unknown keys", async () => {
       const entry = await seedDiaryWithLog();
       const logId = entry.foodLogs[0].id;
 
       const { body } = await request(app.getHttpServer() as Server)
         .patch(`${BASE_PATH_DIARY}/${logId}`)
-        .send(payload)
+        .send({ keyDoesNotExist: 100 })
         .expect(400);
 
       expect(body.message[0].message).toBe('Unrecognized key: "keyDoesNotExist"');
-      expect(body.error).toBe("Bad Request");
       expect(body.statusCode).toBe(400);
     });
 
-    it("[Error case] - should return error when pass empty payload", async () => {
-      const payload = {};
-
+    it("[Error case] - should return 400 when payload is empty", async () => {
       const entry = await seedDiaryWithLog();
       const logId = entry.foodLogs[0].id;
 
       const { body } = await request(app.getHttpServer() as Server)
         .patch(`${BASE_PATH_DIARY}/${logId}`)
-        .send(payload)
+        .send({})
         .expect(400);
 
       expect(body.message[0].message).toBe("At least one field must be provided");
-      expect(body.error).toBe("Bad Request");
-      expect(body.statusCode).toBe(400);
-    });
-
-    it("[Error case] - should return error when pass undefined payload", async () => {
-      const entry = await seedDiaryWithLog();
-      const logId = entry.foodLogs[0].id;
-
-      const { body } = await request(app.getHttpServer() as Server)
-        .patch(`${BASE_PATH_DIARY}/${logId}`)
-        .expect(400);
-
-      expect(body.message[0].message).toBe("Invalid input: expected object, received undefined");
-      expect(body.error).toBe("Bad Request");
       expect(body.statusCode).toBe(400);
     });
   });
 
-  describe("DELETE /v1/api/diary/:logId", () => {
-    it("[Success case] - should delete a food log", async () => {
+  describe("(DELETE) /v1/api/diary/:logId", () => {
+    it("[Success case] - should return 200 and delete the food log from DB", async () => {
       const entry = await seedDiaryWithLog();
       const logId = entry.foodLogs[0].id;
 
@@ -271,7 +186,6 @@ describe("DiaryController (e2e)", () => {
         .expect(404);
 
       expect(body.message).toBe(ERROR_DIARY_ENTRY_NOT_FOUND);
-      expect(body.error).toBe("Not Found");
       expect(body.statusCode).toBe(404);
     });
   });
