@@ -1,3 +1,4 @@
+import { BadRequestException } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { AuthGuard } from "@thallesp/nestjs-better-auth";
 import { FoodService } from "../service/food.service";
@@ -9,7 +10,7 @@ const mockFoodService = {
   findById: vi.fn(),
 };
 
-describe("DiaryController", () => {
+describe("FoodController", () => {
   let controller: FoodController;
 
   beforeEach(async () => {
@@ -26,32 +27,54 @@ describe("DiaryController", () => {
     controller = module.get(FoodController);
   });
 
-  it("search should call foodService.search", async () => {
-    const expectedResult = [{ id: "1" }, { id: "2" }];
-    mockFoodService.search.mockResolvedValue(expectedResult);
-    const result = await controller.search("query   ");
+  describe("search", () => {
+    it("should call foodService.search with trimmed query", async () => {
+      const expectedResult = [{ id: "1" }, { id: "2" }];
+      mockFoodService.search.mockResolvedValue(expectedResult);
 
-    expect(mockFoodService.search).toHaveBeenCalledWith("query");
-    expect(result).toEqual(expectedResult);
+      const result = await controller.search("  chicken breast  ");
+
+      expect(mockFoodService.search).toHaveBeenCalledWith("chicken breast");
+      expect(result).toEqual(expectedResult);
+    });
+
+    it("should throw BadRequestException when query is undefined", async () => {
+      await expect(controller.search(undefined as unknown as string)).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(mockFoodService.search).not.toHaveBeenCalled();
+    });
+
+    it("should throw BadRequestException when query is empty string", async () => {
+      await expect(controller.search("")).rejects.toThrow(BadRequestException);
+      expect(mockFoodService.search).not.toHaveBeenCalled();
+    });
+
+    it("should throw BadRequestException when query is only whitespace", async () => {
+      await expect(controller.search("   ")).rejects.toThrow(BadRequestException);
+      expect(mockFoodService.search).not.toHaveBeenCalled();
+    });
   });
 
-  it("findByBarcode should call foodService.findByBarcode", async () => {
-    const param = "barcode";
-    mockFoodService.findByBarcode.mockResolvedValue({ id: "log_1" });
+  describe("findByBarcode", () => {
+    it("should call foodService.findByBarcode with given barcode", async () => {
+      mockFoodService.findByBarcode.mockResolvedValue({ id: "food_1" });
 
-    const result = await controller.findByBarcode(param);
+      const result = await controller.findByBarcode("5000112126619");
 
-    expect(mockFoodService.findByBarcode).toHaveBeenCalledWith(param);
-    expect(result).toEqual({ id: "log_1" });
+      expect(mockFoodService.findByBarcode).toHaveBeenCalledWith("5000112126619");
+      expect(result).toEqual({ id: "food_1" });
+    });
   });
 
-  it("findById should call foodService.findById", async () => {
-    const param = "id";
-    mockFoodService.findById.mockResolvedValue({ id: "log_1" });
+  describe("findById", () => {
+    it("should call foodService.findById with given id", async () => {
+      mockFoodService.findById.mockResolvedValue({ id: "food_1" });
 
-    const result = await controller.findById(param);
+      const result = await controller.findById("food_1");
 
-    expect(mockFoodService.findById).toHaveBeenCalledWith(param);
-    expect(result).toEqual({ id: "log_1" });
+      expect(mockFoodService.findById).toHaveBeenCalledWith("food_1");
+      expect(result).toEqual({ id: "food_1" });
+    });
   });
 });
