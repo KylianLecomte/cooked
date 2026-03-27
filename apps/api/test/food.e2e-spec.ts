@@ -98,6 +98,7 @@ describe("FoodController (e2e)", () => {
         .expect(200);
 
       if (body !== null) {
+        console.debug(body);
         expect(body.name).toBeDefined();
         expect(body.kcalPer100g).toBeDefined();
       }
