@@ -2,19 +2,9 @@ import { ExecutionContext, INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { AuthGuard } from "@thallesp/nestjs-better-auth";
 import { AppModule } from "src/app.module";
+import { SESSION, TEST_USER, TEST_USER_ID } from "src/auth/fixture/auth.fixture";
 import { PrismaService } from "src/prisma/prisma.service";
 import { API_PREFIX } from "src/util/constant";
-
-export const TEST_USER_ID = "test_user_1";
-
-export const TEST_USER = {
-  id: TEST_USER_ID,
-  email: "test@test.com",
-  name: "Test User",
-  emailVerified: true,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
 
 export async function createTestApp(): Promise<INestApplication> {
   const moduleFixture = await Test.createTestingModule({
@@ -25,9 +15,7 @@ export async function createTestApp(): Promise<INestApplication> {
     .useValue({
       canActivate: (context: ExecutionContext) => {
         const request = context.switchToHttp().getRequest();
-        request.session = {
-          user: { ...TEST_USER },
-        };
+        request.session = { ...SESSION };
         return true;
       },
     })
