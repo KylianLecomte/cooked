@@ -3,47 +3,45 @@ import { Meal } from "@cooked/shared";
 import { INestApplication } from "@nestjs/common";
 import { TEST_USER, TEST_USER_ID } from "src/auth/fixture/auth.fixture";
 import { ERROR_DIARY_ENTRY_NOT_FOUND } from "src/diary/util/diary.constant";
-import { mockFoodSummary } from "src/food/mock/food.mock";
+import { seedFood as seedFoodInDb } from "src/food/mock/food.seeder";
 import { PrismaService } from "src/prisma/prisma.service";
 import { API_PREFIX } from "src/util/constant";
 import request from "supertest";
 import { cleanDatabase, createTestApp } from "./helper/setup";
 
 describe("DiaryController (e2e)", () => {
-  const _BASE_PATH_DIARY = `/${API_PREFIX}/diary`;
-  const _DATE = "2026-03-25";
-  let _app: INestApplication;
-  let _prisma: PrismaService;
+  const BASE_PATH_DIARY = `/${API_PREFIX}/diary`;
+  const DATE = "2026-03-25";
+  let app: INestApplication;
+  let prisma: PrismaService;
 
   beforeAll(async () => {
-    _app = await createTestApp();
-    _prisma = _app.get(PrismaService);
+    app = await createTestApp();
+    prisma = app.get(PrismaService);
   });
 
   afterEach(async () => {
-    if (_app) {
-      await cleanDatabase(_app);
+    if (app) {
+      await cleanDatabase(app);
     }
   });
 
   afterAll(async () => {
-    if (_app) {
-      await _app.close();
+    if (app) {
+      await app.close();
     }
   });
 
-  async function _seedFood() {
-    return _prisma.client.food.create({
-      data: { ...mockFoodSummary },
-    });
+  async function seedFood() {
+    return seedFoodInDb(prisma);
   }
 
-  async function _seedDiaryWithLog(meal = Meal.BREAKFAST, quantity = 100) {
-    const food = await _seedFood();
-    return await _prisma.client.diaryEntry.create({
+  async function seedDiaryWithLog(meal = Meal.BREAKFAST, quantity = 100) {
+    const food = await seedFood();
+    return await prisma.client.diaryEntry.create({
       data: {
         userId: TEST_USER_ID,
-        date: new Date(_DATE),
+        date: new Date(DATE),
         foodLogs: { create: { foodId: food.id, meal, quantity } },
       },
       include: { foodLogs: true },
@@ -52,11 +50,11 @@ describe("DiaryController (e2e)", () => {
 
   describe("(GET) /v1/api/diary/:date", () => {
     it("[Success case] - should return diary entry with food logs for given date", async () => {
-      const food = await _seedFood();
-      await _prisma.client.diaryEntry.create({
+      const food = await seedFood();
+      await prisma.client.diaryEntry.create({
         data: {
           userId: TEST_USER.id,
-          date: new Date(_DATE),
+          date: new Date(DATE),
           foodLogs: {
             create: [
               {
@@ -74,12 +72,12 @@ describe("DiaryController (e2e)", () => {
         },
       });
 
-      const { body } = await request(_app.getHttpServer() as Server)
-        .get(`${_BASE_PATH_DIARY}/${_DATE}`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .get(`${BASE_PATH_DIARY}/${DATE}`)
         .expect(200);
 
       expect(body.id).toBeDefined();
-      expect(body.date).toBe(`${_DATE}T00:00:00.000Z`);
+      expect(body.date).toBe(`${DATE}T00:00:00.000Z`);
       expect(body.foodLogs.length).toBe(2);
       expect(body.foodLogs[0].meal).toBe(Meal.BREAKFAST);
       expect(body.foodLogs[0].quantity).toBe(150);
@@ -94,26 +92,26 @@ describe("DiaryController (e2e)", () => {
     });
 
     it("[Success case] - should return empty diary entry if no entry for date", async () => {
-      const { body } = await request(_app.getHttpServer() as Server)
-        .get(`${_BASE_PATH_DIARY}/${_DATE}`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .get(`${BASE_PATH_DIARY}/${DATE}`)
         .expect(200);
 
       expect(body.id).toBeNull();
-      expect(body.date).toBe(`${_DATE}T00:00:00.000Z`);
+      expect(body.date).toBe(`${DATE}T00:00:00.000Z`);
       expect(body.foodLogs).toEqual([]);
     });
 
     it("[Error case] - should return bad request for invalid date when passed random string as date", async () => {
-      const { body } = await request(_app.getHttpServer() as Server)
-        .get(`${_BASE_PATH_DIARY}/invalid-date`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .get(`${BASE_PATH_DIARY}/invalid-date`)
         .expect(400);
 
       expect(body.message[0].message).toBe("Invalid date format");
     });
 
     it("[Error case] - should return bad request for invalid date when passed wrong format date", async () => {
-      const { body } = await request(_app.getHttpServer() as Server)
-        .get(`${_BASE_PATH_DIARY}/2026/03/25`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .get(`${BASE_PATH_DIARY}/2026/03/25`)
         .expect(404);
 
       expect(body.error).toBe("Not Found");
@@ -122,8 +120,8 @@ describe("DiaryController (e2e)", () => {
     });
 
     it("[Error case] - should return bad request for invalid date when passed wrong format date 2", async () => {
-      const { body } = await request(_app.getHttpServer() as Server)
-        .get(`${_BASE_PATH_DIARY}/25-03-2026`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .get(`${BASE_PATH_DIARY}/25-03-2026`)
         .expect(400);
       expect(body.message[0].message).toBe("Invalid date format");
     });
@@ -131,14 +129,14 @@ describe("DiaryController (e2e)", () => {
 
   describe("(POST) /v1/api/diary/:date/food-log", () => {
     it("[Success case] - should create a new diary entry", async () => {
-      const food = await _seedFood();
+      const food = await seedFood();
       const payload = {
         meal: Meal.BREAKFAST,
         quantity: 150,
         foodId: food.id,
       };
-      const { body } = await request(_app.getHttpServer() as Server)
-        .post(`${_BASE_PATH_DIARY}/${_DATE}/food-log`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .post(`${BASE_PATH_DIARY}/${DATE}/food-log`)
         .send(payload)
         .expect(201);
 
@@ -153,8 +151,8 @@ describe("DiaryController (e2e)", () => {
 
     it("[Error case] - should return bad request when call with empty object as body", async () => {
       const payload = {};
-      const { body } = await request(_app.getHttpServer() as Server)
-        .post(`${_BASE_PATH_DIARY}/${_DATE}/food-log`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .post(`${BASE_PATH_DIARY}/${DATE}/food-log`)
         .send(payload)
         .expect(400);
 
@@ -169,14 +167,14 @@ describe("DiaryController (e2e)", () => {
     });
 
     it("[Error case] - should return bad request for invalid date when passed wrong format date", async () => {
-      const food = await _seedFood();
+      const food = await seedFood();
       const payload = {
         meal: Meal.BREAKFAST,
         quantity: 150,
         foodId: food.id,
       };
-      const { body } = await request(_app.getHttpServer() as Server)
-        .post(`${_BASE_PATH_DIARY}/25-03-2026/food-log`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .post(`${BASE_PATH_DIARY}/25-03-2026/food-log`)
         .send(payload)
         .expect(400);
 
@@ -186,7 +184,7 @@ describe("DiaryController (e2e)", () => {
 
   describe("PATCH /v1/api/diary/:logId", () => {
     it("[Success case] - should update the food quantity", async () => {
-      const entry = await _seedDiaryWithLog();
+      const entry = await seedDiaryWithLog();
 
       const initialPayload = {
         foodId: entry.foodLogs[0].foodId,
@@ -197,8 +195,8 @@ describe("DiaryController (e2e)", () => {
 
       const logId = entry.foodLogs[0].id;
 
-      const { body } = await request(_app.getHttpServer() as Server)
-        .patch(`${_BASE_PATH_DIARY}/${logId}`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .patch(`${BASE_PATH_DIARY}/${logId}`)
         .send(payload)
         .expect(200);
 
@@ -210,11 +208,11 @@ describe("DiaryController (e2e)", () => {
     it("[Error case] - should return unrecognized key when pass unknown attribute in payload", async () => {
       const payload = { keyDoesNotExist: 100 };
 
-      const entry = await _seedDiaryWithLog();
+      const entry = await seedDiaryWithLog();
       const logId = entry.foodLogs[0].id;
 
-      const { body } = await request(_app.getHttpServer() as Server)
-        .patch(`${_BASE_PATH_DIARY}/${logId}`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .patch(`${BASE_PATH_DIARY}/${logId}`)
         .send(payload)
         .expect(400);
 
@@ -226,11 +224,11 @@ describe("DiaryController (e2e)", () => {
     it("[Error case] - should return error when pass empty payload", async () => {
       const payload = {};
 
-      const entry = await _seedDiaryWithLog();
+      const entry = await seedDiaryWithLog();
       const logId = entry.foodLogs[0].id;
 
-      const { body } = await request(_app.getHttpServer() as Server)
-        .patch(`${_BASE_PATH_DIARY}/${logId}`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .patch(`${BASE_PATH_DIARY}/${logId}`)
         .send(payload)
         .expect(400);
 
@@ -240,11 +238,11 @@ describe("DiaryController (e2e)", () => {
     });
 
     it("[Error case] - should return error when pass undefined payload", async () => {
-      const entry = await _seedDiaryWithLog();
+      const entry = await seedDiaryWithLog();
       const logId = entry.foodLogs[0].id;
 
-      const { body } = await request(_app.getHttpServer() as Server)
-        .patch(`${_BASE_PATH_DIARY}/${logId}`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .patch(`${BASE_PATH_DIARY}/${logId}`)
         .expect(400);
 
       expect(body.message[0].message).toBe("Invalid input: expected object, received undefined");
@@ -255,21 +253,21 @@ describe("DiaryController (e2e)", () => {
 
   describe("DELETE /v1/api/diary/:logId", () => {
     it("[Success case] - should delete a food log", async () => {
-      const entry = await _seedDiaryWithLog();
+      const entry = await seedDiaryWithLog();
       const logId = entry.foodLogs[0].id;
 
-      const { body } = await request(_app.getHttpServer() as Server)
-        .delete(`${_BASE_PATH_DIARY}/${logId}`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .delete(`${BASE_PATH_DIARY}/${logId}`)
         .expect(200);
 
       expect(body.id).toBe(logId);
-      const deleted = await _prisma.client.foodLog.findUnique({ where: { id: logId } });
+      const deleted = await prisma.client.foodLog.findUnique({ where: { id: logId } });
       expect(deleted).toBeNull();
     });
 
     it("[Error case] - should return 404 when food log does not exist", async () => {
-      const { body } = await request(_app.getHttpServer() as Server)
-        .delete(`${_BASE_PATH_DIARY}/46f6c3b5-0fbe-4596-b34e-801c3e7b2b78`)
+      const { body } = await request(app.getHttpServer() as Server)
+        .delete(`${BASE_PATH_DIARY}/46f6c3b5-0fbe-4596-b34e-801c3e7b2b78`)
         .expect(404);
 
       expect(body.message).toBe(ERROR_DIARY_ENTRY_NOT_FOUND);

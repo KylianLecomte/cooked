@@ -3,15 +3,13 @@ import { AuthGuard } from "@thallesp/nestjs-better-auth";
 import { FoodService } from "../service/food.service";
 import { FoodController } from "./food.controller";
 
-const _mockFoodService = {
+const mockFoodService = {
   search: vi.fn(),
   findByBarcode: vi.fn(),
   findById: vi.fn(),
 };
 
 describe("DiaryController", () => {
-  const _DATE = "2026-03-25";
-
   let controller: FoodController;
 
   beforeEach(async () => {
@@ -19,7 +17,7 @@ describe("DiaryController", () => {
 
     const module = await Test.createTestingModule({
       controllers: [FoodController],
-      providers: [{ provide: FoodService, useValue: _mockFoodService }],
+      providers: [{ provide: FoodService, useValue: mockFoodService }],
     })
       .overrideGuard(AuthGuard)
       .useValue({ canActivate: () => true })
@@ -29,31 +27,31 @@ describe("DiaryController", () => {
   });
 
   it("search should call foodService.search", async () => {
-    const _expectedResult = [{ id: "1" }, { id: "2" }];
-    _mockFoodService.search.mockResolvedValue(_expectedResult);
+    const expectedResult = [{ id: "1" }, { id: "2" }];
+    mockFoodService.search.mockResolvedValue(expectedResult);
     const result = await controller.search("query   ");
 
-    expect(_mockFoodService.search).toHaveBeenCalledWith("query");
-    expect(result).toEqual(_expectedResult);
+    expect(mockFoodService.search).toHaveBeenCalledWith("query");
+    expect(result).toEqual(expectedResult);
   });
 
   it("findByBarcode should call foodService.findByBarcode", async () => {
-    const _param = "barcode";
-    _mockFoodService.findByBarcode.mockResolvedValue({ id: "log_1" });
+    const param = "barcode";
+    mockFoodService.findByBarcode.mockResolvedValue({ id: "log_1" });
 
-    const result = await controller.findByBarcode(_param);
+    const result = await controller.findByBarcode(param);
 
-    expect(_mockFoodService.findByBarcode).toHaveBeenCalledWith(_param);
+    expect(mockFoodService.findByBarcode).toHaveBeenCalledWith(param);
     expect(result).toEqual({ id: "log_1" });
   });
 
   it("findById should call foodService.findById", async () => {
-    const _param = "id";
-    _mockFoodService.findById.mockResolvedValue({ id: "log_1" });
+    const param = "id";
+    mockFoodService.findById.mockResolvedValue({ id: "log_1" });
 
-    const result = await controller.findById(_param);
+    const result = await controller.findById(param);
 
-    expect(_mockFoodService.findById).toHaveBeenCalledWith(_param);
+    expect(mockFoodService.findById).toHaveBeenCalledWith(param);
     expect(result).toEqual({ id: "log_1" });
   });
 });

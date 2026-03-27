@@ -2,6 +2,13 @@ import { createEmptySummary, Meal } from "@cooked/shared";
 import { ForbiddenException, NotFoundException } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { PrismaService } from "src/prisma/prisma.service";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  createMockDiaryEntry,
+  createMockDiaryServices,
+  createMockFoodLog,
+  MockDiaryServices,
+} from "../mocks/diary.mock";
 import { ERROR_DIARY_ENTRY_NOT_FOUND, ERROR_FOOD_LOG_NOT_OWNED } from "../util/diary.constant";
 import { DiaryService } from "./diary.service";
 
@@ -10,56 +17,26 @@ const OTHER_USER_ID = "user_2";
 const DATE_STR = "2026-03-25";
 const DATE_OBJ = new Date(DATE_STR);
 
-const makeFoodLog = (overrides: Record<string, unknown> = {}) => ({
-  id: "log_1",
-  diaryEntryId: "entry_1",
-  foodId: "food_1",
-  meal: Meal.BREAKFAST,
-  quantity: 200,
-  food: {
-    id: "food_1",
-    name: "Poulet",
-    kcalPer100g: 165,
-    proteinPer100g: 31,
-    carbsPer100g: 0,
-    fatPer100g: 3.6,
-  },
-  ...overrides,
-});
-
-const makeDiaryEntry = (foodLogs = [makeFoodLog()]) => ({
-  id: "entry_1",
-  userId: USER_ID,
-  date: DATE_OBJ,
-  foodLogs,
-});
-
-const mockPrismaClient = {
-  diaryEntry: {
-    findUnique: vi.fn(),
-    upsert: vi.fn(),
-  },
-  foodLog: {
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-    findUnique: vi.fn(),
-  },
-};
-
-const mockPrismaService = { client: mockPrismaClient };
-
 describe("diaryService", () => {
   let service: DiaryService;
+  let mockServices: MockDiaryServices;
+  let mockPrismaClient: MockDiaryServices["prisma"]["client"];
 
   beforeEach(async () => {
     vi.clearAllMocks();
 
+    mockServices = createMockDiaryServices();
+    mockPrismaClient = mockServices.prisma.client;
+
     const module = await Test.createTestingModule({
-      providers: [DiaryService, { provide: PrismaService, useValue: mockPrismaService }],
+      providers: [DiaryService, { provide: PrismaService, useValue: mockServices.prisma }],
     }).compile();
 
     service = module.get(DiaryService);
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   describe("findByDate", () => {
@@ -83,10 +60,10 @@ describe("diaryService", () => {
 
     it("should return with food logs with calculated macros", async () => {
       const foodLogs = [
-        makeFoodLog({ id: "log_1", meal: Meal.BREAKFAST, quantity: 100 }),
-        makeFoodLog({ id: "log_2", meal: Meal.LUNCH, quantity: 200 }),
+        createMockFoodLog({ id: "log_1", meal: Meal.BREAKFAST, quantity: 100 }),
+        createMockFoodLog({ id: "log_2", meal: Meal.LUNCH, quantity: 200 }),
       ];
-      mockPrismaClient.diaryEntry.findUnique.mockResolvedValue(makeDiaryEntry(foodLogs));
+      mockPrismaClient.diaryEntry.findUnique.mockResolvedValue(createMockDiaryEntry({ foodLogs }));
 
       const result = await service.findByDate(USER_ID, DATE_STR);
 
@@ -102,7 +79,7 @@ describe("diaryService", () => {
 
     it("should upsert diary entry then create food log", async () => {
       mockPrismaClient.diaryEntry.upsert.mockResolvedValue({ id: "entry_1" });
-      mockPrismaClient.foodLog.create.mockResolvedValue(makeFoodLog());
+      mockPrismaClient.foodLog.create.mockResolvedValue(createMockFoodLog());
 
       await service.createFoodLog(USER_ID, DATE_STR, dto);
 
@@ -124,10 +101,10 @@ describe("diaryService", () => {
 
     it("update food log if the user is the owner", async () => {
       mockPrismaClient.foodLog.findUnique.mockResolvedValue({
-        ...makeFoodLog(),
+        ...createMockFoodLog(),
         diaryEntry: { userId: USER_ID },
       });
-      mockPrismaClient.foodLog.update.mockResolvedValue(makeFoodLog({ quantity: 300 }));
+      mockPrismaClient.foodLog.update.mockResolvedValue(createMockFoodLog({ quantity: 300 }));
 
       const result = await service.updateFoodLog(USER_ID, "log_1", dto);
 
@@ -149,7 +126,7 @@ describe("diaryService", () => {
 
     it("throw ForbiddenException if the food log is owned by another user", async () => {
       mockPrismaClient.foodLog.findUnique.mockResolvedValue({
-        ...makeFoodLog(),
+        ...createMockFoodLog(),
         diaryEntry: { userId: OTHER_USER_ID },
       });
 
@@ -163,7 +140,7 @@ describe("diaryService", () => {
     it("delete food log if the user is the owner", async () => {
       const logWithoutFood = { id: "log_1", foodId: "food_1", meal: Meal.BREAKFAST, quantity: 200 };
       mockPrismaClient.foodLog.findUnique.mockResolvedValue({
-        ...makeFoodLog(),
+        ...createMockFoodLog(),
         diaryEntry: { userId: USER_ID },
       });
       mockPrismaClient.foodLog.delete.mockResolvedValue(logWithoutFood);
@@ -182,7 +159,7 @@ describe("diaryService", () => {
 
     it("throw ForbiddenException if the food log is owned by another user", async () => {
       mockPrismaClient.foodLog.findUnique.mockResolvedValue({
-        ...makeFoodLog(),
+        ...createMockFoodLog(),
         diaryEntry: { userId: OTHER_USER_ID },
       });
 
