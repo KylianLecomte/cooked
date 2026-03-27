@@ -1,28 +1,12 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Food, FoodSummary } from "@cooked/shared";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { REDIS_CACHE_TTL_1D, REDIS_CACHE_TTL_7D } from "src/util/constant";
-import type { Food } from "../../../generated/prisma/client";
 import { FoodSource } from "../../../generated/prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 import { RedisService } from "../../redis/service/redis.service";
 import { normalizeOffProduct, normalizeUsdaDetail, normalizeUsdaSearch } from "../food.normalizer";
 import { OffService } from "../off.service";
 import { UsdaService } from "../usda.service";
-
-// Résumé léger d'un aliment (liste de recherche)
-export type FoodSummary = Pick<
-  Food,
-  | "id"
-  | "source"
-  | "sourceId"
-  | "name"
-  | "brand"
-  | "category"
-  | "kcalPer100g"
-  | "proteinPer100g"
-  | "carbsPer100g"
-  | "fatPer100g"
-  | "fiberPer100g"
->;
 
 const SUMMARY_SELECT = {
   id: true,
@@ -47,7 +31,6 @@ export class FoodService {
     private readonly off: OffService,
   ) {}
 
-  // ── Recherche unifiée ───────────────────────────────────────────────────────
   async search(query: string): Promise<FoodSummary[]> {
     const cacheKey = `food:search:${query.toLowerCase().trim()}`;
 
@@ -115,7 +98,6 @@ export class FoodService {
     return results;
   }
 
-  // ── Recherche par code-barre ────────────────────────────────────────────────
   async findByBarcode(barcode: string): Promise<FoodSummary | null> {
     const cacheKey = `food:barcode:${barcode}`;
 
@@ -155,11 +137,11 @@ export class FoodService {
       select: SUMMARY_SELECT,
     });
 
+    if (!food) throw new BadRequestException(`Produit ${barcode} introuvable`);
+
     await this.redis.setJson(cacheKey, food, REDIS_CACHE_TTL_7D);
     return food;
   }
-
-  // ── Détail complet (avec micronutriments) ───────────────────────────────────
 
   async findById(id: string): Promise<Food> {
     const cacheKey = `food:detail:${id}`;

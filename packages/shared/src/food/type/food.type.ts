@@ -58,3 +58,17 @@ export interface FoodWithSource {
 }
 
 export interface Food extends Omit<FoodWithSource, "source" | "sourceId"> {}
+
+export interface FoodSummary
+  extends Pick<
+    Food,
+    | "id"
+    | "name"
+    | "brand"
+    | "category"
+    | "kcalPer100g"
+    | "proteinPer100g"
+    | "carbsPer100g"
+    | "fatPer100g"
+    | "fiberPer100g"
+  > {}

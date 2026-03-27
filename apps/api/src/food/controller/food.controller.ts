@@ -1,3 +1,4 @@
+import { Food, FoodSummary } from "@cooked/shared";
 import { BadRequestException, Controller, Get, Param, Query, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@thallesp/nestjs-better-auth";
 import { FoodService } from "../service/food.service";
@@ -13,21 +14,19 @@ export class FoodController {
    * Retourne un tableau de FoodSummary (sans micronutriments détaillés).
    */
   @Get("search")
-  async search(@Query("q") query: string) {
+  async search(@Query("q") query: string): Promise<FoodSummary[]> {
     if (!query?.trim()) throw new BadRequestException("Le paramètre q est requis");
     return this.foodService.search(query.trim());
   }
 
   /**
-   * GET /v1/api/foods/barcode/:code
+   * GET /v1/api/foods/barcode/:barcode
    * Recherche par code-barre EAN/UPC via Open Food Facts.
    * Retourne un FoodSummary ou 404.
    */
-  @Get("barcode/:code")
-  async barcode(@Param("code") code: string) {
-    const food = await this.foodService.findByBarcode(code);
-    if (!food) throw new BadRequestException(`Produit ${code} introuvable`);
-    return food;
+  @Get("barcode/:barcode")
+  async findByBarcode(@Param("barcode") barcode: string): Promise<FoodSummary | null> {
+    return await this.foodService.findByBarcode(barcode);
   }
 
   /**
@@ -36,7 +35,7 @@ export class FoodController {
    * Si USDA et micros incomplets, fetche le détail complet en temps réel.
    */
   @Get(":id")
-  findOne(@Param("id") id: string) {
+  findById(@Param("id") id: string): Promise<Food> {
     return this.foodService.findById(id);
   }
 }
