@@ -10,4 +10,4 @@ export const updateFoodLogSchema = createFoodLogSchema
 
 export type UpdateFoodLog = z.infer<typeof updateFoodLogSchema>;
 
-export class UpdateFoodLogDto extends createZodDto(createFoodLogSchema) {}
+export class UpdateFoodLogDto extends createZodDto(updateFoodLogSchema) {}

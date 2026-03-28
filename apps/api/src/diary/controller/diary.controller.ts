@@ -4,8 +4,8 @@ import { AuthGuard, Session } from "@thallesp/nestjs-better-auth";
 import { GlobalZodValidationPipe } from "src/zod/pipe/zod-validation.pipe";
 import { dateSchema, uuidSchema } from "src/zod/schema/date.schema";
 import { BetterAuthSession } from "../../type/auth.type";
-import { CreateFoodLog } from "../dto/create-food-log.dto";
-import { UpdateFoodLog } from "../dto/update-food-log.dto";
+import { CreateFoodLogDto } from "../dto/create-food-log.dto";
+import { UpdateFoodLogDto } from "../dto/update-food-log.dto";
 import { DiaryService } from "../service/diary.service";
 
 @Controller("diary")
@@ -33,7 +33,7 @@ export class DiaryController {
   async createFoodLog(
     @Session() session: BetterAuthSession,
     @Param("date", new GlobalZodValidationPipe(dateSchema)) date: string,
-    @Body() foodLogDto: CreateFoodLog,
+    @Body() foodLogDto: CreateFoodLogDto,
   ): Promise<FoodLog> {
     return this.diaryService.createFoodLog(session.user.id, date, foodLogDto);
   }
@@ -46,7 +46,7 @@ export class DiaryController {
   async updateFoodLog(
     @Session() session: BetterAuthSession,
     @Param("logId") logId: string,
-    @Body() foodLogDto: UpdateFoodLog,
+    @Body() foodLogDto: UpdateFoodLogDto,
   ): Promise<FoodLog> {
     return this.diaryService.updateFoodLog(session.user.id, logId, foodLogDto);
   }

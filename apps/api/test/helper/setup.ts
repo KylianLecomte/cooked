@@ -8,6 +8,7 @@ import { OffService } from "src/food/off.service";
 import { UsdaService } from "src/food/usda.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { API_PREFIX } from "src/util/constant";
+import { GlobalZodValidationPipe } from "src/zod/pipe/global-zod-validation.pipe";
 
 export async function createTestApp(): Promise<INestApplication> {
   const moduleFixture = await Test.createTestingModule({
@@ -26,6 +27,7 @@ export async function createTestApp(): Promise<INestApplication> {
 
   const app = moduleFixture.createNestApplication();
   app.setGlobalPrefix(API_PREFIX);
+  app.useGlobalPipes(new GlobalZodValidationPipe());
 
   await app.init();
   await seedTestUser(app);
@@ -55,6 +57,7 @@ export async function createTestAppWithMockedApis(): Promise<INestApplication> {
 
   const app = moduleFixture.createNestApplication();
   app.setGlobalPrefix(API_PREFIX);
+  app.useGlobalPipes(new GlobalZodValidationPipe());
 
   await app.init();
   await seedTestUser(app);
