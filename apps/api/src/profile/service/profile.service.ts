@@ -1,6 +1,7 @@
 import type { ActivityLevel, Gender, Goal } from "@cooked/shared";
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
+import { zodSafeParse } from "../../zod/util/zod.util";
 import type { UpdateProfileDto } from "../dto/update-profile.dto";
 import { updateProfileSchema } from "../dto/update-profile.dto";
 import { calculateTdee, type TdeeResult } from "../tdee.calculator";
@@ -26,12 +27,7 @@ export class ProfileService {
   // 4. Upsert en BDD
 
   async upsert(userId: string, rawDto: unknown) {
-    const parseResult = updateProfileSchema.safeParse(rawDto);
-    if (!parseResult.success) {
-      throw new BadRequestException(parseResult.error.flatten().fieldErrors);
-    }
-
-    const dto: UpdateProfileDto = parseResult.data;
+    const dto: UpdateProfileDto = zodSafeParse(updateProfileSchema, rawDto);
 
     // Récupère le profil existant pour le merge (PATCH = merge, pas remplacement)
     const existing = await this.prisma.client.profile.findUnique({
@@ -49,7 +45,8 @@ export class ProfileService {
     };
 
     // Recalcule le TDEE seulement si tous les champs requis sont présents
-    const tdee = this.tryCalculateTdee(merged);
+    // bmrKcal est un résultat intermédiaire non persisté en BDD
+    const { bmrKcal: _, ...tdee } = this.tryCalculateTdee(merged);
 
     return this.prisma.client.profile.upsert({
       where: { userId },

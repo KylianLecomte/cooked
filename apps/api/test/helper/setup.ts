@@ -79,4 +79,5 @@ export async function cleanDatabase(app: INestApplication): Promise<void> {
   await prisma.client.foodLog.deleteMany();
   await prisma.client.diaryEntry.deleteMany();
   await prisma.client.food.deleteMany();
+  await prisma.client.profile.deleteMany();
 }
