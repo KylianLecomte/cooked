@@ -1,11 +1,11 @@
 import { DiaryEntryResponse, FoodLog, FoodLogWithoutFood } from "@cooked/shared";
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { AuthGuard, Session } from "@thallesp/nestjs-better-auth";
-import { ZodValidationPipe } from "src/zod/pipe/zod-validation.pipe";
+import { GlobalZodValidationPipe } from "src/zod/pipe/zod-validation.pipe";
 import { dateSchema, uuidSchema } from "src/zod/schema/date.schema";
 import { BetterAuthSession } from "../../type/auth.type";
-import { CreateFoodLogDto, createFoodLogSchema } from "../dto/create-food-log.dto";
-import { UpdateFoodLogDto, updateFoodLogSchema } from "../dto/update-food-log.dto";
+import { CreateFoodLog } from "../dto/create-food-log.dto";
+import { UpdateFoodLog } from "../dto/update-food-log.dto";
 import { DiaryService } from "../service/diary.service";
 
 @Controller("diary")
@@ -20,7 +20,7 @@ export class DiaryController {
   @Get(":date")
   async findByDate(
     @Session() session: BetterAuthSession,
-    @Param("date", new ZodValidationPipe(dateSchema)) date: string,
+    @Param("date", new GlobalZodValidationPipe(dateSchema)) date: string,
   ): Promise<DiaryEntryResponse> {
     return this.diaryService.findByDate(session.user.id, date);
   }
@@ -32,8 +32,8 @@ export class DiaryController {
   @Post(":date/food-log")
   async createFoodLog(
     @Session() session: BetterAuthSession,
-    @Param("date", new ZodValidationPipe(dateSchema)) date: string,
-    @Body(new ZodValidationPipe(createFoodLogSchema)) foodLogDto: CreateFoodLogDto,
+    @Param("date", new GlobalZodValidationPipe(dateSchema)) date: string,
+    @Body() foodLogDto: CreateFoodLog,
   ): Promise<FoodLog> {
     return this.diaryService.createFoodLog(session.user.id, date, foodLogDto);
   }
@@ -46,7 +46,7 @@ export class DiaryController {
   async updateFoodLog(
     @Session() session: BetterAuthSession,
     @Param("logId") logId: string,
-    @Body(new ZodValidationPipe(updateFoodLogSchema)) foodLogDto: UpdateFoodLogDto,
+    @Body() foodLogDto: UpdateFoodLog,
   ): Promise<FoodLog> {
     return this.diaryService.updateFoodLog(session.user.id, logId, foodLogDto);
   }
@@ -58,7 +58,7 @@ export class DiaryController {
   @Delete(":logId")
   async deleteFoodLog(
     @Session() session: BetterAuthSession,
-    @Param("logId", new ZodValidationPipe(uuidSchema)) logId: string,
+    @Param("logId", new GlobalZodValidationPipe(uuidSchema)) logId: string,
   ): Promise<FoodLogWithoutFood> {
     return this.diaryService.deleteFoodLog(session.user.id, logId);
   }

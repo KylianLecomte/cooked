@@ -1,4 +1,5 @@
 import { Meal } from "@cooked/shared";
+import { createZodDto } from "src/zod/util/zod.util";
 import z from "zod";
 
 export const createFoodLogSchema = z
@@ -12,4 +13,6 @@ export const createFoodLogSchema = z
   })
   .strict();
 
-export type CreateFoodLogDto = z.infer<typeof createFoodLogSchema>;
+export type CreateFoodLog = z.infer<typeof createFoodLogSchema>;
+
+export class CreateFoodLogDto extends createZodDto(createFoodLogSchema) {}

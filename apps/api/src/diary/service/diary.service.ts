@@ -6,8 +6,8 @@ import {
 } from "@cooked/shared";
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CreateFoodLogDto } from "../dto/create-food-log.dto";
-import { UpdateFoodLogDto } from "../dto/update-food-log.dto";
+import { CreateFoodLog } from "../dto/create-food-log.dto";
+import { UpdateFoodLog } from "../dto/update-food-log.dto";
 import { ERROR_DIARY_ENTRY_NOT_FOUND, ERROR_FOOD_LOG_NOT_OWNED } from "../util/diary.constant";
 
 @Injectable()
@@ -54,11 +54,7 @@ export class DiaryService {
     return { ...diaryEntry, ...summary };
   }
 
-  async createFoodLog(
-    userId: string,
-    date: string,
-    foodLogDto: CreateFoodLogDto,
-  ): Promise<FoodLog> {
+  async createFoodLog(userId: string, date: string, foodLogDto: CreateFoodLog): Promise<FoodLog> {
     const diaryEntry = await this.prisma.client.diaryEntry.upsert({
       where: { userId_date: { userId, date: new Date(date) } },
       create: { userId, date: new Date(date) },
@@ -74,11 +70,7 @@ export class DiaryService {
     });
   }
 
-  async updateFoodLog(
-    userId: string,
-    logId: string,
-    foodLogDto: UpdateFoodLogDto,
-  ): Promise<FoodLog> {
+  async updateFoodLog(userId: string, logId: string, foodLogDto: UpdateFoodLog): Promise<FoodLog> {
     await this.checkFoodLogOwnership(userId, logId);
 
     return this.prisma.client.foodLog.update({

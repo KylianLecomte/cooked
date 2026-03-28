@@ -8,6 +8,7 @@ import { Logger as PinoLogger } from "nestjs-pino";
 import { AppModule } from "./app.module";
 import type { EnvSchema } from "./config/env.schema";
 import { API_PREFIX } from "./util/constant";
+import { GlobalZodValidationPipe } from "./zod/pipe/global-zod-validation.pipe";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -19,6 +20,8 @@ async function bootstrap() {
 
   app.useLogger(app.get(PinoLogger));
   app.setGlobalPrefix(API_PREFIX);
+  app.useGlobalPipes(new GlobalZodValidationPipe());
+
   const configService = app.get(ConfigService<EnvSchema>);
   const port = configService.get("PORT", { infer: true });
 

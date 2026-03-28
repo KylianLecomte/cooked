@@ -1,3 +1,4 @@
+import { createZodDto } from "src/zod/util/zod.util";
 import z from "zod";
 import { createFoodLogSchema } from "./create-food-log.dto";
 
@@ -7,4 +8,6 @@ export const updateFoodLogSchema = createFoodLogSchema
     message: "At least one field must be provided",
   });
 
-export type UpdateFoodLogDto = z.infer<typeof updateFoodLogSchema>;
+export type UpdateFoodLog = z.infer<typeof updateFoodLogSchema>;
+
+export class UpdateFoodLogDto extends createZodDto(createFoodLogSchema) {}
