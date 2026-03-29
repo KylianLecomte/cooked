@@ -1,4 +1,5 @@
 import { Server } from "node:http";
+import { Gender } from "@cooked/shared";
 import { INestApplication } from "@nestjs/common";
 import { TEST_USER_ID } from "src/auth/fixture/auth.fixture";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -35,7 +36,6 @@ describe("ProfileController (e2e)", () => {
         .get(BASE_PATH_PROFILE)
         .expect(200);
 
-      // NestJS returns empty body when handler returns null
       expect(response.text).toBe("");
     });
 
@@ -43,7 +43,7 @@ describe("ProfileController (e2e)", () => {
       await prisma.client.profile.create({
         data: {
           userId: TEST_USER_ID,
-          gender: "MALE",
+          gender: Gender.MALE,
           heightCm: 180,
           weightKg: 80,
         },
@@ -54,7 +54,7 @@ describe("ProfileController (e2e)", () => {
         .expect(200);
 
       expect(body.userId).toBe(TEST_USER_ID);
-      expect(body.gender).toBe("MALE");
+      expect(body.gender).toBe(Gender.MALE);
       expect(body.heightCm).toBe(180);
     });
   });
@@ -63,18 +63,18 @@ describe("ProfileController (e2e)", () => {
     it("[Success case] - should return 200 and create profile on first update", async () => {
       const { body } = await request(app.getHttpServer() as Server)
         .patch(BASE_PATH_PROFILE)
-        .send({ gender: "MALE", heightCm: 180 })
+        .send({ gender: Gender.MALE, heightCm: 180 })
         .expect(200);
 
       expect(body.userId).toBe(TEST_USER_ID);
-      expect(body.gender).toBe("MALE");
+      expect(body.gender).toBe(Gender.MALE);
       expect(body.heightCm).toBe(180);
     });
 
     it("[Success case] - should return 200 and merge with existing profile", async () => {
       // Create initial profile
       await prisma.client.profile.create({
-        data: { userId: TEST_USER_ID, gender: "MALE", heightCm: 180 },
+        data: { userId: TEST_USER_ID, gender: Gender.MALE, heightCm: 180 },
       });
 
       // Update with additional fields
@@ -83,7 +83,7 @@ describe("ProfileController (e2e)", () => {
         .send({ weightKg: 80 })
         .expect(200);
 
-      expect(body.gender).toBe("MALE");
+      expect(body.gender).toBe(Gender.MALE);
       expect(body.heightCm).toBe(180);
       expect(body.weightKg).toBe(80);
     });
@@ -105,10 +105,10 @@ describe("ProfileController (e2e)", () => {
     it("[Success case] - should return 200 without TDEE when profile is incomplete", async () => {
       const { body } = await request(app.getHttpServer() as Server)
         .patch(BASE_PATH_PROFILE)
-        .send({ gender: "FEMALE" })
+        .send({ gender: Gender.FEMALE })
         .expect(200);
 
-      expect(body.gender).toBe("FEMALE");
+      expect(body.gender).toBe(Gender.FEMALE);
       expect(body.tdeeKcal).toBeNull();
       expect(body.targetKcal).toBeNull();
     });
