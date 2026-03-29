@@ -412,6 +412,21 @@ describe("FoodService", () => {
 
         await expect(service.findByBarcode(barcode)).rejects.toThrow("OFF API error");
       });
+
+      it("should throw BadRequestException when upsert returns null (defensive guard)", async () => {
+        const mockOffProduct = createMockOffProduct();
+
+        mockRedisService.getJson.mockResolvedValue(null);
+        mockPrismaService.client.food.findUnique.mockResolvedValue(null);
+        mockOffService.getByBarcode.mockResolvedValue(mockOffProduct);
+        mockNormalizeOffProduct();
+        // Prisma upsert returns null — defensive guard on line 140 must throw
+        mockPrismaService.client.food.upsert.mockResolvedValue(null as never);
+
+        await expect(service.findByBarcode(barcode)).rejects.toThrow(
+          `Produit ${barcode} introuvable`,
+        );
+      });
     });
   });
 

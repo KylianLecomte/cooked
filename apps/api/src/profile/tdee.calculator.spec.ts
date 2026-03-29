@@ -123,6 +123,40 @@ describe("calculateTdee", () => {
     });
   });
 
+  describe("age calculation — birthday not yet reached this year", () => {
+    it("should subtract a year when the birth month is later than current month", () => {
+      // Today is March — a December birthday hasn't occurred yet this year
+      const birthDate = new Date("1990-12-15");
+      const expectedAge = new Date().getFullYear() - 1990 - 1;
+      const result = calculateTdee({ ...BASE_PARAMS, birthDate, gender: "MALE" });
+      const expectedBmrValue = Math.round(
+        10 * BASE_PARAMS.weightKg + 6.25 * BASE_PARAMS.heightCm - 5 * expectedAge + 5,
+      );
+      expect(result.bmrKcal).toBe(expectedBmrValue);
+    });
+
+    it("should subtract a year when same month but day is later in the month", () => {
+      const today = new Date();
+      // Same month as today, but day = 28th of next month → use a day later than today in the same month
+      // We craft a birthdate: same month as today, but day = today.getDate() + 1 (if possible)
+      const birthMonth = String(today.getMonth() + 1).padStart(2, "0");
+      const birthDay = String(Math.min(today.getDate() + 1, 28)).padStart(2, "0");
+      const birthDate = new Date(`1990-${birthMonth}-${birthDay}`);
+      // Only run this assertion if birthDay is actually after today (avoids edge case on day 28+)
+      if (birthDate.getDate() > today.getDate()) {
+        const expectedAge = today.getFullYear() - 1990 - 1;
+        const result = calculateTdee({ ...BASE_PARAMS, birthDate, gender: "MALE" });
+        const expectedBmrValue = Math.round(
+          10 * BASE_PARAMS.weightKg + 6.25 * BASE_PARAMS.heightCm - 5 * expectedAge + 5,
+        );
+        expect(result.bmrKcal).toBe(expectedBmrValue);
+      } else {
+        // If we can't craft a valid future-in-month date (today is last day), just verify it doesn't throw
+        expect(() => calculateTdee({ ...BASE_PARAMS, birthDate, gender: "MALE" })).not.toThrow();
+      }
+    });
+  });
+
   describe("result structure", () => {
     it("should return all expected fields", () => {
       const result = calculateTdee(BASE_PARAMS);

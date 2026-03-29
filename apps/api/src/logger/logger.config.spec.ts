@@ -82,4 +82,33 @@ describe("buildPinoConfig", () => {
     expect(http.autoLogging?.ignore({ url: "/health" })).toBe(true);
     expect(http.autoLogging?.ignore({ url: "/api/diary" })).toBe(false);
   });
+
+  it("should format customSuccessMessage as '<method> <url> <status>'", () => {
+    const http = buildPinoConfig({ isDev: false }).pinoHttp as {
+      customSuccessMessage?: (
+        req: { method: string; url: string },
+        res: { statusCode: number },
+      ) => string;
+    };
+    expect(
+      http.customSuccessMessage?.({ method: "GET", url: "/v1/api/profile" }, { statusCode: 200 }),
+    ).toBe("GET /v1/api/profile 200");
+  });
+
+  it("should format customErrorMessage including the error message", () => {
+    const http = buildPinoConfig({ isDev: false }).pinoHttp as {
+      customErrorMessage?: (
+        req: { method: string; url: string },
+        res: { statusCode: number },
+        err: { message: string },
+      ) => string;
+    };
+    expect(
+      http.customErrorMessage?.(
+        { method: "POST", url: "/v1/api/diary" },
+        { statusCode: 500 },
+        { message: "DB crashed" },
+      ),
+    ).toBe("POST /v1/api/diary 500 — DB crashed");
+  });
 });

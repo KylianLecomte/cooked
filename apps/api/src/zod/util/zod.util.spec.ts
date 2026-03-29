@@ -60,6 +60,19 @@ describe("createZodDto", () => {
     const Dto = createZodDto(schema);
     expect(new Dto()).toBeDefined();
   });
+
+  it("should parse valid data via the static create method", () => {
+    // `create` exists at runtime even though the TS return type doesn't expose it
+    const Dto = createZodDto(schema) as unknown as {
+      create: (input: unknown) => { email: string };
+    };
+    expect(Dto.create({ email: "user@example.com" })).toEqual({ email: "user@example.com" });
+  });
+
+  it("should throw on invalid data via the static create method", () => {
+    const Dto = createZodDto(schema) as unknown as { create: (input: unknown) => unknown };
+    expect(() => Dto.create({ email: "not-an-email" })).toThrow();
+  });
 });
 
 describe("hasSchema", () => {
