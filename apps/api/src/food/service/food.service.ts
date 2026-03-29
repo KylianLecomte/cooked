@@ -5,8 +5,8 @@ import { FoodSource } from "../../../generated/prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 import { RedisService } from "../../redis/service/redis.service";
 import { normalizeOffProduct, normalizeUsdaDetail, normalizeUsdaSearch } from "../food.normalizer";
-import { OffService } from "../off.service";
-import { UsdaService } from "../usda.service";
+import { OffService } from "./off.service";
+import { UsdaService } from "./usda.service";
 
 const SUMMARY_SELECT = {
   id: true,

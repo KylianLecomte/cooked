@@ -20,9 +20,9 @@ import {
   mockNormalizeUsdaDetail,
   mockNormalizeUsdaSearch,
 } from "../mock/food.mock";
-import { OffService } from "../off.service";
-import { UsdaService } from "../usda.service";
 import { FoodService } from "./food.service";
+import { OffService } from "./off.service";
+import { UsdaService } from "./usda.service";
 
 describe("FoodService", () => {
   let service: FoodService;

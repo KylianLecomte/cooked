@@ -1,4 +1,4 @@
-import { createFoodLogSchema } from "src/diary/dto/create-food-log.dto";
+import { createFoodLogSchema } from "src/diary/schema/create-food-log.schema";
 import { GlobalZodValidationPipe } from "./zod-validation.pipe";
 
 describe("ZodValidationPipe", () => {

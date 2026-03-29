@@ -1,8 +1,8 @@
 import { Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { UsdaFoodDetail, UsdaSearchFood } from "./food.type";
-import { makeHttpResponse } from "./mock/food.mock";
+import type { UsdaFoodDetail, UsdaSearchFood } from "../food.type";
+import { makeHttpResponse } from "../mock/food.mock";
 import { UsdaService } from "./usda.service";
 
 const MOCK_SEARCH_FOOD: UsdaSearchFood = {

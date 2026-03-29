@@ -6,8 +6,8 @@ import {
 } from "@cooked/shared";
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CreateFoodLog } from "../dto/create-food-log.dto";
-import { UpdateFoodLog } from "../dto/update-food-log.dto";
+import { CreateFoodLog } from "../schema/create-food-log.schema";
+import { UpdateFoodLog } from "../schema/update-food-log.schema";
 import { ERROR_DIARY_ENTRY_NOT_FOUND, ERROR_FOOD_LOG_NOT_OWNED } from "../util/diary.constant";
 
 @Injectable()

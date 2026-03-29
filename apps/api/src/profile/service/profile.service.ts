@@ -2,8 +2,8 @@ import type { ActivityLevel, Gender, Goal } from "@cooked/shared";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import { zodSafeParse } from "../../zod/util/zod.util";
-import type { UpdateProfileDto } from "../dto/update-profile.dto";
-import { updateProfileSchema } from "../dto/update-profile.dto";
+import type { UpdateProfileDto } from "../dto/update-profile.schema";
+import { updateProfileSchema } from "../dto/update-profile.schema";
 import { calculateTdee, type TdeeResult } from "../tdee.calculator";
 
 @Injectable()

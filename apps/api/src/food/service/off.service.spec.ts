@@ -1,7 +1,7 @@
 import { Logger } from "@nestjs/common";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OffProduct } from "./food.type";
-import { makeHttpResponse } from "./mock/food.mock";
+import type { OffProduct } from "../food.type";
+import { makeHttpResponse } from "../mock/food.mock";
 import { OffService } from "./off.service";
 
 const MOCK_PRODUCT: OffProduct = {

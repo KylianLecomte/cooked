@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { FoodController } from "./controller/food.controller";
-import { OffService } from "./off.service";
 import { FoodService } from "./service/food.service";
-import { UsdaService } from "./usda.service";
+import { OffService } from "./service/off.service";
+import { UsdaService } from "./service/usda.service";
 
 @Module({
   controllers: [FoodController],
