@@ -10,21 +10,11 @@ import { calculateTdee, type TdeeResult } from "../tdee.calculator";
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ── Lecture du profil ───────────────────────────────────────────────────────
-
   async findByUserId(userId: string) {
     return this.prisma.client.profile.findUnique({
       where: { userId },
     });
   }
-
-  // ── Mise à jour (upsert) avec recalcul TDEE ─────────────────────────────────
-  //
-  // Stratégie :
-  // 1. Valider le body avec Zod
-  // 2. Récupérer le profil existant pour merger les champs (PATCH sémantique)
-  // 3. Si tous les champs requis pour le TDEE sont présents → calculer
-  // 4. Upsert en BDD
 
   async upsert(userId: string, rawDto: unknown) {
     const dto: UpdateProfileDto = zodSafeParse(updateProfileSchema, rawDto);
@@ -62,8 +52,6 @@ export class ProfileService {
     });
   }
 
-  // ── Calcul TDEE si tous les champs sont disponibles ─────────────────────────
-  //
   // Retourne un objet partiel Prisma (null par défaut si données incomplètes).
   // On passe null explicitement pour réinitialiser les valeurs calculées si
   // les données d'entrée deviennent incomplètes après une suppression de champ.

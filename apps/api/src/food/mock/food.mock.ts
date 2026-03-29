@@ -3,6 +3,14 @@ import { FoodCategory, FoodSource } from "../../../generated/prisma/client";
 import * as foodNormalizer from "../food.normalizer";
 import type { OffProduct, UsdaSearchFood } from "../food.type";
 
+export function makeHttpResponse(body: unknown, ok = true): Response {
+  return {
+    ok,
+    status: ok ? 200 : 500,
+    json: async () => body,
+  } as Response;
+}
+
 export const createMockFoodSummary = (overrides?: Record<string, unknown>) => ({
   id: "food_001",
   source: FoodSource.OFF,
