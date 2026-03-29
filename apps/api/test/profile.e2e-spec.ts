@@ -114,17 +114,25 @@ describe("ProfileController (e2e)", () => {
     });
 
     it("[Error case] - should return 400 for invalid gender value", async () => {
-      await request(app.getHttpServer() as Server)
+      const { body } = await request(app.getHttpServer() as Server)
         .patch(BASE_PATH_PROFILE)
         .send({ gender: "INVALID" })
         .expect(400);
+
+      expect(body.statusCode).toBe(400);
+      expect(Array.isArray(body.message)).toBe(true);
+      expect(body.message.some((e: { path: string }) => e.path === "gender")).toBe(true);
     });
 
     it("[Error case] - should return 400 for heightCm below minimum", async () => {
-      await request(app.getHttpServer() as Server)
+      const { body } = await request(app.getHttpServer() as Server)
         .patch(BASE_PATH_PROFILE)
         .send({ heightCm: 10 })
         .expect(400);
+
+      expect(body.statusCode).toBe(400);
+      expect(Array.isArray(body.message)).toBe(true);
+      expect(body.message.some((e: { path: string }) => e.path === "heightCm")).toBe(true);
     });
   });
 });
