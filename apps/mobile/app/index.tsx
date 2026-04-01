@@ -12,7 +12,7 @@ export default function Index() {
 
   if (isPending) {
     return (
-      <View className="flex-1 bg-[#080C10] items-center justify-center">
+      <View className="flex-1 color-cooked-bg items-center justify-center">
         <ActivityIndicator size="small" color="#4ADE80" />
       </View>
     );

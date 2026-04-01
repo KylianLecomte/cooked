@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import { Text } from "react-native";
 
 // Icônes texte en attendant @expo/vector-icons (P2)
-function TabIcon({ label }: { label: string }) {
+function TabIcon({ label }: { readonly label: string }) {
   return <Text className="text-base">{label}</Text>;
 }
 

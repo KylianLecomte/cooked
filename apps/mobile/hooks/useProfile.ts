@@ -1,6 +1,7 @@
 import type { ActivityLevel, Gender, Goal } from "@cooked/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "../lib/api-client";
+import { API_BACKEND_ENDPOINT } from "@/api/backend/api-backend.endpoint";
+import { api } from "../api/api.util";
 import { queryKeys } from "../lib/query-keys";
 
 // ── Type miroir du modèle Prisma Profile ─────────────────────────────────────
@@ -29,25 +30,22 @@ export type UpdateProfilePayload = Partial<
   Pick<Profile, "birthDate" | "gender" | "heightCm" | "weightKg" | "activityLevel" | "goal">
 >;
 
-// ── Hook de lecture ──────────────────────────────────────────────────────────
-
 export function useProfile() {
   return useQuery({
     queryKey: queryKeys.profile,
     // Retourne null si l'utilisateur n'a pas encore de profil (pas encore onboardé)
-    queryFn: () => api.get<Profile | null>("/api/profile"),
+    queryFn: () => api.get<Profile | null>(API_BACKEND_ENDPOINT.profile.base),
     // Retry réduit : une erreur réseau au boot ne doit pas bloquer 3× l'app
     retry: 1,
   });
 }
 
-// ── Hook de mise à jour ───────────────────────────────────────────────────────
-
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: UpdateProfilePayload) => api.patch<Profile>("/api/profile", payload),
+    mutationFn: (payload: UpdateProfilePayload) =>
+      api.patch<Profile>(API_BACKEND_ENDPOINT.profile.base, payload),
     onSuccess: (updatedProfile) => {
       // Mise à jour du cache sans refetch pour éviter un aller-retour réseau
       queryClient.setQueryData(queryKeys.profile, updatedProfile);

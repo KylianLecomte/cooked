@@ -171,6 +171,15 @@ importers:
       '@cooked/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@expo-google-fonts/dm-mono':
+        specifier: ^0.4.2
+        version: 0.4.2
+      '@expo-google-fonts/dm-sans':
+        specifier: ^0.4.2
+        version: 0.4.2
+      '@expo-google-fonts/dm-serif-display':
+        specifier: ^0.4.2
+        version: 0.4.2
       '@sentry/react-native':
         specifier: ^8.5.0
         version: 8.5.0(expo@55.0.5)(react-native@0.83.2(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
@@ -189,6 +198,9 @@ importers:
       expo-dev-client:
         specifier: ~55.0.13
         version: 55.0.13(expo@55.0.5)(typescript@5.9.3)
+      expo-font:
+        specifier: ^55.0.4
+        version: 55.0.4(expo@55.0.5)(react-native@0.83.2(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)
       expo-linking:
         specifier: ^55.0.7
         version: 55.0.7(expo@55.0.5)(react-native@0.83.2(@babel/core@7.29.0)(@types/react@19.2.14)(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
@@ -1223,6 +1235,15 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@expo-google-fonts/dm-mono@0.4.2':
+    resolution: {integrity: sha512-loMaZOkQRs1r7yt4rN39zcr9e0J+smwnSx929yuODkuiPfsY4PaW18C9SEZ0BvXfcBKoRhatGoIBl8V2MOYVPQ==}
+
+  '@expo-google-fonts/dm-sans@0.4.2':
+    resolution: {integrity: sha512-e/fLH5aCJzkEenz7axvEn8N7IJAKhUwNjIxS75h9j+Ip1M9S7d22M19gJN3A7QW4egVkBJRyQh1hQFhngQn9yA==}
+
+  '@expo-google-fonts/dm-serif-display@0.4.2':
+    resolution: {integrity: sha512-onlO8xAzsgMbKcwUE+fAgJ5AFHhk06VtaDN7eQOJwjV65QIciDKTiSNu1ymHc4m6g/x6D9OqPIYPXdTNIfaEaA==}
 
   '@expo-google-fonts/material-symbols@0.4.25':
     resolution: {integrity: sha512-MlwOpcYPLYu2+aDAwqv29l3sknNNxA36Jcu07Tg9+MTEvXk2SPcO8eQmwwDeVBbv5Wb6ToD1LmE+e0lLv/9WvA==}
@@ -7885,6 +7906,12 @@ snapshots:
 
   '@esbuild/win32-x64@0.27.3':
     optional: true
+
+  '@expo-google-fonts/dm-mono@0.4.2': {}
+
+  '@expo-google-fonts/dm-sans@0.4.2': {}
+
+  '@expo-google-fonts/dm-serif-display@0.4.2': {}
 
   '@expo-google-fonts/material-symbols@0.4.25': {}
 

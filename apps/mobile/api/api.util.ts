@@ -1,18 +1,6 @@
-import { authClient } from "./auth-client";
-
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000/v1/api";
-
-// ── Erreur API typée ──────────────────────────────────────────────────────────
-
-export class ApiError extends Error {
-  constructor(
-    public readonly status: number,
-    message: string,
-  ) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
+import { authClient } from "../lib/auth-client";
+import { API_BASE_URL } from "./api.constant";
+import { ApiError } from "./api.type";
 
 // ── Wrapper fetch central ─────────────────────────────────────────────────────
 //
