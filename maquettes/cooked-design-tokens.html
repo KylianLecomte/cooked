@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COOKED — Design Tokens</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ╔══════════════════════════════════════════════════════════════════════╗
+       ║                  DESIGN TOKENS — éditable ici                       ║
+       ╚══════════════════════════════════════════════════════════════════════╝ */
+    :root {
+      /* ── Fonds & surfaces (teinte bleu-gris très légère) ── */
+      --ckd-bg: #080A0C;  /* fond principal de l'app           */
+      --ckd-s1: #13161D;  /* cards, inputs, tab bar            */
+      --ckd-s2: #1C2028;  /* headers de menu, step dots        */
+
+      /* ── Bordures ── */
+      --ckd-b1: #23272F;  /* séparateurs, bordures de cards    */
+      --ckd-b2: #2E3441;  /* toggles, badges, sheet handle     */
+
+      /* ── Texte ── */
+      --ckd-tx: #F1F5F9;  /* texte principal         ~19:1 AAA */
+      --ckd-tm: #9DAFC6;  /* texte secondaire / muted ~7.8:1 AAA sur s1 */
+      --ckd-tf: #2E3441;  /* texte très subtil, dates futures  */
+
+      /* ── Orange — nav active, CTA primaire, lipides macros ── */
+      --ckd-orange: #FF6B2C;
+      --ckd-orange-s: rgba(255, 107, 44, 0.12);
+      --ckd-orange-m: rgba(255, 107, 44, 0.35);
+
+      /* ── Vert — succès, checkmarks, protéines dans les stats ── */
+      --ckd-green: #4ADE80;
+      --ckd-green-s: rgba(74, 222, 128, 0.12);
+
+      /* ── Bleu — protéines (macros), catégorie shopping ── */
+      --ckd-blue: #60A5FA;
+      --ckd-blue-s: rgba(96, 165, 250, 0.12);
+
+      /* ── Jaune — glucides (macros), breakfast, amidon shopping ── */
+      --ckd-yellow: #FBBF24;
+      --ckd-yellow-s: rgba(251, 191, 36, 0.12);
+
+      /* ── Violet — micronutriments, minéraux ── */
+      --ckd-purple: #A78BFA;
+      --ckd-purple-s: rgba(167, 139, 250, 0.12);
+
+      /* ── Teal — meal planning tab, CTA secondaire, cases cochées ── */
+      --ckd-teal: #2DD4BF;
+      --ckd-teal-s: rgba(45, 212, 191, 0.12);
+      --ckd-teal-m: rgba(45, 212, 191, 0.30);
+
+      /* ── Rouge — logout, erreurs, dépassement objectif ── */
+      --ckd-red: #F87171;
+
+      /* ── Polices ── */
+      --font-sans: 'DM Sans', sans-serif;
+      --font-serif: 'DM Serif Display', serif;
+      --font-mono: 'DM Mono', monospace;
+
+      /* ── Font sizes ── */
+      --fs9: 9px;
+      --fs10: 10px;
+      --fs11: 11px;
+      --fs12: 12px;
+      --fs13: 13px;
+      --fs14: 14px;
+      --fs15: 15px;
+      --fs16: 16px;
+      --fs17: 17px;
+      --fs19: 19px;
+      --fs22: 22px;
+      --fs23: 23px;
+      --fs26: 26px;
+      --fs32: 32px;
+      --fs44: 44px;
+      --fs52: 52px;
+
+      /* ── Letter spacing ── */
+      --ls-m-3: -3px;
+      --ls-m-2: -2px;
+      --ls-m-1: -1px;
+      --ls-m-0-5: -0.5px;
+      --ls-2: 2px;
+      --ls-3: 3px;
+      --ls-4: 4px;
+
+      /* ── Border radius ── */
+      --br-2: 2px;
+      --br-6: 6px;
+      --br-9: 9px;
+      --br-11: 11px;
+      --br-13: 13px;
+      --br-14: 14px;
+      --br-15: 15px;
+      --br-18: 18px;
+      --br-20: 20px;
+      --br-9999: 9999px;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════ */
+
+    body {
+      background: var(--ckd-bg);
+      color: var(--ckd-tx);
+      font-family: var(--font-sans);
+      font-size: var(--fs14);
+      line-height: 1.6;
+      padding: 40px 48px 80px;
+    }
+
+    /* ─── LAYOUT ────────────────────────────────────────────────────────── */
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: var(--fs32);
+      letter-spacing: var(--ls-m-1);
+      color: var(--ckd-tx);
+      margin-bottom: 4px;
+    }
+
+    .page-sub {
+      font-family: var(--font-mono);
+      font-size: var(--fs10);
+      letter-spacing: var(--ls-3);
+      color: var(--ckd-tm);
+      text-transform: uppercase;
+      margin-bottom: 56px;
+    }
+
+    section {
+      margin-bottom: 56px;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: var(--fs10);
+      letter-spacing: var(--ls-3);
+      color: var(--ckd-tm);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--ckd-b1);
+      padding-bottom: 10px;
+      margin-bottom: 24px;
+    }
+
+    /* ─── COULEURS ──────────────────────────────────────────────────────── */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .color-card {
+      background: var(--ckd-s1);
+      border: 1px solid var(--ckd-b1);
+      border-radius: var(--br-11);
+      overflow: hidden;
+    }
+
+    .color-swatch {
+      height: 64px;
+      width: 100%;
+    }
+
+    .color-info {
+      padding: 10px 12px 12px;
+    }
+
+    .color-token {
+      font-family: var(--font-mono);
+      font-size: var(--fs10);
+      color: var(--ckd-tm);
+      letter-spacing: var(--ls-2);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .color-value {
+      font-family: var(--font-mono);
+      font-size: var(--fs11);
+      color: var(--ckd-tx);
+      font-weight: 500;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .color-usage {
+      font-size: var(--fs10);
+      color: var(--ckd-tm);
+      line-height: 1.4;
+    }
+
+    /* Swatches transparentes : damier */
+    .swatch-transparent {
+      background-image:
+        linear-gradient(45deg, #1a1e26 25%, transparent 25%),
+        linear-gradient(-45deg, #1a1e26 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #1a1e26 75%),
+        linear-gradient(-45deg, transparent 75%, #1a1e26 75%);
+      background-size: 10px 10px;
+      background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+      position: relative;
+    }
+
+    .swatch-transparent>.swatch-overlay {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* ─── TYPOGRAPHIE ───────────────────────────────────────────────────── */
+    .type-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .type-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 200px;
+      align-items: center;
+      gap: 24px;
+      padding: 10px 16px;
+      background: var(--ckd-s1);
+      border: 1px solid var(--ckd-b1);
+      border-radius: var(--br-9);
+    }
+
+    .type-meta {
+      font-family: var(--font-mono);
+      font-size: var(--fs9);
+      letter-spacing: var(--ls-2);
+      color: var(--ckd-tm);
+    }
+
+    .type-meta strong {
+      display: block;
+      font-size: var(--fs11);
+      color: var(--ckd-tx);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .type-preview {
+      color: var(--ckd-tx);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .type-usage {
+      font-family: var(--font-mono);
+      font-size: var(--fs10);
+      color: var(--ckd-tm);
+      text-align: right;
+    }
+
+    /* ─── POLICES ───────────────────────────────────────────────────────── */
+    .font-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .font-card {
+      background: var(--ckd-s1);
+      border: 1px solid var(--ckd-b1);
+      border-radius: var(--br-11);
+      padding: 20px;
+    }
+
+    .font-card-label {
+      font-family: var(--font-mono);
+      font-size: var(--fs9);
+      letter-spacing: var(--ls-2);
+      color: var(--ckd-tm);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .font-card-sample {
+      font-size: var(--fs26);
+      color: var(--ckd-tx);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .font-weights {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 12px;
+      border-top: 1px solid var(--ckd-b1);
+      padding-top: 12px;
+    }
+
+    .font-weight-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--fs12);
+      color: var(--ckd-tx);
+    }
+
+    .font-weight-badge {
+      font-family: var(--font-mono);
+      font-size: var(--fs9);
+      color: var(--ckd-tm);
+    }
+
+    /* ─── LETTER SPACING ────────────────────────────────────────────────── */
+    .ls-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ls-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 80px;
+      align-items: center;
+      gap: 24px;
+      padding: 12px 16px;
+      background: var(--ckd-s1);
+      border: 1px solid var(--ckd-b1);
+      border-radius: var(--br-9);
+    }
+
+    .ls-token {
+      font-family: var(--font-mono);
+      font-size: var(--fs10);
+      color: var(--ckd-orange);
+    }
+
+    .ls-preview {
+      font-size: var(--fs14);
+      color: var(--ckd-tx);
+      font-family: var(--font-sans);
+    }
+
+    .ls-value {
+      font-family: var(--font-mono);
+      font-size: var(--fs10);
+      color: var(--ckd-tm);
+      text-align: right;
+    }
+
+    /* ─── BORDER RADIUS ─────────────────────────────────────────────────── */
+    .br-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .br-card {
+      background: var(--ckd-s1);
+      border: 1px solid var(--ckd-b1);
+      border-radius: var(--br-11);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .br-swatch {
+      width: 64px;
+      height: 64px;
+      background: var(--ckd-s2);
+      border: 2px solid var(--ckd-b2);
+    }
+
+    .br-info {
+      text-align: center;
+    }
+
+    .br-token {
+      font-family: var(--font-mono);
+      font-size: var(--fs10);
+      color: var(--ckd-orange);
+      display: block;
+      letter-spacing: var(--ls-2);
+    }
+
+    .br-value {
+      font-family: var(--font-mono);
+      font-size: var(--fs11);
+      color: var(--ckd-tx);
+      display: block;
+      font-weight: 500;
+    }
+
+    .br-usage {
+      font-size: var(--fs10);
+      color: var(--ckd-tm);
+      margin-top: 2px;
+    }
+
+    /* ─── COMPOSANT PREVIEW ─────────────────────────────────────────────── */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .preview-card {
+      background: var(--ckd-s1);
+      border: 1px solid var(--ckd-b1);
+      border-radius: var(--br-11);
+      padding: 16px;
+    }
+
+    .preview-card-title {
+      font-family: var(--font-mono);
+      font-size: var(--fs9);
+      letter-spacing: var(--ls-3);
+      color: var(--ckd-tm);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    /* Boutons */
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: var(--br-13);
+      font-family: var(--font-sans);
+      font-size: var(--fs14);
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--ckd-orange);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: var(--ckd-teal);
+      color: #000;
+    }
+
+    .btn-ghost {
+      background: var(--ckd-s2);
+      color: var(--ckd-tm);
+      border: 1px solid var(--ckd-b2);
+    }
+
+    .btn-danger {
+      background: var(--ckd-red);
+      color: #fff;
+    }
+
+    /* Pills / badges */
+    .pill-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: var(--br-20);
+      font-family: var(--font-mono);
+      font-size: var(--fs10);
+      font-weight: 700;
+      letter-spacing: var(--ls-2);
+    }
+
+    .pill-orange {
+      background: var(--ckd-orange-s);
+      color: var(--ckd-orange);
+      border: 1px solid var(--ckd-orange-m);
+    }
+
+    .pill-green {
+      background: var(--ckd-green-s);
+      color: var(--ckd-green);
+    }
+
+    .pill-blue {
+      background: var(--ckd-blue-s);
+      color: var(--ckd-blue);
+    }
+
+    .pill-yellow {
+      background: var(--ckd-yellow-s);
+      color: var(--ckd-yellow);
+    }
+
+    .pill-purple {
+      background: var(--ckd-purple-s);
+      color: var(--ckd-purple);
+    }
+
+    .pill-teal {
+      background: var(--ckd-teal-s);
+      color: var(--ckd-teal);
+    }
+
+    .pill-red {
+      background: rgba(248, 113, 113, 0.12);
+      color: var(--ckd-red);
+    }
+
+    /* Macros */
+    .macro-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .macro {
+      flex: 1;
+      background: var(--ckd-s2);
+      border-radius: var(--br-11);
+      padding: 12px;
+    }
+
+    .macro-label {
+      font-family: var(--font-mono);
+      font-size: var(--fs9);
+      letter-spacing: var(--ls-2);
+      margin-bottom: 6px;
+    }
+
+    .macro-value {
+      font-family: var(--font-sans);
+      font-size: var(--fs17);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .macro-sub {
+      font-family: var(--font-mono);
+      font-size: var(--fs9);
+      margin-top: 4px;
+    }
+
+    /* Input */
+    .inp-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .inp-label {
+      font-family: var(--font-mono);
+      font-size: var(--fs9);
+      letter-spacing: var(--ls-2);
+      color: var(--ckd-tm);
+      text-transform: uppercase;
+    }
+
+    .inp {
+      background: var(--ckd-s1);
+      border: 1px solid var(--ckd-b2);
+      border-radius: var(--br-13);
+      padding: 12px 14px;
+      font-family: var(--font-sans);
+      font-size: var(--fs14);
+      color: var(--ckd-tx);
+      outline: none;
+      width: 100%;
+    }
+
+    .inp::placeholder {
+      color: var(--ckd-tm);
+    }
+
+    .inp:focus {
+      border-color: var(--ckd-orange);
+    }
+
+    /* Calorie display */
+    .kcal-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 20px;
+      background: var(--ckd-s2);
+      border-radius: var(--br-15);
+    }
+
+    .kcal-number {
+      font-family: var(--font-serif);
+      font-size: var(--fs52);
+      color: var(--ckd-orange);
+      letter-spacing: var(--ls-m-3);
+      line-height: 1;
+    }
+
+    .kcal-unit {
+      font-family: var(--font-mono);
+      font-size: var(--fs10);
+      letter-spacing: var(--ls-3);
+      color: var(--ckd-tm);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+
+<body>
+
+  <p class="page-title">COOKED</p>
+  <p class="page-sub">Design Tokens — tailwind.config.js</p>
+
+  <!-- section 00 supprimée — thème E validé et appliqué dans :root -->
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 1 : COULEURS
+       ══════════════════════════════════════════════════════════════════════ -->
+  <section>
+    <p class="section-label">01 — Couleurs</p>
+
+    <!-- Fonds & surfaces -->
+    <p
+      style="font-family:var(--font-mono);font-size:var(--fs9);letter-spacing:var(--ls-2);color:var(--ckd-tm);text-transform:uppercase;margin-bottom:10px;">
+      Fonds &amp; surfaces</p>
+    <div class="color-grid" style="margin-bottom:24px;">
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-bg);border-bottom:1px solid var(--ckd-b1);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-bg</span>
+          <span class="color-value">#080A0C</span>
+          <span class="color-usage">Fond principal de l'app</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-s1);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-s1</span>
+          <span class="color-value">#13161D</span>
+          <span class="color-usage">Cards, inputs, tab bar</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-s2);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-s2</span>
+          <span class="color-value">#1C2028</span>
+          <span class="color-usage">Headers menu, step dots</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-b1);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-b1</span>
+          <span class="color-value">#23272F</span>
+          <span class="color-usage">Séparateurs, bordures de cards</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-b2);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-b2</span>
+          <span class="color-value">#2E3441</span>
+          <span class="color-usage">Toggles, badges, sheet handle</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Texte -->
+    <p
+      style="font-family:var(--font-mono);font-size:var(--fs9);letter-spacing:var(--ls-2);color:var(--ckd-tm);text-transform:uppercase;margin-bottom:10px;">
+      Texte</p>
+    <div class="color-grid" style="margin-bottom:24px;">
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-tx);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-tx</span>
+          <span class="color-value">#F1F5F9</span>
+          <span class="color-usage">Texte principal</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-tm);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-tm</span>
+          <span class="color-value">#9DAFC6</span>
+          <span class="color-usage">Texte secondaire / muted — ~7.8:1 AAA sur ckd-s1</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-tf);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-tf</span>
+          <span class="color-value">#2E3441</span>
+          <span class="color-usage">Texte très subtil, dates futures</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accents -->
+    <p
+      style="font-family:var(--font-mono);font-size:var(--fs9);letter-spacing:var(--ls-2);color:var(--ckd-tm);text-transform:uppercase;margin-bottom:10px;">
+      Accents</p>
+    <div class="color-grid">
+
+      <!-- Orange -->
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-orange);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-orange</span>
+          <span class="color-value">#FF6B2C</span>
+          <span class="color-usage">Nav active, CTA primaire, lipides</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch swatch-transparent">
+          <div class="swatch-overlay" style="background:var(--ckd-orange-s);"></div>
+        </div>
+        <div class="color-info">
+          <span class="color-token">ckd-orange-s</span>
+          <span class="color-value">rgba(255,107,44,0.12)</span>
+          <span class="color-usage">Fond hover bouton, pill sélectionnée</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch swatch-transparent">
+          <div class="swatch-overlay" style="background:var(--ckd-orange-m);"></div>
+        </div>
+        <div class="color-info">
+          <span class="color-token">ckd-orange-m</span>
+          <span class="color-value">rgba(255,107,44,0.35)</span>
+          <span class="color-usage">Bordure pill hover</span>
+        </div>
+      </div>
+
+      <!-- Vert -->
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-green);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-green</span>
+          <span class="color-value">#4ADE80</span>
+          <span class="color-usage">Succès, checkmarks, protéines stats</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch swatch-transparent">
+          <div class="swatch-overlay" style="background:var(--ckd-green-s);"></div>
+        </div>
+        <div class="color-info">
+          <span class="color-token">ckd-green-s</span>
+          <span class="color-value">rgba(74,222,128,0.12)</span>
+          <span class="color-usage">Badges verts, catégorie bg</span>
+        </div>
+      </div>
+
+      <!-- Bleu -->
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-blue);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-blue</span>
+          <span class="color-value">#60A5FA</span>
+          <span class="color-usage">Protéines (macros), shopping</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch swatch-transparent">
+          <div class="swatch-overlay" style="background:var(--ckd-blue-s);"></div>
+        </div>
+        <div class="color-info">
+          <span class="color-token">ckd-blue-s</span>
+          <span class="color-value">rgba(96,165,250,0.12)</span>
+          <span class="color-usage">Badges bleus</span>
+        </div>
+      </div>
+
+      <!-- Jaune -->
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-yellow);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-yellow</span>
+          <span class="color-value">#FBBF24</span>
+          <span class="color-usage">Glucides (macros), breakfast</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch swatch-transparent">
+          <div class="swatch-overlay" style="background:var(--ckd-yellow-s);"></div>
+        </div>
+        <div class="color-info">
+          <span class="color-token">ckd-yellow-s</span>
+          <span class="color-value">rgba(251,191,36,0.12)</span>
+          <span class="color-usage">Badges jaunes, glucides bg</span>
+        </div>
+      </div>
+
+      <!-- Violet -->
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-purple);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-purple</span>
+          <span class="color-value">#A78BFA</span>
+          <span class="color-usage">Micronutriments, minéraux</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch swatch-transparent">
+          <div class="swatch-overlay" style="background:var(--ckd-purple-s);"></div>
+        </div>
+        <div class="color-info">
+          <span class="color-token">ckd-purple-s</span>
+          <span class="color-value">rgba(167,139,250,0.12)</span>
+          <span class="color-usage">Badges violets</span>
+        </div>
+      </div>
+
+      <!-- Teal -->
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-teal);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-teal</span>
+          <span class="color-value">#2DD4BF</span>
+          <span class="color-usage">Meal planning, CTA secondaire</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch swatch-transparent">
+          <div class="swatch-overlay" style="background:var(--ckd-teal-s);"></div>
+        </div>
+        <div class="color-info">
+          <span class="color-token">ckd-teal-s</span>
+          <span class="color-value">rgba(45,212,191,0.12)</span>
+          <span class="color-usage">Pill bg teal</span>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch swatch-transparent">
+          <div class="swatch-overlay" style="background:var(--ckd-teal-m);"></div>
+        </div>
+        <div class="color-info">
+          <span class="color-token">ckd-teal-m</span>
+          <span class="color-value">rgba(45,212,191,0.30)</span>
+          <span class="color-usage">Bordure teal</span>
+        </div>
+      </div>
+
+      <!-- Rouge -->
+      <div class="color-card">
+        <div class="color-swatch" style="background:var(--ckd-red);"></div>
+        <div class="color-info">
+          <span class="color-token">ckd-red</span>
+          <span class="color-value">#F87171</span>
+          <span class="color-usage">Logout, erreurs, dépassement</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 2 : POLICES
+       ══════════════════════════════════════════════════════════════════════ -->
+  <section>
+    <p class="section-label">02 — Familles de polices</p>
+    <div class="font-showcase">
+
+      <!-- DM Sans -->
+      <div class="font-card">
+        <p class="font-card-label">DM Sans — font-sans-*</p>
+        <p class="font-card-sample" style="font-family:var(--font-sans);">Aa Bb Cc</p>
+        <p style="font-family:var(--font-sans);font-size:var(--fs12);color:var(--ckd-tm);">Corps, boutons, labels</p>
+        <div class="font-weights">
+          <div class="font-weight-row"><span style="font-family:var(--font-sans);font-weight:400;">Regular
+              400</span><span class="font-weight-badge">font-sans</span></div>
+          <div class="font-weight-row"><span style="font-family:var(--font-sans);font-weight:500;">Medium
+              500</span><span class="font-weight-badge">font-sans-medium</span></div>
+          <div class="font-weight-row"><span style="font-family:var(--font-sans);font-weight:600;">SemiBold
+              600</span><span class="font-weight-badge">font-sans-semibold</span></div>
+          <div class="font-weight-row"><span style="font-family:var(--font-sans);font-weight:700;">Bold 700</span><span
+              class="font-weight-badge">font-sans-bold</span></div>
+          <div class="font-weight-row"><span style="font-family:var(--font-sans);font-weight:800;">ExtraBold
+              800</span><span class="font-weight-badge">font-sans-extrabold</span></div>
+          <div class="font-weight-row"><span style="font-family:var(--font-sans);font-weight:900;">Black 900</span><span
+              class="font-weight-badge">font-sans-black</span></div>
+        </div>
+      </div>
+
+      <!-- DM Serif Display -->
+      <div class="font-card">
+        <p class="font-card-label">DM Serif Display — font-serif</p>
+        <p class="font-card-sample" style="font-family:var(--font-serif);">Aa Bb Cc</p>
+        <p style="font-family:var(--font-sans);font-size:var(--fs12);color:var(--ckd-tm);">Branding, logo, grand display
+        </p>
+        <div class="font-weights">
+          <div class="font-weight-row"><span style="font-family:var(--font-serif);font-weight:400;">Regular
+              400</span><span class="font-weight-badge">font-serif</span></div>
+          <div class="font-weight-row"><span
+              style="font-family:var(--font-serif);font-style:italic;font-weight:400;">Italic 400</span><span
+              class="font-weight-badge">font-serif-italic</span></div>
+        </div>
+      </div>
+
+      <!-- DM Mono -->
+      <div class="font-card">
+        <p class="font-card-label">DM Mono — font-mono-*</p>
+        <p class="font-card-sample" style="font-family:var(--font-mono);">Aa Bb 01</p>
+        <p style="font-family:var(--font-sans);font-size:var(--fs12);color:var(--ckd-tm);">Labels, badges, données
+          chiffrées</p>
+        <div class="font-weights">
+          <div class="font-weight-row"><span style="font-family:var(--font-mono);font-weight:400;">Regular
+              400</span><span class="font-weight-badge">font-mono</span></div>
+          <div class="font-weight-row"><span style="font-family:var(--font-mono);font-weight:500;">Medium
+              500</span><span class="font-weight-badge">font-mono-medium</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 3 : TAILLES DE TEXTE
+       ══════════════════════════════════════════════════════════════════════ -->
+  <section>
+    <p class="section-label">03 — Tailles de texte (fontSize)</p>
+    <div class="type-grid">
+      <div class="type-row">
+        <div class="type-meta"><strong>fs9</strong>9px / lh 13px</div>
+        <div class="type-preview" style="font-size:9px;font-family:var(--font-mono);">SECTIONS · NAV LABELS · CAPTIONS
+        </div>
+        <div class="type-usage">Nav group labels</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs10</strong>10px / lh 14px</div>
+        <div class="type-preview" style="font-size:10px;font-family:var(--font-mono);">BADGE · SECTION LABEL · TAB</div>
+        <div class="type-usage">Section labels</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs11</strong>11px / lh 15px</div>
+        <div class="type-preview" style="font-size:11px;">Labels, macro labels, badges, pills</div>
+        <div class="type-usage">Macro labels</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs12</strong>12px / lh 17px</div>
+        <div class="type-preview" style="font-size:12px;">Corps texte compact, descriptions courtes</div>
+        <div class="type-usage">Corps compact</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs13</strong>13px / lh 18px</div>
+        <div class="type-preview" style="font-size:13px;">Secondary headers, texte inputs, back buttons</div>
+        <div class="type-usage">Inputs, headers secondaires</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs14</strong>14px / lh 22px</div>
+        <div class="type-preview" style="font-size:14px;">Texte principal de l'application, paragraphes</div>
+        <div class="type-usage">Corps principal</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs15</strong>15px / lh 20px</div>
+        <div class="type-preview" style="font-size:15px;font-weight:700;">52g · 68g · 12g — Valeurs macros</div>
+        <div class="type-usage">Valeurs macros</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs16</strong>16px / lh 22px</div>
+        <div class="type-preview" style="font-size:16px;font-weight:700;">Prénom Nom — Profil utilisateur</div>
+        <div class="type-usage">Grands headers</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs17</strong>17px / lh 22px</div>
+        <div class="type-preview" style="font-size:17px;font-weight:900;">2 350 kcal · 52g protéines</div>
+        <div class="type-usage">Valeurs nutriments bold</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs19</strong>19px / lh 24px</div>
+        <div class="type-preview" style="font-size:19px;font-weight:900;letter-spacing:-0.5px;">Journal alimentaire
+        </div>
+        <div class="type-usage">Page main headers</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs22</strong>22px / lh 28px</div>
+        <div class="type-preview" style="font-size:22px;font-weight:900;letter-spacing:-1px;">Mes repas du jour</div>
+        <div class="type-usage">h2 (weight 900)</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs23</strong>23px / lh 28px</div>
+        <div class="type-preview" style="font-size:23px;font-weight:900;letter-spacing:-1px;">Créer un compte</div>
+        <div class="type-usage">Onboarding headers</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs26</strong>26px / lh 30px</div>
+        <div class="type-preview" style="font-size:26px;font-family:var(--font-serif);letter-spacing:-1px;">COOKED</div>
+        <div class="type-usage">Logo</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs32</strong>32px / lh 36px</div>
+        <div class="type-preview" style="font-size:32px;font-family:var(--font-serif);letter-spacing:-2px;">COOKED</div>
+        <div class="type-usage">Grand branding login</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs44</strong>44px / lh 44px</div>
+        <div class="type-preview" style="font-size:44px;font-weight:900;letter-spacing:-2px;color:var(--ckd-orange);">
+          482 kcal</div>
+        <div class="type-usage">Kcal food detail</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><strong>fs52</strong>52px / lh 52px</div>
+        <div class="type-preview"
+          style="font-size:52px;font-family:var(--font-serif);letter-spacing:-3px;color:var(--ckd-orange);">2 350</div>
+        <div class="type-usage">Objectif calorique</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 4 : LETTER SPACING
+       ══════════════════════════════════════════════════════════════════════ -->
+  <section>
+    <p class="section-label">04 — Letter spacing</p>
+    <div class="ls-grid">
+      <div class="ls-row">
+        <span class="ls-token">ls-m-3</span>
+        <span class="ls-preview"
+          style="letter-spacing:-3px;font-size:var(--fs32);font-family:var(--font-serif);font-weight:900;">Objectif
+          calorique</span>
+        <span class="ls-value">−3px</span>
+      </div>
+      <div class="ls-row">
+        <span class="ls-token">ls-m-2</span>
+        <span class="ls-preview" style="letter-spacing:-2px;font-size:var(--fs22);font-weight:900;">Grand
+          affichage</span>
+        <span class="ls-value">−2px</span>
+      </div>
+      <div class="ls-row">
+        <span class="ls-token">ls-m-1</span>
+        <span class="ls-preview" style="letter-spacing:-1px;font-size:var(--fs19);font-weight:900;">Logo · Titres
+          principaux</span>
+        <span class="ls-value">−1px</span>
+      </div>
+      <div class="ls-row">
+        <span class="ls-token">ls-m-0-5</span>
+        <span class="ls-preview" style="letter-spacing:-0.5px;font-size:var(--fs16);font-weight:700;">Sous-titres de
+          page</span>
+        <span class="ls-value">−0.5px</span>
+      </div>
+      <div class="ls-row">
+        <span class="ls-token">ls-2</span>
+        <span class="ls-preview"
+          style="letter-spacing:2px;font-family:var(--font-mono);font-size:var(--fs10);text-transform:uppercase;">INPUT
+          LABEL · SECTION</span>
+        <span class="ls-value">+2px</span>
+      </div>
+      <div class="ls-row">
+        <span class="ls-token">ls-3</span>
+        <span class="ls-preview"
+          style="letter-spacing:3px;font-family:var(--font-mono);font-size:var(--fs9);text-transform:uppercase;">NAV
+          GROUP LABEL</span>
+        <span class="ls-value">+3px</span>
+      </div>
+      <div class="ls-row">
+        <span class="ls-token">ls-4</span>
+        <span class="ls-preview"
+          style="letter-spacing:4px;font-family:var(--font-mono);font-size:var(--fs12);">••••••••</span>
+        <span class="ls-value">+4px</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 5 : BORDER RADIUS
+       ══════════════════════════════════════════════════════════════════════ -->
+  <section>
+    <p class="section-label">05 — Border radius</p>
+    <div class="br-grid">
+      <div class="br-card">
+        <div class="br-swatch" style="border-radius:2px;"></div>
+        <div class="br-info">
+          <span class="br-token">br-2</span>
+          <span class="br-value">2px</span>
+          <span class="br-usage">Progress bars, dots</span>
+        </div>
+      </div>
+      <div class="br-card">
+        <div class="br-swatch" style="border-radius:6px;"></div>
+        <div class="br-info">
+          <span class="br-token">br-6</span>
+          <span class="br-value">6px</span>
+          <span class="br-usage">Petits boutons, recipe tags</span>
+        </div>
+      </div>
+      <div class="br-card">
+        <div class="br-swatch" style="border-radius:9px;"></div>
+        <div class="br-info">
+          <span class="br-token">br-9</span>
+          <span class="br-value">9px</span>
+          <span class="br-usage">Portion selectors, tabs</span>
+        </div>
+      </div>
+      <div class="br-card">
+        <div class="br-swatch" style="border-radius:11px;"></div>
+        <div class="br-info">
+          <span class="br-token">br-11</span>
+          <span class="br-value">11px</span>
+          <span class="br-usage">Cards principales ★</span>
+        </div>
+      </div>
+      <div class="br-card">
+        <div class="br-swatch" style="border-radius:13px;"></div>
+        <div class="br-info">
+          <span class="br-token">br-13</span>
+          <span class="br-value">13px</span>
+          <span class="br-usage">Inputs, boutons principaux</span>
+        </div>
+      </div>
+      <div class="br-card">
+        <div class="br-swatch" style="border-radius:14px;"></div>
+        <div class="br-info">
+          <span class="br-token">br-14</span>
+          <span class="br-value">14px</span>
+          <span class="br-usage">Tab bar pills</span>
+        </div>
+      </div>
+      <div class="br-card">
+        <div class="br-swatch" style="border-radius:15px;"></div>
+        <div class="br-info">
+          <span class="br-token">br-15</span>
+          <span class="br-value">15px</span>
+          <span class="br-usage">Meal sections, planner</span>
+        </div>
+      </div>
+      <div class="br-card">
+        <div class="br-swatch" style="border-radius:18px;"></div>
+        <div class="br-info">
+          <span class="br-token">br-18</span>
+          <span class="br-value">18px</span>
+          <span class="br-usage">Fonds de cards larges</span>
+        </div>
+      </div>
+      <div class="br-card">
+        <div class="br-swatch" style="border-radius:20px;"></div>
+        <div class="br-info">
+          <span class="br-token">br-20</span>
+          <span class="br-value">20px</span>
+          <span class="br-usage">Badges, category pills</span>
+        </div>
+      </div>
+      <div class="br-card">
+        <div class="br-swatch" style="border-radius:9999px;"></div>
+        <div class="br-info">
+          <span class="br-token">br-9999</span>
+          <span class="br-value">9999px</span>
+          <span class="br-usage">Cercles, toggles</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       SECTION 6 : APERÇU COMPOSANTS
+       ══════════════════════════════════════════════════════════════════════ -->
+  <section>
+    <p class="section-label">06 — Aperçu composants</p>
+    <div class="preview-grid">
+
+      <!-- Boutons -->
+      <div class="preview-card">
+        <p class="preview-card-title">Boutons</p>
+        <div class="btn-row">
+          <button class="btn btn-primary">Ajouter</button>
+          <button class="btn btn-secondary">Planning</button>
+          <button class="btn btn-ghost">Annuler</button>
+          <button class="btn btn-danger">Déconnexion</button>
+        </div>
+      </div>
+
+      <!-- Pills & badges -->
+      <div class="preview-card">
+        <p class="preview-card-title">Pills &amp; badges</p>
+        <div class="pill-row">
+          <span class="pill pill-orange">Lipides</span>
+          <span class="pill pill-blue">Protéines</span>
+          <span class="pill pill-yellow">Glucides</span>
+          <span class="pill pill-green">Succès</span>
+          <span class="pill pill-purple">Micros</span>
+          <span class="pill pill-teal">Planning</span>
+          <span class="pill pill-red">Erreur</span>
+        </div>
+      </div>
+
+      <!-- Macros -->
+      <div class="preview-card">
+        <p class="preview-card-title">Macros</p>
+        <div class="macro-row">
+          <div class="macro">
+            <p class="macro-label" style="color:var(--ckd-blue);">PROTÉINES</p>
+            <p class="macro-value" style="color:var(--ckd-blue);">68g</p>
+            <p class="macro-sub" style="color:var(--ckd-tm);">/ 150g</p>
+          </div>
+          <div class="macro">
+            <p class="macro-label" style="color:var(--ckd-yellow);">GLUCIDES</p>
+            <p class="macro-value" style="color:var(--ckd-yellow);">210g</p>
+            <p class="macro-sub" style="color:var(--ckd-tm);">/ 300g</p>
+          </div>
+          <div class="macro">
+            <p class="macro-label" style="color:var(--ckd-orange);">LIPIDES</p>
+            <p class="macro-value" style="color:var(--ckd-orange);">52g</p>
+            <p class="macro-sub" style="color:var(--ckd-tm);">/ 80g</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="preview-card">
+        <p class="preview-card-title">Input</p>
+        <div class="inp-wrap">
+          <label class="inp-label">Adresse e-mail</label>
+          <input class="inp" type="text" placeholder="hello@cooked.app" />
+        </div>
+      </div>
+
+      <!-- Display calorique -->
+      <div class="preview-card" style="grid-column: span 2;">
+        <p class="preview-card-title">Affichage calorique</p>
+        <div class="kcal-display">
+          <p class="kcal-number">2 350</p>
+          <p class="kcal-unit">kcal · objectif journalier</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</body>
+
+</html>
