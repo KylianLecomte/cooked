@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from "react-native-reanimated";
+import { twMerge } from "tailwind-merge";
 import { Props } from "@/types/props.type";
 
 export type ProgressBarProps = Readonly<
@@ -28,9 +29,7 @@ export default function ProgressBar({
   }));
 
   return (
-    <View
-      className={`h-1.5 rounded-ckd-br-2 overflow-hidden ${backgroundColor} ${className ?? ""}`}
-    >
+    <View className={twMerge("h-1.5 rounded-ckd-br-2 overflow-hidden", backgroundColor, className)}>
       <Animated.View
         className={`h-full rounded-ckd-br-2 ${progressColor}`}
         style={[_animatedFill]}
