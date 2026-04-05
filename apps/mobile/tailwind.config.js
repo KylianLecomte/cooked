@@ -42,7 +42,8 @@ const palette = {
   "teal-m": "rgba(45,212,191,0.30)",
 
   // Rouge — logout, erreurs, dépassement objectif
-  red: "#F87171",
+  red: "#EB2727",
+  "red-s": "rgba(235,39,39,0.12)",
 };
 
 const toPx = (value) => `${value}px`;
@@ -81,6 +82,7 @@ module.exports = {
         "ckd-teal-s": palette["teal-s"],
         "ckd-teal-m": palette["teal-m"],
         "ckd-red": palette.red,
+        "ckd-red-s": palette["red-s"],
 
         "ckd-proteine": palette.blue,
         "ckd-proteine-s": palette["blue-s"],
@@ -144,19 +146,6 @@ module.exports = {
         "ckd-ls-4": "4px", // champs mot de passe
       },
 
-      borderRadius: {
-        "ckd-br-2": "2px", // progress bars, petits dots
-        "ckd-br-6": "6px", // petits boutons, recipe tags
-        "ckd-br-9": "9px", // portion selectors, tabs, petits contrôles
-        "ckd-br-11": "11px", // cards principales (valeur la plus fréquente)
-        "ckd-br-13": "13px", // inputs, boutons principaux
-        "ckd-br-14": "14px", // tab bar pills, boutons proéminents
-        "ckd-br-15": "15px", // meal sections, planner day cards
-        "ckd-br-18": "18px", // fonds de cards larges
-        "ckd-br-20": "20px", // badges, category pills, nav pills
-        "ckd-br-9999": "9999px", // cercles, toggles
-      },
-
       spacing: {
         px: "1px",
         0: "0",
@@ -179,7 +168,9 @@ module.exports = {
         14: "3.5rem",
         16: "4rem",
         18: "4.5rem",
+        19: "4.75rem",
         20: "5rem",
+        22: "5.5rem",
         24: "6rem",
         28: "7rem",
         32: "8rem",

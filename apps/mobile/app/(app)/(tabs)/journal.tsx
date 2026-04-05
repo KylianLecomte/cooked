@@ -1,13 +1,14 @@
 import { Text, View } from "react-native";
 import Card from "@/components/Card";
 import MacroBar from "@/components/progressBar/MacroBar";
+import MicroBar from "@/components/progressBar/MicroBar";
 import ProgressBar from "@/components/progressBar/ProgressBar";
 
 // Stub P1 — implémentation complète en P3 (Journal Alimentaire)
 export default function JournalScreen() {
   return (
-    <View className="flex-1 bg-ckd-bg p-2">
-      <View className="mt-16 mb-2">
+    <View className="flex-1 gap-4 bg-ckd-bg p-2">
+      <View className="mt-16">
         <Text className="text-ckd-text-muted text-xl font-bold">MERCREDI</Text>
         <Text className="text-ckd-text-muted text-xl font-bold">11 mars 2026</Text>
       </View>
@@ -39,6 +40,19 @@ export default function JournalScreen() {
           <MacroBar type="proteine" label="Protéines" current={98} target={176}></MacroBar>
           <MacroBar type="glucide" label="Glucides" current={2500} target={5000}></MacroBar>
           <MacroBar type="lipide" label="Lipides" current={42} target={78}></MacroBar>
+        </View>
+      </Card>
+      <Card>
+        <View className="flex-row justify-between mb-2">
+          <Text className={`text-ckd-text-faint font-ckd-mono text-ckd-fs10`}>MICRONUTRIMENTS</Text>
+          <Text className={`text-ckd-text-faint font-ckd-mono text-ckd-fs10`}>70/100</Text>
+        </View>
+        <View className={`gap-2`}>
+          <MicroBar label="Vitamine D" current={20}></MicroBar>
+          <MicroBar label="Magnésium" current={40}></MicroBar>
+          <MicroBar label="Vitamine C" current={80}></MicroBar>
+          <MicroBar label="Calcium" current={99}></MicroBar>
+          <MicroBar label="Vitamine B12" current={140}></MicroBar>
         </View>
       </Card>
     </View>

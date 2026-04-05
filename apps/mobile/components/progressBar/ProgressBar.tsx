@@ -3,12 +3,20 @@ import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from "react-n
 import { twMerge } from "tailwind-merge";
 import { Props } from "@/types/props.type";
 
+export type ProgressBarColors = {
+  text: string;
+  bg: string;
+  bgSoft: string;
+  border: string;
+};
+
 export type ProgressBarProps = Readonly<
   {
     current: number;
     target: number;
     progressColor: string;
     backgroundColor: string;
+    borderColor: string;
   } & Props
 >;
 
@@ -16,6 +24,7 @@ export default function ProgressBar({
   className,
   progressColor,
   backgroundColor,
+  borderColor,
   current,
   target,
 }: Readonly<ProgressBarProps>) {
@@ -29,11 +38,15 @@ export default function ProgressBar({
   }));
 
   return (
-    <View className={twMerge("h-1.5 rounded-ckd-br-2 overflow-hidden", backgroundColor, className)}>
-      <Animated.View
-        className={`h-full rounded-ckd-br-2 ${progressColor}`}
-        style={[_animatedFill]}
-      />
+    <View
+      className={twMerge(
+        "border h-2 rounded-md overflow-hidden",
+        backgroundColor,
+        borderColor,
+        className,
+      )}
+    >
+      <Animated.View className={`h-full rounded-md ${progressColor}`} style={[_animatedFill]} />
     </View>
   );
 }
