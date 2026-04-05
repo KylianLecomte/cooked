@@ -33,6 +33,7 @@ export default function JournalScreen() {
           className="w-full h-1 mb-2"
           backgroundColor={"bg-ckd-orange-s"}
           progressColor={"bg-ckd-orange"}
+          borderColor={"border-ckd-orange-s"}
           current={1}
           target={10}
         />

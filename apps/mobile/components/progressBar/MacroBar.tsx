@@ -41,9 +41,9 @@ export default function MacroBar({ type, label, current, target }: MacroBarProps
         className="flex-1"
         backgroundColor={macroStyles[type].bgSoft}
         progressColor={macroStyles[type].bg}
+        borderColor={macroStyles[type].border}
         current={current}
         target={target}
-        borderColor={macroStyles[type].border}
       />
 
       <View className="w-20 items-end">
