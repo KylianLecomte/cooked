@@ -13,6 +13,7 @@
     "check": "biome check --write .",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
+    "test:e2e": "turbo test:e2e",
     "prepare": "husky"
   },
   "engines": {
