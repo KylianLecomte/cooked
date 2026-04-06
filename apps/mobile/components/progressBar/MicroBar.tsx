@@ -53,7 +53,6 @@ export default function MicroBar({ label, current }: MicroBarProps) {
         backgroundColor={colors.bgSoft}
         progressColor={colors.bg}
         borderColor={colors.border}
-        current={current}
         target={100}
       />
 
