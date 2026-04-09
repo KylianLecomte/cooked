@@ -31,7 +31,7 @@ export default function TabsLayout() {
         name="journal"
         options={{
           title: "Journal",
-          tabBarIcon: ({ focused }) => <TabIcon label={focused ? "📋" : "📋"} />,
+          tabBarIcon: () => <TabIcon label={"📋"} />,
         }}
       />
       <Tabs.Screen
