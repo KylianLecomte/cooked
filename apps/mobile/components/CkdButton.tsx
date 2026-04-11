@@ -1,19 +1,13 @@
-import { Pressable, Text } from "react-native";
+import { Pressable } from "react-native";
 import { twMerge } from "tailwind-merge";
 
 type ButtonProps = {
   onPress: () => void;
   children: React.ReactNode;
   containerClassName?: string;
-  textClassName?: string;
 };
 
-export default function Button({
-  onPress,
-  children,
-  containerClassName,
-  textClassName,
-}: Readonly<ButtonProps>) {
+export default function Button({ onPress, children, containerClassName }: Readonly<ButtonProps>) {
   return (
     <Pressable
       className={twMerge(
@@ -22,7 +16,7 @@ export default function Button({
       )}
       onPress={onPress}
     >
-      <Text className={textClassName}>{children}</Text>
+      {children}
     </Pressable>
   );
 }

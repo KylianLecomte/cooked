@@ -52,6 +52,7 @@ module.exports = {
         "ckd-red-s": palette["red-s"],
 
         "ckd-main-color": colors.main,
+        "ckd-main-color-s": colors["main-s"],
 
         "ckd-proteine": palette.blue,
         "ckd-proteine-s": palette["blue-s"],

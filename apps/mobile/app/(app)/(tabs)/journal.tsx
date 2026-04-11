@@ -4,7 +4,7 @@ import Ckd from "@/components/CkdCard";
 import CkdMacroBar from "@/components/progressBar/CkdMacroBar";
 import CkdMicroBar from "@/components/progressBar/CkdMicroBar";
 import CkdProgressBar from "@/components/progressBar/CkdProgressBar";
-import { buttonVariants } from "@/theme/variant.style";
+import { ButtonVariants } from "@/theme/variant.style";
 
 export default function JournalScreen() {
   return (
@@ -73,11 +73,10 @@ export default function JournalScreen() {
           <View className="flex-row gap-2 items-center">
             <Text className="text-ckd-text-muted font-ckd-mono text-ckd-fs14">420 kcal</Text>
             <Button
-              containerClassName={buttonVariants.secondary.containerClassName}
-              textClassName={buttonVariants.secondary.textClassName}
+              containerClassName={ButtonVariants.secondary.containerClassName}
               onPress={() => console.debug("Ajouter un aliment")}
             >
-              +
+              <Text className={ButtonVariants.secondary.textClassName}>+</Text>
             </Button>
           </View>
         }

@@ -1,9 +1,9 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import Button from "@/components/CkdButton";
 import { colors } from "@/theme/colors.style";
-import { buttonVariants } from "@/theme/variant.style";
+import { ButtonVariants, CardVariants } from "@/theme/variant.style";
 
 type CardProps = Readonly<{
   titleLeft?: React.ReactNode;
@@ -16,21 +16,24 @@ export default function CkdCard({ titleLeft, titleRight, content, closable = fal
   const [open, setOpen] = useState(true);
 
   return (
-    <View className="p-4 bg-ckd-surface-1 rounded-lg border border-ckd-border-1">
+    <View className={CardVariants.main}>
       <View className="flex-row justify-between items-center">
         {titleLeft}
         <View className="flex-row gap-2 justify-center">
           {titleRight}
           {closable ? (
             <Button
-              containerClassName={buttonVariants.iconBorderLess.containerClassName}
-              textClassName={buttonVariants.iconBorderLess.textClassName}
+              containerClassName={ButtonVariants.iconBorderLess.containerClassName}
               onPress={() => setOpen(!open)}
             >
               {open ? (
-                <Ionicons name="chevron-down-sharp" size={18} color={colors.main} />
+                <Text className={ButtonVariants.iconBorderLess.textClassName}>
+                  <Ionicons name="chevron-down-sharp" size={18} color={colors.main} />
+                </Text>
               ) : (
-                <Ionicons name="chevron-up-outline" size={18} color={colors.main} />
+                <Text className={ButtonVariants.iconBorderLess.textClassName}>
+                  <Ionicons name="chevron-up-outline" size={18} color={colors.main} />
+                </Text>
               )}
             </Button>
           ) : null}

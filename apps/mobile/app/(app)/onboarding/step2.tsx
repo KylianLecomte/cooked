@@ -12,6 +12,7 @@ import {
 import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
+import CkdSelectCardGroup from "@/components/CkdSelectCardGroup";
 import { useUpdateProfile } from "../../../hooks/useProfile";
 
 export default function OnboardingStep2() {
@@ -42,8 +43,8 @@ export default function OnboardingStep2() {
     <ScrollView className="flex-1 bg-ckd-bg" contentContainerStyle={{ padding: 24 }}>
       {/* Progression */}
       <View className="flex-row gap-2 mb-8 mt-4">
-        <View className="flex-1 h-1 bg-ckd-green" />
-        <View className="flex-1 h-1 bg-ckd-green" />
+        <View className="flex-1 h-1 bg-ckd-main-color" />
+        <View className="flex-1 h-1 bg-ckd-main-color" />
         <View className="flex-1 h-1 bg-ckd-border-1" />
       </View>
 
@@ -53,86 +54,87 @@ export default function OnboardingStep2() {
         Le facteur qui multiplie le plus tes besoins caloriques.
       </Text>
 
-      {/* Niveau d'activité */}
       <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-3">NIVEAU D'ACTIVITÉ</Text>
-      <View className="gap-2 mb-7">
-        {ACTIVITY_LEVELS.map((a) => (
-          <Pressable
-            key={a}
-            className={`border p-4 flex-row justify-between items-center ${
-              activityLevel === a
-                ? "border-ckd-green bg-ckd-green-s"
-                : "border-ckd-input-border bg-ckd-input-bg"
-            }`}
-            onPress={() => setActivityLevel(a)}
-          >
-            <View className="flex-1">
-              <Text
-                className={`font-semibold text-sm ${
-                  activityLevel === a ? "text-ckd-green" : "text-ckd-text-muted"
-                }`}
-              >
-                {ACTIVITY_LEVEL_LABELS[a]}
-              </Text>
-              <Text className="text-ckd-text-muted text-xs mt-0.5">
-                {ACTIVITY_LEVEL_DETAILS[a]}
-              </Text>
-            </View>
-            <Text
-              className={`text-sm font-bold ml-4 ${
-                activityLevel === a ? "text-ckd-green" : "text-ckd-text-muted"
-              }`}
-            >
-              ×{ACTIVITY_MULTIPLIERS[a]}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
 
-      {/* Objectif */}
-      <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-3">OBJECTIF</Text>
-      <View className="gap-2 mb-7">
-        {GOALS.map((g) => (
-          <Pressable
-            key={g}
-            className={`border p-4 flex-row justify-between items-center ${
-              goal === g
-                ? "border-ckd-green bg-ckd-green-s"
-                : "border-ckd-input-border bg-ckd-input-bg"
-            }`}
-            onPress={() => setGoal(g)}
-          >
-            <View className="flex-1">
+      <CkdSelectCardGroup
+        containerClassName="mb-8"
+        classNames={{
+          btnCommon: `self-stretch flex-row justify-between items-center `,
+          btnSelected: `border-ckd-main-color bg-ckd-main-color-s`,
+        }}
+        cardContents={ACTIVITY_LEVELS.map((a) => ({
+          id: a,
+          content: (
+            <>
+              <View className="flex-1">
+                <Text
+                  className={`font-semibold text-sm ${
+                    activityLevel === a ? "text-ckd-main-color" : "text-ckd-text-muted"
+                  }`}
+                >
+                  {ACTIVITY_LEVEL_LABELS[a]}
+                </Text>
+                <Text className="text-ckd-text-muted text-xs mt-0.5">
+                  {ACTIVITY_LEVEL_DETAILS[a]}
+                </Text>
+              </View>
               <Text
-                className={`font-semibold text-sm ${
-                  goal === g ? "text-ckd-green" : "text-ckd-text-muted"
+                className={`text-sm font-bold ml-4 ${
+                  activityLevel === a ? "text-ckd-main-color" : "text-ckd-text-muted"
                 }`}
               >
-                {GOAL_LABELS[g]}
+                ×{ACTIVITY_MULTIPLIERS[a]}
               </Text>
-              <Text className="text-ckd-text-muted text-xs mt-0.5">
+            </>
+          ),
+        }))}
+        onSelect={(id) => setActivityLevel(id as ActivityLevel)}
+      ></CkdSelectCardGroup>
+
+      <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-3">OBJECTIF</Text>
+      <CkdSelectCardGroup
+        containerClassName="mb-8"
+        classNames={{
+          btnCommon: `self-stretch flex-row justify-between items-center `,
+          btnSelected: `border-ckd-main-color bg-ckd-main-color-s`,
+        }}
+        cardContents={GOALS.map((g) => ({
+          id: g,
+          content: (
+            <>
+              <View className="">
+                <Text
+                  className={`font-semibold text-sm ${
+                    goal === g ? "text-ckd-main-color" : "text-ckd-text-muted"
+                  }`}
+                >
+                  {GOAL_LABELS[g]}
+                </Text>
+                <Text className="text-ckd-text-muted text-xs mt-0.5">
+                  {GOAL_KCAL_DELTA[g] === 0
+                    ? "Équilibre calorique"
+                    : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal/jour`}
+                </Text>
+              </View>
+              <Text
+                className={`text-sm font-bold ml-4 ${
+                  goal === g ? "text-ckd-main-color" : "text-ckd-text-muted"
+                }`}
+              >
                 {GOAL_KCAL_DELTA[g] === 0
-                  ? "Équilibre calorique"
-                  : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal/jour`}
+                  ? "±0 kcal"
+                  : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal`}
               </Text>
-            </View>
-            <Text
-              className={`text-sm font-bold ml-4 ${
-                goal === g ? "text-ckd-green" : "text-ckd-text-muted"
-              }`}
-            >
-              {GOAL_KCAL_DELTA[g] === 0
-                ? "±0 kcal"
-                : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal`}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
+            </>
+          ),
+        }))}
+        onSelect={(id) => setGoal(id as Goal)}
+      ></CkdSelectCardGroup>
 
       {error !== "" && <Text className="text-ckd-red text-sm mb-4">{error}</Text>}
 
       <Pressable
-        className="bg-ckd-green py-4 items-center mb-8"
+        className="bg-ckd-main-color py-4 items-center mb-8"
         onPress={handleNext}
         disabled={updateProfile.isPending}
       >

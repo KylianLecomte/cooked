@@ -48,4 +48,5 @@ export const palette = {
 
 export const colors = {
   main: palette.orange,
+  "main-s": palette["orange-s"],
 } as const;
