@@ -10,5 +10,10 @@ export const ButtonVariants = {
 } as const;
 
 export const CardVariants = {
-  main: "p-4 bg-ckd-surface-1 rounded-lg border border-ckd-border-1",
+  primary: "p-4 bg-ckd-surface-1 rounded-lg border border-ckd-border-1",
+} as const;
+
+export const InputVariants = {
+  primary: "bg-ckd-input-bg border border-ckd-input-border rounded-lg p-4 text-ckd-text",
+  secondary: "bg-ckd-main-color-s border border-ckd-main-color rounded-lg p-4 text-ckd-main-color",
 } as const;

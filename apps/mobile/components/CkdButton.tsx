@@ -5,9 +5,15 @@ type ButtonProps = {
   onPress: () => void;
   children: React.ReactNode;
   containerClassName?: string;
+  disabled?: boolean;
 };
 
-export default function Button({ onPress, children, containerClassName }: Readonly<ButtonProps>) {
+export default function Button({
+  onPress,
+  children,
+  containerClassName,
+  disabled = false,
+}: Readonly<ButtonProps>) {
   return (
     <Pressable
       className={twMerge(
@@ -15,6 +21,7 @@ export default function Button({ onPress, children, containerClassName }: Readon
         containerClassName,
       )}
       onPress={onPress}
+      disabled={disabled}
     >
       {children}
     </Pressable>

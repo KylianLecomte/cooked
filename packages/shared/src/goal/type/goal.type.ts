@@ -1,4 +1,4 @@
-import { TypesValuesOf } from "./generics.type";
+import { TypesValuesOf } from "../../type/generics.type";
 
 // ── Goal ────────────────────────────────────────────────────────────────────
 export const Goal = {

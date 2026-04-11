@@ -24,7 +24,7 @@ export default function CkdSelectableCard<T>({
   return (
     <CkdButton
       containerClassName={twMerge(
-        CardVariants.main,
+        CardVariants.primary,
         classNames?.btnCommon,
         isSelected ? classNames?.btnSelected : classNames?.btnNotSelected,
       )}

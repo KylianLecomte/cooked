@@ -1,6 +1,6 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import Button from "@/components/CkdButton";
 import { colors } from "@/theme/colors.style";
 import { ButtonVariants, CardVariants } from "@/theme/variant.style";
@@ -16,7 +16,7 @@ export default function CkdCard({ titleLeft, titleRight, content, closable = fal
   const [open, setOpen] = useState(true);
 
   return (
-    <View className={CardVariants.main}>
+    <View className={CardVariants.primary}>
       <View className="flex-row justify-between items-center">
         {titleLeft}
         <View className="flex-row gap-2 justify-center">
@@ -27,13 +27,9 @@ export default function CkdCard({ titleLeft, titleRight, content, closable = fal
               onPress={() => setOpen(!open)}
             >
               {open ? (
-                <Text className={ButtonVariants.iconBorderLess.textClassName}>
-                  <Ionicons name="chevron-down-sharp" size={18} color={colors.main} />
-                </Text>
+                <Ionicons name="chevron-down-sharp" size={18} color={colors.main} />
               ) : (
-                <Text className={ButtonVariants.iconBorderLess.textClassName}>
-                  <Ionicons name="chevron-up-outline" size={18} color={colors.main} />
-                </Text>
+                <Ionicons name="chevron-up-outline" size={18} color={colors.main} />
               )}
             </Button>
           ) : null}

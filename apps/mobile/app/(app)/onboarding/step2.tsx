@@ -8,11 +8,14 @@ import {
   GOAL_LABELS,
   GOALS,
   type Goal,
+  getGoalDeltaLabel,
 } from "@cooked/shared";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import Button from "@/components/CkdButton";
 import CkdSelectCardGroup from "@/components/CkdSelectCardGroup";
+import { InputVariants } from "@/theme/variant.style";
 import { useUpdateProfile } from "../../../hooks/useProfile";
 
 export default function OnboardingStep2() {
@@ -59,31 +62,32 @@ export default function OnboardingStep2() {
       <CkdSelectCardGroup
         containerClassName="mb-8"
         classNames={{
-          btnCommon: `self-stretch flex-row justify-between items-center `,
-          btnSelected: `border-ckd-main-color bg-ckd-main-color-s`,
+          btnCommon: "self-stretch flex-row justify-between items-center",
+          btnNotSelected: InputVariants.primary,
+          btnSelected: InputVariants.secondary,
         }}
-        cardContents={ACTIVITY_LEVELS.map((a) => ({
-          id: a,
+        cardContents={ACTIVITY_LEVELS.map((activity) => ({
+          id: activity,
           content: (
             <>
               <View className="flex-1">
                 <Text
                   className={`font-semibold text-sm ${
-                    activityLevel === a ? "text-ckd-main-color" : "text-ckd-text-muted"
+                    activityLevel === activity ? "text-ckd-main-color" : "text-ckd-text-muted"
                   }`}
                 >
-                  {ACTIVITY_LEVEL_LABELS[a]}
+                  {ACTIVITY_LEVEL_LABELS[activity]}
                 </Text>
                 <Text className="text-ckd-text-muted text-xs mt-0.5">
-                  {ACTIVITY_LEVEL_DETAILS[a]}
+                  {ACTIVITY_LEVEL_DETAILS[activity]}
                 </Text>
               </View>
               <Text
                 className={`text-sm font-bold ml-4 ${
-                  activityLevel === a ? "text-ckd-main-color" : "text-ckd-text-muted"
+                  activityLevel === activity ? "text-ckd-main-color" : "text-ckd-text-muted"
                 }`}
               >
-                ×{ACTIVITY_MULTIPLIERS[a]}
+                ×{ACTIVITY_MULTIPLIERS[activity]}
               </Text>
             </>
           ),
@@ -95,10 +99,11 @@ export default function OnboardingStep2() {
       <CkdSelectCardGroup
         containerClassName="mb-8"
         classNames={{
-          btnCommon: `self-stretch flex-row justify-between items-center `,
-          btnSelected: `border-ckd-main-color bg-ckd-main-color-s`,
+          btnCommon: "self-stretch flex-row justify-between items-center",
+          btnNotSelected: "border-ckd-input-border bg-ckd-input-bg",
+          btnSelected: "border-ckd-main-color bg-ckd-main-color-s",
         }}
-        cardContents={GOALS.map((g) => ({
+        cardContents={GOALS.map((g: Goal) => ({
           id: g,
           content: (
             <>
@@ -113,7 +118,7 @@ export default function OnboardingStep2() {
                 <Text className="text-ckd-text-muted text-xs mt-0.5">
                   {GOAL_KCAL_DELTA[g] === 0
                     ? "Équilibre calorique"
-                    : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal/jour`}
+                    : `${getGoalDeltaLabel(g)} kcal/jour`}
                 </Text>
               </View>
               <Text
@@ -121,9 +126,7 @@ export default function OnboardingStep2() {
                   goal === g ? "text-ckd-main-color" : "text-ckd-text-muted"
                 }`}
               >
-                {GOAL_KCAL_DELTA[g] === 0
-                  ? "±0 kcal"
-                  : `${GOAL_KCAL_DELTA[g] > 0 ? "+" : ""}${GOAL_KCAL_DELTA[g]} kcal`}
+                {GOAL_KCAL_DELTA[g] === 0 ? "±0 kcal" : `${getGoalDeltaLabel(g)} kcal`}
               </Text>
             </>
           ),
@@ -133,8 +136,8 @@ export default function OnboardingStep2() {
 
       {error !== "" && <Text className="text-ckd-red text-sm mb-4">{error}</Text>}
 
-      <Pressable
-        className="bg-ckd-main-color py-4 items-center mb-8"
+      <Button
+        containerClassName="self-stretch bg-ckd-main-color py-4 items-center mb-8"
         onPress={handleNext}
         disabled={updateProfile.isPending}
       >
@@ -143,7 +146,7 @@ export default function OnboardingStep2() {
         ) : (
           <Text className="text-ckd-text-dark font-bold text-base tracking-wider">SUIVANT</Text>
         )}
-      </Pressable>
+      </Button>
     </ScrollView>
   );
 }

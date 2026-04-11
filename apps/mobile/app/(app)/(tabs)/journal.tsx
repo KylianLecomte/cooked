@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 import Button from "@/components/CkdButton";
-import Ckd from "@/components/CkdCard";
+import CkdCard from "@/components/CkdCard";
 import CkdMacroBar from "@/components/progressBar/CkdMacroBar";
 import CkdMicroBar from "@/components/progressBar/CkdMicroBar";
 import CkdProgressBar from "@/components/progressBar/CkdProgressBar";
@@ -14,7 +14,7 @@ export default function JournalScreen() {
         <Text className="text-ckd-text text-xl font-bold">11 mars 2026</Text>
       </View>
 
-      <Ckd
+      <CkdCard
         titleLeft={
           <Text className="text-ckd-text-faint font-ckd-mono text-ckd-fs10">CALORIES & MACROS</Text>
         }
@@ -49,7 +49,7 @@ export default function JournalScreen() {
         }
       />
 
-      <Ckd
+      <CkdCard
         titleLeft={
           <Text className="text-ckd-text-faint font-ckd-mono text-ckd-fs10">MICRONUTRIMENTS</Text>
         }
@@ -65,7 +65,7 @@ export default function JournalScreen() {
         }
       />
 
-      <Ckd
+      <CkdCard
         titleLeft={
           <Text className="text-ckd-text font-ckd-sans text-ckd-fs16">Petit-déjeuner</Text>
         }

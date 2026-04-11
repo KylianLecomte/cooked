@@ -1,4 +1,5 @@
 import { ACTIVITY_LEVEL_LABELS, GOAL_LABELS } from "@cooked/shared";
+import { router } from "expo-router";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import CkdCard from "@/components/CkdCard";
 import { useProfile } from "../../../hooks/useProfile";
@@ -17,8 +18,7 @@ export default function OnboardingStep3() {
   }
 
   function handleStart() {
-    // Le profil est complet — l'(app)/_layout.tsx ne redirigera plus vers l'onboarding
-    // router.replace("/(app)/(tabs)/journal");
+    router.replace("/(app)/(tabs)/journal");
   }
 
   return (
