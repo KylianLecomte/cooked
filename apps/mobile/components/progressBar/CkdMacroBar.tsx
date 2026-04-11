@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import ProgressBar, { ProgressBarColors } from "./ProgressBar";
+import CkdProgressBar, { ProgressBarColors } from "./CkdProgressBar";
 
 type MacroType = "proteine" | "glucide" | "lipide";
 
@@ -31,13 +31,13 @@ type MacroBarProps = Readonly<{
   target: number;
 }>;
 
-export default function MacroBar({ type, label, current, target }: MacroBarProps) {
+export default function CkdMacroBar({ type, label, current, target }: MacroBarProps) {
   const exceeded = current > target;
 
   return (
     <View className={`gap-2 flex-row items-center`}>
       <Text className={`w-16 text-ckd-fs12 font-sans mb-0 text-ckd-text-muted`}>{label}</Text>
-      <ProgressBar
+      <CkdProgressBar
         className="flex-1"
         backgroundColor={macroStyles[type].bgSoft}
         progressColor={macroStyles[type].bg}

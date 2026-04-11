@@ -20,7 +20,7 @@ export type ProgressBarProps = Readonly<
   } & Props
 >;
 
-export default function ProgressBar({
+export default function CkdProgressBar({
   className,
   progressColor,
   backgroundColor,

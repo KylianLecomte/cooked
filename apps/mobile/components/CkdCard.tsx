@@ -1,7 +1,7 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState } from "react";
 import { View } from "react-native";
-import Button from "@/components/Button";
+import Button from "@/components/CkdButton";
 import { colors } from "@/theme/colors.style";
 import { buttonVariants } from "@/theme/variant.style";
 
@@ -12,7 +12,7 @@ type CardProps = Readonly<{
   closable?: boolean;
 }>;
 
-export default function Card({ titleLeft, titleRight, content, closable = false }: CardProps) {
+export default function CkdCard({ titleLeft, titleRight, content, closable = false }: CardProps) {
   const [open, setOpen] = useState(true);
 
   return (

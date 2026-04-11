@@ -1,7 +1,8 @@
 import { GENDER_LABELS, GENDERS, type Gender } from "@cooked/shared";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import CkdTextInput from "@/components/input/CkdTextInput";
 import { useUpdateProfile } from "../../../hooks/useProfile";
 
 export default function OnboardingStep1() {
@@ -63,45 +64,42 @@ export default function OnboardingStep1() {
   }
 
   return (
-    <View className="flex-1 bg-[#080C10] px-6 justify-center">
+    <View className="flex-1 bg-ckd-bg px-6 justify-center">
       {/* Progression */}
       <View className="flex-row gap-2 mb-8">
-        <View className="flex-1 h-1 bg-[#4ADE80]" />
-        <View className="flex-1 h-1 bg-[#1E293B]" />
-        <View className="flex-1 h-1 bg-[#1E293B]" />
+        <View className="flex-1 h-1 bg-ckd-green" />
+        <View className="flex-1 h-1 bg-ckd-border-1" />
+        <View className="flex-1 h-1 bg-ckd-border-1" />
       </View>
 
-      <Text className="text-[#334155] text-xs tracking-[3px] mb-2">ÉTAPE 1 / 3</Text>
-      <Text className="text-[#F1F5F9] text-3xl font-black mb-1">Infos physiques</Text>
-      <Text className="text-[#475569] text-sm mb-8">
+      <Text className="text-ckd-text-muted text-xs tracking-[3px] mb-2">ÉTAPE 1 / 3</Text>
+      <Text className="text-ckd-text text-3xl font-black mb-1">Infos physiques</Text>
+      <Text className="text-ckd-text-muted text-sm mb-8">
         Pour calculer tes besoins caloriques précis.
       </Text>
 
       {/* Date de naissance */}
-      <Text className="text-[#334155] text-xs tracking-[2px] mb-2">DATE DE NAISSANCE</Text>
+      <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-2">DATE DE NAISSANCE</Text>
       <View className="flex-row gap-2 mb-5">
-        <TextInput
-          className="flex-1 bg-[#0F172A] border border-[#1E293B] text-[#F1F5F9] px-3 py-4 text-center text-base"
+        <CkdTextInput
+          className="flex-1"
           placeholder="JJ"
-          placeholderTextColor="#334155"
           keyboardType="number-pad"
           maxLength={2}
           value={birthDay}
           onChangeText={setBirthDay}
         />
-        <TextInput
-          className="flex-1 bg-[#0F172A] border border-[#1E293B] text-[#F1F5F9] px-3 py-4 text-center text-base"
+        <CkdTextInput
+          className="flex-1"
           placeholder="MM"
-          placeholderTextColor="#334155"
           keyboardType="number-pad"
           maxLength={2}
           value={birthMonth}
           onChangeText={setBirthMonth}
         />
-        <TextInput
-          className="flex-[2] bg-[#0F172A] border border-[#1E293B] text-[#F1F5F9] px-3 py-4 text-center text-base"
+        <CkdTextInput
+          className="flex-[2]"
           placeholder="AAAA"
-          placeholderTextColor="#334155"
           keyboardType="number-pad"
           maxLength={4}
           value={birthYear}
@@ -110,19 +108,21 @@ export default function OnboardingStep1() {
       </View>
 
       {/* Genre */}
-      <Text className="text-[#334155] text-xs tracking-[2px] mb-2">GENRE BIOLOGIQUE</Text>
+      <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-2">GENRE BIOLOGIQUE</Text>
       <View className="flex-row gap-2 mb-5">
         {GENDERS.map((g) => (
           <Pressable
             key={g}
             className={`flex-1 py-3 items-center border ${
-              gender === g ? "border-[#4ADE80] bg-[#4ADE8015]" : "border-[#1E293B] bg-[#0F172A]"
+              gender === g
+                ? "border-ckd-green bg-[#4ADE8015]"
+                : "border-ckd-input-border bg-ckd-input-bg"
             }`}
             onPress={() => setGender(g)}
           >
             <Text
               className={`text-sm font-semibold ${
-                gender === g ? "text-[#4ADE80]" : "text-[#475569]"
+                gender === g ? "text-ckd-green" : "text-ckd-placeholder"
               }`}
             >
               {GENDER_LABELS[g]}
@@ -134,22 +134,18 @@ export default function OnboardingStep1() {
       {/* Taille & Poids */}
       <View className="flex-row gap-3 mb-6">
         <View className="flex-1">
-          <Text className="text-[#334155] text-xs tracking-[2px] mb-2">TAILLE (cm)</Text>
-          <TextInput
-            className="bg-[#0F172A] border border-[#1E293B] text-[#F1F5F9] px-4 py-4 text-base"
+          <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-2">TAILLE (cm)</Text>
+          <CkdTextInput
             placeholder="175"
-            placeholderTextColor="#334155"
             keyboardType="decimal-pad"
             value={heightCm}
             onChangeText={setHeightCm}
           />
         </View>
         <View className="flex-1">
-          <Text className="text-[#334155] text-xs tracking-[2px] mb-2">POIDS (kg)</Text>
-          <TextInput
-            className="bg-[#0F172A] border border-[#1E293B] text-[#F1F5F9] px-4 py-4 text-base"
+          <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-2">POIDS (kg)</Text>
+          <CkdTextInput
             placeholder="70"
-            placeholderTextColor="#334155"
             keyboardType="decimal-pad"
             value={weightKg}
             onChangeText={setWeightKg}
@@ -157,17 +153,17 @@ export default function OnboardingStep1() {
         </View>
       </View>
 
-      {error !== "" && <Text className="text-red-400 text-sm mb-4">{error}</Text>}
+      {error !== "" && <Text className="text-ckd-red text-sm mb-4">{error}</Text>}
 
       <Pressable
-        className="bg-[#4ADE80] py-4 items-center"
+        className="bg-ckd-green py-4 items-center"
         onPress={handleNext}
         disabled={updateProfile.isPending}
       >
         {updateProfile.isPending ? (
-          <ActivityIndicator size="small" color="#080C10" />
+          <ActivityIndicator className="text-ckd-text-dark" size="small" />
         ) : (
-          <Text className="text-[#080C10] font-bold text-base tracking-wider">SUIVANT →</Text>
+          <Text className="text-ckd-text-dark font-bold text-base tracking-wider">SUIVANT</Text>
         )}
       </Pressable>
     </View>

@@ -11,7 +11,9 @@ export const palette = {
   // Texte
   tx: "#F1F5F9", // texte principal         ~19:1 AAA
   tm: "#9DAFC6", // texte secondaire / muted ~7.8:1 AAA sur s1
+  tp: "#707D8E", // texte placeholder
   tf: "#2E3441", // texte très subtil, dates futures
+  td: "#080C10", // texte sombre sur fond clair (ex: étiquette de la date du jour)
 
   // Orange — nav active, CTA primaire, lipides macros
   orange: "#FF6B2C",

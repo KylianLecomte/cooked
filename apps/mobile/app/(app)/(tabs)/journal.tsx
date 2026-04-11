@@ -1,9 +1,9 @@
 import { Text, View } from "react-native";
-import Button from "@/components/Button";
-import Card from "@/components/Card";
-import MacroBar from "@/components/progressBar/MacroBar";
-import MicroBar from "@/components/progressBar/MicroBar";
-import ProgressBar from "@/components/progressBar/ProgressBar";
+import Button from "@/components/CkdButton";
+import Ckd from "@/components/CkdCard";
+import CkdMacroBar from "@/components/progressBar/CkdMacroBar";
+import CkdMicroBar from "@/components/progressBar/CkdMicroBar";
+import CkdProgressBar from "@/components/progressBar/CkdProgressBar";
 import { buttonVariants } from "@/theme/variant.style";
 
 export default function JournalScreen() {
@@ -14,7 +14,7 @@ export default function JournalScreen() {
         <Text className="text-ckd-text text-xl font-bold">11 mars 2026</Text>
       </View>
 
-      <Card
+      <Ckd
         titleLeft={
           <Text className="text-ckd-text-faint font-ckd-mono text-ckd-fs10">CALORIES & MACROS</Text>
         }
@@ -32,7 +32,7 @@ export default function JournalScreen() {
                 </Text>
               </View>
             </View>
-            <ProgressBar
+            <CkdProgressBar
               className="w-full h-1 mb-2"
               backgroundColor="bg-ckd-orange-s"
               progressColor="bg-ckd-orange"
@@ -41,31 +41,31 @@ export default function JournalScreen() {
               target={10}
             />
             <View className="gap-2">
-              <MacroBar type="proteine" label="Protéines" current={98} target={176} />
-              <MacroBar type="glucide" label="Glucides" current={2500} target={5000} />
-              <MacroBar type="lipide" label="Lipides" current={42} target={78} />
+              <CkdMacroBar type="proteine" label="Protéines" current={98} target={176} />
+              <CkdMacroBar type="glucide" label="Glucides" current={2500} target={5000} />
+              <CkdMacroBar type="lipide" label="Lipides" current={42} target={78} />
             </View>
           </>
         }
       />
 
-      <Card
+      <Ckd
         titleLeft={
           <Text className="text-ckd-text-faint font-ckd-mono text-ckd-fs10">MICRONUTRIMENTS</Text>
         }
         titleRight={<Text className="text-ckd-text-faint font-ckd-mono text-ckd-fs10">70/100</Text>}
         content={
           <View className="gap-2">
-            <MicroBar label="Vitamine D" current={20} />
-            <MicroBar label="Magnésium" current={40} />
-            <MicroBar label="Vitamine B12" current={80} />
-            <MicroBar label="Calcium" current={99} />
-            <MicroBar label="Vitamine C" current={100} />
+            <CkdMicroBar label="Vitamine D" current={20} />
+            <CkdMicroBar label="Magnésium" current={40} />
+            <CkdMicroBar label="Vitamine B12" current={80} />
+            <CkdMicroBar label="Calcium" current={99} />
+            <CkdMicroBar label="Vitamine C" current={100} />
           </View>
         }
       />
 
-      <Card
+      <Ckd
         titleLeft={
           <Text className="text-ckd-text font-ckd-sans text-ckd-fs16">Petit-déjeuner</Text>
         }

@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import ProgressBar, { ProgressBarColors } from "./ProgressBar";
+import CkdProgressBar, { ProgressBarColors } from "./CkdProgressBar";
 
 type MicroColor = "green" | "orange" | "red" | "purple";
 
@@ -42,13 +42,13 @@ type MicroBarProps = Readonly<{
   current: number;
 }>;
 
-export default function MicroBar({ label, current }: MicroBarProps) {
+export default function CkdMicroBar({ label, current }: MicroBarProps) {
   const colors = getColorStyle(current);
 
   return (
     <View className={`gap-2 flex-row items-center`}>
       <Text className={`w-22 text-ckd-fs12 font-sans mb-0 text-ckd-text-muted`}>{label}</Text>
-      <ProgressBar
+      <CkdProgressBar
         className="flex-1"
         backgroundColor={colors.bgSoft}
         progressColor={colors.bg}

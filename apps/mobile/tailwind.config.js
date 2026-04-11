@@ -12,27 +12,42 @@ module.exports = {
     extend: {
       colors: {
         "ckd-bg": palette.bg,
+
         "ckd-surface-1": palette.s1,
         "ckd-surface-2": palette.s2,
+
         "ckd-border-1": palette.b1,
         "ckd-border-2": palette.b2,
+
+        "ckd-input-bg": palette.s2,
+        "ckd-input-border": palette.b2,
+        "ckd-placeholder": palette.tp,
+
         "ckd-text": palette.tx,
         "ckd-text-muted": palette.tm,
         "ckd-text-faint": palette.tf,
+        "ckd-text-dark": palette.td,
+
         "ckd-orange": palette.orange,
         "ckd-orange-s": palette["orange-s"],
         "ckd-orange-m": palette["orange-m"],
+
         "ckd-green": palette.green,
         "ckd-green-s": palette["green-s"],
+
         "ckd-blue": palette.blue,
         "ckd-blue-s": palette["blue-s"],
+
         "ckd-yellow": palette.yellow,
         "ckd-yellow-s": palette["yellow-s"],
+
         "ckd-purple": palette.purple,
         "ckd-purple-s": palette["purple-s"],
+
         "ckd-teal": palette.teal,
         "ckd-teal-s": palette["teal-s"],
         "ckd-teal-m": palette["teal-m"],
+
         "ckd-red": palette.red,
         "ckd-red-s": palette["red-s"],
 

@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
-import PortionSelector from "../../../components/PortionSelector";
+import CkdPortionSelector from "../../../components/CkdPortionSelector";
 import { useFoodDetail } from "../../../hooks/useFoodDetail";
 import type { FoodDetail } from "../../../types/food";
 import { CATEGORY_LABELS } from "../../../types/food";
@@ -191,7 +191,7 @@ export default function FoodDetailScreen() {
       </Text>
 
       {/* Sélecteur de portion */}
-      <PortionSelector value={quantityG} onChange={setQuantityG} />
+      <CkdPortionSelector value={quantityG} onChange={setQuantityG} />
 
       {/* Onglets */}
       <View className="flex-row border-b border-[#1E293B] mb-0 mt-6">

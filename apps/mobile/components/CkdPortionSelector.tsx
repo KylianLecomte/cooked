@@ -7,7 +7,7 @@ interface Props {
   readonly onChange: (grams: number) => void;
 }
 
-export default function PortionSelector({ value, onChange }: Props) {
+export default function CkdPortionSelector({ value, onChange }: Props) {
   function handlePreset(g: number) {
     onChange(g);
   }
