@@ -11,7 +11,7 @@ export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findByUserId(userId: string) {
-    return this.prisma.client.profile.findUnique({
+    return await this.prisma.client.profile.findUnique({
       where: { userId },
     });
   }
