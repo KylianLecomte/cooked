@@ -23,17 +23,18 @@ export default function AppLayout() {
   const isLoading = sessionPending || (!!session && profileLoading);
 
   useEffect(() => {
+    console.debug("AppLayout useEffect", { isLoading, session, profile });
     if (isLoading) return;
 
     if (!session) {
       router.replace("/(auth)/login");
-      return;
+      // return;
     }
 
     // Profil chargé (null = pas encore créé) et goal non renseigné → onboarding
-    if (profile !== undefined && !profile?.goal) {
-      router.replace("/(app)/onboarding/step1");
-    }
+    // if (profile !== undefined) {
+    //   router.replace("/(app)/onboarding/step1");
+    // }
   }, [isLoading, session, profile]);
 
   if (isLoading || !session) {

@@ -59,7 +59,7 @@ export default function OnboardingStep1() {
       heightCm: Number(heightCm),
       weightKg: Number(weightKg),
     });
-
+    console.debug("Profile updated, navigating to step 2");
     router.push("/(app)/onboarding/step2");
   }
 
@@ -115,7 +115,7 @@ export default function OnboardingStep1() {
             key={g}
             className={`flex-1 py-3 items-center border ${
               gender === g
-                ? "border-ckd-green bg-[#4ADE8015]"
+                ? "border-ckd-green bg-ckd-green-s"
                 : "border-ckd-input-border bg-ckd-input-bg"
             }`}
             onPress={() => setGender(g)}
