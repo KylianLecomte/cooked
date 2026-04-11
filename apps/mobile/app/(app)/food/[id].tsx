@@ -157,7 +157,7 @@ export default function FoodDetailScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 bg-[#080C10] items-center justify-center">
+      <View className="flex-1 bg-ckd-bg items-center justify-center">
         <ActivityIndicator size="small" color="#4ADE80" />
       </View>
     );
@@ -165,7 +165,7 @@ export default function FoodDetailScreen() {
 
   if (isError || !food) {
     return (
-      <View className="flex-1 bg-[#080C10] items-center justify-center px-6">
+      <View className="flex-1 bg-ckd-bg items-center justify-center px-6">
         <Text className="text-red-400 text-sm text-center mb-4">Aliment introuvable.</Text>
         <Pressable onPress={() => router.back()}>
           <Text className="text-[#4ADE80] text-sm">← Retour</Text>
@@ -175,7 +175,7 @@ export default function FoodDetailScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-[#080C10]" contentContainerStyle={{ padding: 24 }}>
+    <ScrollView className="flex-1 bg-ckd-bg" contentContainerStyle={{ padding: 24 }}>
       {/* Navigation */}
       <Pressable onPress={() => router.back()} className="mb-4 mt-4">
         <Text className="text-[#475569] text-sm">← Retour</Text>

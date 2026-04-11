@@ -15,14 +15,14 @@ export default function ProfileScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 bg-[#080C10] items-center justify-center">
+      <View className="flex-1 bg-ckd-bg items-center justify-center">
         <ActivityIndicator size="small" color="#4ADE80" />
       </View>
     );
   }
 
   return (
-    <ScrollView className="flex-1 bg-[#080C10]" contentContainerStyle={{ padding: 24 }}>
+    <ScrollView className="flex-1 bg-ckd-bg" contentContainerStyle={{ padding: 24 }}>
       {/* En-tête */}
       <Text className="text-[#334155] text-xs tracking-[3px] mb-6 mt-4">PROFIL</Text>
 

@@ -53,7 +53,7 @@ export default function RegisterScreen() {
   }
 
   return (
-    <View className="flex-1 bg-[#080C10] px-6 justify-center">
+    <View className="flex-1 bg-ckd-bg px-6 justify-center">
       {/* En-tête */}
       <Text className="text-[#4ADE80] text-xs tracking-[3px] mb-2">COOKED</Text>
       <Text className="text-[#F1F5F9] text-4xl font-black mb-1">INSCRIPTION</Text>

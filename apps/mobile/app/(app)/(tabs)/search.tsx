@@ -135,7 +135,7 @@ export default function SearchScreen() {
   const { data, isFetching, isError } = useFoodSearch(debounced);
 
   return (
-    <View className="flex-1 bg-[#080C10]">
+    <View className="flex-1 bg-ckd-bg">
       {/* En-tête + SearchBar */}
       <View className="px-6 pt-14 pb-4">
         <Text className="text-[#334155] text-xs tracking-[3px] mb-4">RECHERCHE</Text>

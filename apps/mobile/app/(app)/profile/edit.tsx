@@ -66,14 +66,14 @@ export default function EditProfileScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 bg-[#080C10] items-center justify-center">
+      <View className="flex-1 bg-ckd-bg items-center justify-center">
         <ActivityIndicator size="small" color="#4ADE80" />
       </View>
     );
   }
 
   return (
-    <ScrollView className="flex-1 bg-[#080C10]">
+    <ScrollView className="flex-1 bg-ckd-bg">
       {/* Header */}
       <View className="flex-row items-center px-6 pt-12 pb-6">
         <Pressable onPress={() => router.back()} className="mr-4">

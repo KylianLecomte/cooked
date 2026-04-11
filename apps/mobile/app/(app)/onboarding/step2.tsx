@@ -39,7 +39,7 @@ export default function OnboardingStep2() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-[#080C10]" contentContainerStyle={{ padding: 24 }}>
+    <ScrollView className="flex-1 bg-ckd-bg" contentContainerStyle={{ padding: 24 }}>
       {/* Progression */}
       <View className="flex-row gap-2 mb-8 mt-4">
         <View className="flex-1 h-1 bg-ckd-green" />
