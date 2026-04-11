@@ -61,6 +61,7 @@ export default function OnboardingStep2() {
 
       <CkdSelectCardGroup
         containerClassName="mb-8"
+        selectedId={activityLevel}
         classNames={{
           btnCommon: "self-stretch flex-row justify-between items-center",
           btnNotSelected: InputVariants.primary,
@@ -98,16 +99,17 @@ export default function OnboardingStep2() {
       <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-3">OBJECTIF</Text>
       <CkdSelectCardGroup
         containerClassName="mb-8"
+        selectedId={goal}
         classNames={{
           btnCommon: "self-stretch flex-row justify-between items-center",
-          btnNotSelected: "border-ckd-input-border bg-ckd-input-bg",
-          btnSelected: "border-ckd-main-color bg-ckd-main-color-s",
+          btnNotSelected: InputVariants.primary,
+          btnSelected: InputVariants.secondary,
         }}
         cardContents={GOALS.map((g: Goal) => ({
           id: g,
           content: (
             <>
-              <View className="">
+              <View>
                 <Text
                   className={`font-semibold text-sm ${
                     goal === g ? "text-ckd-main-color" : "text-ckd-text-muted"

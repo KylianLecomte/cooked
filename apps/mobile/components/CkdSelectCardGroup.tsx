@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { View } from "react-native";
 import { twMerge } from "tailwind-merge";
 import CkdSelectableCard, { SelectableCardClassNames } from "./CkdSelectableCard";
@@ -6,6 +5,7 @@ import CkdSelectableCard, { SelectableCardClassNames } from "./CkdSelectableCard
 type SelectCardGroupProps<T> = Readonly<{
   classNames?: SelectableCardClassNames;
   containerClassName?: string;
+  selectedId: number | string | null;
   cardContents: { id: number | string; data?: T; content: React.ReactNode }[];
   onSelect: (param: T | number | string) => void;
 }>;
@@ -13,11 +13,10 @@ type SelectCardGroupProps<T> = Readonly<{
 export default function CkdSelectCardGroup<T>({
   classNames,
   containerClassName,
+  selectedId,
   onSelect,
   cardContents,
 }: SelectCardGroupProps<T>) {
-  const [selectedId, setSelectedId] = useState<number | string | null>(null);
-
   return (
     <View className={twMerge("gap-2", containerClassName)}>
       {cardContents.map((content) => (
@@ -26,10 +25,7 @@ export default function CkdSelectCardGroup<T>({
           key={content.id}
           cardContent={content}
           isSelected={selectedId === content.id}
-          onSelect={(param) => {
-            setSelectedId(content.id);
-            onSelect(param);
-          }}
+          onSelect={onSelect}
         />
       ))}
     </View>
