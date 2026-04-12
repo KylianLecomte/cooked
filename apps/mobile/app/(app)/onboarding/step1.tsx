@@ -1,8 +1,11 @@
 import { GENDER_LABELS, GENDERS, type Gender } from "@cooked/shared";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import CkdButton from "@/components/CkdButton";
+import CkdSelectCardGroup from "@/components/CkdSelectCardGroup";
 import CkdTextInput from "@/components/input/CkdTextInput";
+import { InputVariants } from "@/theme/variant.style";
 import { useUpdateProfile } from "../../../hooks/useProfile";
 
 export default function OnboardingStep1() {
@@ -64,10 +67,9 @@ export default function OnboardingStep1() {
   }
 
   return (
-    <View className="flex-1 bg-ckd-bg px-6 justify-center">
-      {/* Progression */}
+    <ScrollView className="flex-1 bg-ckd-bg p-4 pt-14">
       <View className="flex-row gap-2 mb-8">
-        <View className="flex-1 h-1 bg-ckd-green" />
+        <View className="flex-1 h-1 bg-ckd-main-color" />
         <View className="flex-1 h-1 bg-ckd-border-1" />
         <View className="flex-1 h-1 bg-ckd-border-1" />
       </View>
@@ -78,7 +80,6 @@ export default function OnboardingStep1() {
         Pour calculer tes besoins caloriques précis.
       </Text>
 
-      {/* Date de naissance */}
       <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-2">DATE DE NAISSANCE</Text>
       <View className="flex-row gap-2 mb-5">
         <CkdTextInput
@@ -107,31 +108,30 @@ export default function OnboardingStep1() {
         />
       </View>
 
-      {/* Genre */}
       <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-2">GENRE BIOLOGIQUE</Text>
-      <View className="flex-row gap-2 mb-5">
-        {GENDERS.map((g) => (
-          <Pressable
-            key={g}
-            className={`flex-1 py-3 items-center border ${
-              gender === g
-                ? "border-ckd-green bg-ckd-green-s"
-                : "border-ckd-input-border bg-ckd-input-bg"
-            }`}
-            onPress={() => setGender(g)}
-          >
+      <CkdSelectCardGroup
+        containerClassName="flex-row mb-5"
+        selectedId={gender}
+        classNames={{
+          btnCommon: "self-stretch flex-1 py-2",
+          btnNotSelected: InputVariants.primary,
+          btnSelected: InputVariants.secondary,
+        }}
+        cardContents={GENDERS.map((g) => ({
+          id: g,
+          content: (
             <Text
               className={`text-sm font-semibold ${
-                gender === g ? "text-ckd-green" : "text-ckd-placeholder"
+                gender === g ? "text-ckd-main-color" : "text-ckd-placeholder"
               }`}
             >
               {GENDER_LABELS[g]}
             </Text>
-          </Pressable>
-        ))}
-      </View>
+          ),
+        }))}
+        onSelect={(id) => setGender(id as Gender)}
+      ></CkdSelectCardGroup>
 
-      {/* Taille & Poids */}
       <View className="flex-row gap-3 mb-6">
         <View className="flex-1">
           <Text className="text-ckd-text-muted text-xs tracking-[2px] mb-2">TAILLE (cm)</Text>
@@ -155,8 +155,8 @@ export default function OnboardingStep1() {
 
       {error !== "" && <Text className="text-ckd-red text-sm mb-4">{error}</Text>}
 
-      <Pressable
-        className="bg-ckd-green py-4 items-center"
+      <CkdButton
+        containerClassName="self-stretch bg-ckd-main-color py-4 items-center"
         onPress={handleNext}
         disabled={updateProfile.isPending}
       >
@@ -165,7 +165,7 @@ export default function OnboardingStep1() {
         ) : (
           <Text className="text-ckd-text-dark font-bold text-base tracking-wider">SUIVANT</Text>
         )}
-      </Pressable>
-    </View>
+      </CkdButton>
+    </ScrollView>
   );
 }

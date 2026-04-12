@@ -27,7 +27,7 @@ export default function CkdTextInput({
   return (
     <TextInput
       className={twMerge(
-        "bg-ckd-input-bg border border-ckd-input-border text-ckd-text p-2 text-center text-base placeholder:text-ckd-placeholder",
+        "bg-ckd-input-bg border rounded-lg border-ckd-input-border text-ckd-text p-2 text-center text-base placeholder:text-ckd-placeholder",
         className,
       )}
       placeholder={placeholder}

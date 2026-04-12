@@ -1,6 +1,7 @@
 import { ACTIVITY_LEVEL_LABELS, GOAL_LABELS } from "@cooked/shared";
 import { router } from "expo-router";
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import CkdButton from "@/components/CkdButton";
 import CkdCard from "@/components/CkdCard";
 import { useProfile } from "../../../hooks/useProfile";
 
@@ -22,9 +23,8 @@ export default function OnboardingStep3() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-ckd-bg" contentContainerStyle={{ padding: 24 }}>
-      {/* Progression */}
-      <View className="flex-row gap-2 mb-8 mt-4">
+    <ScrollView className="flex-1 bg-ckd-bg p-4 pt-14">
+      <View className="flex-row gap-2 mb-8">
         <View className="flex-1 h-1 bg-ckd-main-color" />
         <View className="flex-1 h-1 bg-ckd-main-color" />
         <View className="flex-1 h-1 bg-ckd-main-color" />
@@ -47,7 +47,7 @@ export default function OnboardingStep3() {
             <View className="items-center">
               <Text className="text-ckd-main-color text-6xl font-black">{profile.tdeeKcal}</Text>
               <Text className="text-ckd-text-muted text-base mt-1">kcal / jour</Text>
-              <View className="border-t border-[#1E293B] mt-4 pt-4 w-full items-center">
+              <View className="border-t border-ckd-border-1 mt-4 pt-4 w-full items-center">
                 <Text className="text-ckd-text-muted text-xs">
                   Objectif {profile.goal ? GOAL_LABELS[profile.goal] : "—"} :{" "}
                   <Text className="text-ckd-main-color font-bold">{profile.targetKcal} kcal</Text>
@@ -66,7 +66,7 @@ export default function OnboardingStep3() {
           content={
             <View className="flex-row justify-between">
               <View className="items-center flex-1">
-                <Text className="text-[#61DAFB] text-2xl font-black">
+                <Text className="text-ckd-proteine text-2xl font-black">
                   {profile.targetProteinG}g
                 </Text>
                 <Text className="text-ckd-text-muted text-xs mt-1">Protéines</Text>
@@ -77,7 +77,7 @@ export default function OnboardingStep3() {
                   %
                 </Text>
               </View>
-              <View className="w-px bg-[#1E293B]" />
+              <View className="w-px bg-ckd-border-1" />
               <View className="items-center flex-1">
                 <Text className="text-ckd-glucide text-2xl font-black">
                   {profile.targetCarbsG}g
@@ -87,7 +87,7 @@ export default function OnboardingStep3() {
                   {Math.round(((profile.targetCarbsG ?? 0) * 4 * 100) / (profile.targetKcal ?? 1))}%
                 </Text>
               </View>
-              <View className="w-px bg-[#1E293B]" />
+              <View className="w-px bg-ckd-border-1" />
               <View className="items-center flex-1">
                 <Text className="text-ckd-lipide text-2xl font-black">{profile.targetFatG}g</Text>
                 <Text className="text-ckd-text-muted text-xs mt-1">Lipides</Text>
@@ -130,11 +130,14 @@ export default function OnboardingStep3() {
         <Text className="text-ckd-text-muted text-xs text-center mb-4">
           Tu pourras modifier ces données à tout moment dans ton profil.
         </Text>
-
-        <Pressable className="bg-ckd-main-color py-4 items-center" onPress={handleStart}>
-          <Text className="text-ckd-text-dark font-bold text-base tracking-wider">TERMINER</Text>
-        </Pressable>
       </View>
+
+      <CkdButton
+        containerClassName="self-stretch bg-ckd-main-color py-4 items-center"
+        onPress={handleStart}
+      >
+        <Text className="text-ckd-text-dark font-bold text-base tracking-wider">TERMINER</Text>
+      </CkdButton>
     </ScrollView>
   );
 }

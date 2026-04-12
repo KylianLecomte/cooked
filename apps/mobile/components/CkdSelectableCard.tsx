@@ -28,7 +28,7 @@ export default function CkdSelectableCard<T>({
         classNames?.btnCommon,
         isSelected ? classNames?.btnSelected : classNames?.btnNotSelected,
       )}
-      onPress={() => onSelect(cardContent.data || cardContent.id)}
+      onPress={() => onSelect(cardContent.data ?? cardContent.id)}
     >
       {cardContent.content}
     </CkdButton>

@@ -13,7 +13,7 @@ import {
 import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
-import Button from "@/components/CkdButton";
+import CkdButton from "@/components/CkdButton";
 import CkdSelectCardGroup from "@/components/CkdSelectCardGroup";
 import { InputVariants } from "@/theme/variant.style";
 import { useUpdateProfile } from "../../../hooks/useProfile";
@@ -43,9 +43,8 @@ export default function OnboardingStep2() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-ckd-bg" contentContainerStyle={{ padding: 24 }}>
-      {/* Progression */}
-      <View className="flex-row gap-2 mb-8 mt-4">
+    <ScrollView className="flex-1 bg-ckd-bg p-4 pt-14">
+      <View className="flex-row gap-2 mb-8">
         <View className="flex-1 h-1 bg-ckd-main-color" />
         <View className="flex-1 h-1 bg-ckd-main-color" />
         <View className="flex-1 h-1 bg-ckd-border-1" />
@@ -138,8 +137,8 @@ export default function OnboardingStep2() {
 
       {error !== "" && <Text className="text-ckd-red text-sm mb-4">{error}</Text>}
 
-      <Button
-        containerClassName="self-stretch bg-ckd-main-color py-4 items-center mb-8"
+      <CkdButton
+        containerClassName="self-stretch bg-ckd-main-color py-4 items-center"
         onPress={handleNext}
         disabled={updateProfile.isPending}
       >
@@ -148,7 +147,7 @@ export default function OnboardingStep2() {
         ) : (
           <Text className="text-ckd-text-dark font-bold text-base tracking-wider">SUIVANT</Text>
         )}
-      </Button>
+      </CkdButton>
     </ScrollView>
   );
 }
