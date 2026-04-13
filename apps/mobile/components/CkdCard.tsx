@@ -15,27 +15,33 @@ type CardProps = Readonly<{
 export default function CkdCard({ titleLeft, titleRight, content, closable = false }: CardProps) {
   const [open, setOpen] = useState(true);
 
+  const hasTitle = titleLeft || titleRight;
+
   return (
     <View className={CardVariants.primary}>
-      <View className="flex-row justify-between items-center">
-        {titleLeft}
-        <View className="flex-row gap-2 justify-center">
-          {titleRight}
-          {closable ? (
-            <Button
-              containerClassName={ButtonVariants.iconBorderLess.containerClassName}
-              onPress={() => setOpen(!open)}
-            >
-              {open ? (
-                <Ionicons name="chevron-down-sharp" size={18} color={colors.main} />
-              ) : (
-                <Ionicons name="chevron-up-outline" size={18} color={colors.main} />
-              )}
-            </Button>
-          ) : null}
+      {hasTitle && (
+        <View className="flex-row justify-between items-center">
+          {titleLeft}
+          <View className="flex-row gap-2 justify-center">
+            {titleRight}
+            {closable ? (
+              <Button
+                containerClassName={ButtonVariants.iconBorderLess.containerClassName}
+                onPress={() => setOpen(!open)}
+              >
+                {open ? (
+                  <Ionicons name="chevron-down-sharp" size={18} color={colors.main} />
+                ) : (
+                  <Ionicons name="chevron-up-outline" size={18} color={colors.main} />
+                )}
+              </Button>
+            ) : null}
+          </View>
         </View>
-      </View>
-      {(closable && open) || !closable ? <View className="mt-2">{content}</View> : null}
+      )}
+      {(closable && open) || !closable ? (
+        <View className={hasTitle ? "mt-2" : ""}>{content}</View>
+      ) : null}
     </View>
   );
 }

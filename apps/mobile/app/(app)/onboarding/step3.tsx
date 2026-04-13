@@ -1,8 +1,10 @@
 import { ACTIVITY_LEVEL_LABELS, GOAL_LABELS } from "@cooked/shared";
 import { router } from "expo-router";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { twMerge } from "tailwind-merge";
 import CkdButton from "@/components/CkdButton";
 import CkdCard from "@/components/CkdCard";
+import { ButtonVariants } from "@/theme/variant.style";
 import { useProfile } from "../../../hooks/useProfile";
 
 export default function OnboardingStep3() {
@@ -133,10 +135,12 @@ export default function OnboardingStep3() {
       </View>
 
       <CkdButton
-        containerClassName="self-stretch bg-ckd-main-color py-4 items-center"
+        containerClassName={twMerge(ButtonVariants.primary.containerClassName, "self-stretch py-4")}
         onPress={handleStart}
       >
-        <Text className="text-ckd-text-dark font-bold text-base tracking-wider">TERMINER</Text>
+        <Text className={twMerge(ButtonVariants.primary.textClassName, "font-bold tracking-wider")}>
+          TERMINER
+        </Text>
       </CkdButton>
     </ScrollView>
   );

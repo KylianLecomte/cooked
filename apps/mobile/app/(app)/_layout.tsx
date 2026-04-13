@@ -39,7 +39,8 @@ export default function AppLayout() {
     if (!session) {
       router.replace("/(auth)/login");
     } else if (!profile?.goal) {
-      router.replace("/(app)/onboarding/step3");
+      router.replace("/(app)/(tabs)/profile");
+      // router.replace("/(app)/onboarding/step3");
     }
     // sinon : profil complet, on ne navigue nulle part
   }, [isLoading, session, profile]);

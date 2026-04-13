@@ -2,10 +2,11 @@ import { GENDER_LABELS, GENDERS, type Gender } from "@cooked/shared";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { twMerge } from "tailwind-merge";
 import CkdButton from "@/components/CkdButton";
 import CkdSelectCardGroup from "@/components/CkdSelectCardGroup";
 import CkdTextInput from "@/components/input/CkdTextInput";
-import { InputVariants } from "@/theme/variant.style";
+import { ButtonVariants, InputVariants } from "@/theme/variant.style";
 import { useUpdateProfile } from "../../../hooks/useProfile";
 
 export default function OnboardingStep1() {
@@ -156,14 +157,18 @@ export default function OnboardingStep1() {
       {error !== "" && <Text className="text-ckd-red text-sm mb-4">{error}</Text>}
 
       <CkdButton
-        containerClassName="self-stretch bg-ckd-main-color py-4 items-center"
+        containerClassName={twMerge(ButtonVariants.primary.containerClassName, "self-stretch py-4")}
         onPress={handleNext}
         disabled={updateProfile.isPending}
       >
         {updateProfile.isPending ? (
           <ActivityIndicator className="text-ckd-text-dark" size="small" />
         ) : (
-          <Text className="text-ckd-text-dark font-bold text-base tracking-wider">SUIVANT</Text>
+          <Text
+            className={twMerge(ButtonVariants.primary.textClassName, "font-bold tracking-wider")}
+          >
+            SUIVANT
+          </Text>
         )}
       </CkdButton>
     </ScrollView>

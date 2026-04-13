@@ -1,10 +1,12 @@
+import Entypo from "@expo/vector-icons/Entypo";
 import { Text, View } from "react-native";
 import Button from "@/components/CkdButton";
 import CkdCard from "@/components/CkdCard";
 import CkdMacroBar from "@/components/progressBar/CkdMacroBar";
 import CkdMicroBar from "@/components/progressBar/CkdMicroBar";
 import CkdProgressBar from "@/components/progressBar/CkdProgressBar";
-import { ButtonVariants } from "@/theme/variant.style";
+import { colors } from "@/theme/colors.style";
+import { ButtonVariants, TextVariants } from "@/theme/variant.style";
 
 export default function JournalScreen() {
   return (
@@ -15,12 +17,8 @@ export default function JournalScreen() {
       </View>
 
       <CkdCard
-        titleLeft={
-          <Text className="text-ckd-text-faint font-ckd-mono text-ckd-fs10">CALORIES & MACROS</Text>
-        }
-        titleRight={
-          <Text className="text-ckd-text-faint font-ckd-mono text-ckd-fs10">2350 kcal obj.</Text>
-        }
+        titleLeft={<Text className={TextVariants.title}>CALORIES & MACROS</Text>}
+        titleRight={<Text className={TextVariants.title}>2350 kcal obj.</Text>}
         content={
           <>
             <View className="flex-row items-end gap-1 mb-1">
@@ -50,10 +48,8 @@ export default function JournalScreen() {
       />
 
       <CkdCard
-        titleLeft={
-          <Text className="text-ckd-text-faint font-ckd-mono text-ckd-fs10">MICRONUTRIMENTS</Text>
-        }
-        titleRight={<Text className="text-ckd-text-faint font-ckd-mono text-ckd-fs10">70/100</Text>}
+        titleLeft={<Text className={TextVariants.title}>MICRONUTRIMENTS</Text>}
+        titleRight={<Text className={TextVariants.title}>70/100</Text>}
         content={
           <View className="gap-2">
             <CkdMicroBar label="Vitamine D" current={20} />
@@ -66,9 +62,7 @@ export default function JournalScreen() {
       />
 
       <CkdCard
-        titleLeft={
-          <Text className="text-ckd-text font-ckd-sans text-ckd-fs16">Petit-déjeuner</Text>
-        }
+        titleLeft={<Text className={TextVariants.title}>PETIT-DÉJEUNER</Text>}
         titleRight={
           <View className="flex-row gap-2 items-center">
             <Text className="text-ckd-text-muted font-ckd-mono text-ckd-fs14">420 kcal</Text>
@@ -76,7 +70,9 @@ export default function JournalScreen() {
               containerClassName={ButtonVariants.secondary.containerClassName}
               onPress={() => console.debug("Ajouter un aliment")}
             >
-              <Text className={ButtonVariants.secondary.textClassName}>+</Text>
+              <Text className={ButtonVariants.secondary.textClassName}>
+                <Entypo name="plus" size={16} color={colors.main} />
+              </Text>
             </Button>
           </View>
         }

@@ -1,5 +1,6 @@
 import { Pressable } from "react-native";
 import { twMerge } from "tailwind-merge";
+import { ButtonVariants } from "@/theme/variant.style";
 
 type ButtonProps = {
   onPress: () => void;
@@ -16,10 +17,7 @@ export default function Button({
 }: Readonly<ButtonProps>) {
   return (
     <Pressable
-      className={twMerge(
-        "self-start rounded-lg min-w-8 min-h-8 w-fit items-center justify-center",
-        containerClassName,
-      )}
+      className={twMerge(ButtonVariants.common.containerClassName, containerClassName)}
       onPress={onPress}
       disabled={disabled}
     >
